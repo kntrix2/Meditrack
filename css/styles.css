@@ -1,5 +1,8 @@
 /* Meditrack CSS - Estilos globales */
 
+/* Importar fuentes Google */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
 /* Reset y estilos base */
 * {
   margin: 0;
@@ -9,34 +12,43 @@
 
 :root {
   /* Paleta de colores - tonos azules calmantes y profesionales */
-  --primary: #4285f4;
-  --primary-dark: #3367d6;
-  --secondary: #34a853;
-  --accent: #fbbc05;
-  --warning: #ea4335;
-  --light-grey: #f5f5f5;
+  --primary: #3a7bd5;
+  --primary-dark: #2c5fb4;
+  --primary-light: #d4e3fc;
+  --secondary: #36b37e;
+  --secondary-light: #e3fcf7;
+  --accent: #f9cf5a;
+  --warning: #f27474;
+  --warning-light: #ffe8e8;
+  --light-grey: #f8f9fa;
   --grey: #e0e0e0;
   --dark-grey: #757575;
   --white: #ffffff;
-  --black: #212121;
+  --black: #2d3748;
   
   /* Fuentes */
+  --font-primary: 'Poppins', sans-serif;
+  --font-secondary: 'Montserrat', sans-serif;
+  --font-size-xs: 0.75rem;
   --font-size-small: 0.875rem;
   --font-size-regular: 1rem;
   --font-size-medium: 1.125rem;
   --font-size-large: 1.5rem;
   --font-size-xlarge: 2rem;
+  --font-size-xxlarge: 2.5rem;
   
   /* Nuevas variables para app */
   --header-height: 60px;
   --sidebar-width: 250px;
   --bottom-nav-height: 60px;
   --app-background: var(--light-grey);
-  --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --border-radius: 12px;
+  --transition-speed: 0.25s;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-primary);
   font-size: var(--font-size-regular);
   line-height: 1.6;
   color: var(--black);
@@ -53,15 +65,19 @@ body {
   padding: 0 20px;
 }
 
-/* Encabezados */
+/* Títulos con nueva tipografía */
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-secondary);
   margin-bottom: 0.5em;
   font-weight: 600;
   line-height: 1.3;
+  color: var(--black);
 }
 
 h1 {
   font-size: var(--font-size-xlarge);
+  margin-top: 0;
+  margin-bottom: 0.5em;
 }
 
 h2 {
@@ -84,66 +100,100 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Botones */
+/* Mejorar aspecto de las tarjetas */
+.card, 
+.feature-card, 
+.dashboard-card, 
+.medication-card,
+.appointment-card {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  background-color: var(--white);
+}
+
+.card:hover, 
+.feature-card:hover, 
+.dashboard-card:hover, 
+.medication-card:hover,
+.appointment-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Mejorar botones */
 .btn {
-  display: inline-block;
-  padding: 0.75em 1.5em;
-  border: none;
-  border-radius: 4px;
+  font-family: var(--font-primary);
   font-weight: 600;
-  text-align: center;
+  border-radius: 30px;
+  transition: all var(--transition-speed) ease;
+  padding: 0.8em 1.8em;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease, color 0.3s ease;
-  font-size: var(--font-size-regular);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  color: var(--white);
-}
-
-.btn:active {
-  transform: translateY(0);
+  border: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .btn-primary {
-  background-color: var(--primary);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white !important;
+  box-shadow: 0 3px 10px rgba(58, 123, 213, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-dark);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(58, 123, 213, 0.3);
+  color: white;
+  text-decoration: none;
 }
 
 .btn-secondary {
-  background-color: var(--secondary);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--secondary) 0%, #2a9d6c 100%);
+  color: white;
+  box-shadow: 0 3px 10px rgba(54, 179, 126, 0.2);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #2a9d6c 0%, var(--secondary) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(54, 179, 126, 0.3);
+  color: white;
+  text-decoration: none;
 }
 
 .btn-outline {
-  background-color: transparent;
   border: 2px solid var(--primary);
   color: var(--primary);
+  background-color: var(--white);
+  box-shadow: 0 2px 8px rgba(58, 123, 213, 0.1);
 }
 
 .btn-outline:hover {
-  background-color: var(--primary);
-  color: var(--white);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(58, 123, 213, 0.15);
+  border-color: var(--primary-dark);
+  text-decoration: none;
 }
 
 .btn-warning {
-  background-color: var(--warning);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--warning) 0%, #e85a5a 100%);
+  color: white;
+  box-shadow: 0 3px 10px rgba(242, 116, 116, 0.2);
 }
 
-.btn-block {
-  display: block;
-  width: 100%;
+.btn-warning:hover {
+  background: linear-gradient(135deg, #e85a5a 0%, var(--warning) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(242, 116, 116, 0.3);
 }
 
 .btn-sm {
-  padding: 0.5em 1em;
-  font-size: var(--font-size-small);
+  padding: 0.5em 1.2em;
+  font-size: 0.9rem;
 }
 
 /* Formularios */
@@ -338,21 +388,6 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
-/* Tarjetas */
-.card {
-  background-color: var(--white);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  padding: 1.5em;
-  margin-bottom: 1.5em;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
 /* Utilitarios */
 .text-center {
   text-align: center;
@@ -416,8 +451,9 @@ input:focus, select:focus, textarea:focus {
   background-color: var(--white);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 1em 0;
-  position: sticky;
+  position: fixed;
   top: 0;
+  width: 100%;
   z-index: 100;
 }
 
@@ -475,6 +511,10 @@ input:focus, select:focus, textarea:focus {
   background-color: var(--primary);
 }
 
+.nav-links a.btn {
+  color: white;
+}
+
 /* Menú hamburguesa para móviles */
 .menu-toggle {
   display: none;
@@ -486,19 +526,26 @@ input:focus, select:focus, textarea:focus {
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 1.5rem;
+    z-index: 1000;
   }
   
   .nav-links {
     position: fixed;
-    top: 60px;
+    top: 0;
     right: -100%;
-    width: 80%;
-    height: calc(100vh - 60px);
-    flex-direction: column;
+    width: 75%;
+    height: 100vh;
     background-color: var(--white);
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 60px;
     transition: right 0.3s ease;
-    padding: 2em;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
   }
   
   .nav-links.active {
@@ -506,11 +553,58 @@ input:focus, select:focus, textarea:focus {
   }
   
   .nav-links li {
-    margin: 1em 0;
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid var(--grey);
   }
   
-  .container {
-    padding: 0 12px;
+  .nav-links a {
+    display: block;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+  }
+  
+  .nav-links a.btn {
+    margin: 15px 25px;
+    text-align: center;
+    color: white;
+  }
+  
+  /* Overlay para cuando el menú está abierto */
+  .menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+  }
+  
+  .menu-overlay.active {
+    display: block;
+  }
+  
+  /* Ajustes para la visualización de la sección Hero en móviles */
+  .hero {
+    padding: 1em 0 2em;
+  }
+  
+  /* Ajustar tamaño de tarjetas de testimonios */
+  .testimonials-slider {
+    overflow-x: auto;
+    padding: 1em 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    gap: 1em;
+  }
+  
+  .testimonial-card {
+    scroll-snap-align: start;
+    min-width: 280px;
+    margin-right: 1em;
   }
 }
 
@@ -704,18 +798,14 @@ input:focus, select:focus, textarea:focus {
 }
 
 .medication-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1em;
-  background-color: var(--light-grey);
+  background-color: var(--primary-light);
+  padding: 1.2em;
   border-bottom: 1px solid var(--grey);
 }
 
 .medication-card-header h3 {
-  margin: 0;
-  font-size: var(--font-size-medium);
-  color: var(--black);
+  color: var(--primary-dark);
+  font-weight: 600;
 }
 
 .medication-status {
@@ -860,7 +950,18 @@ input:focus, select:focus, textarea:focus {
 }
 
 .dashboard-header {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
+}
+
+.dashboard-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.2em;
+}
+
+.dashboard-header p {
+  margin-top: 0;
+  color: var(--dark-grey);
+  font-size: 0.95rem;
 }
 
 .dashboard-cards {
@@ -902,11 +1003,22 @@ input:focus, select:focus, textarea:focus {
 /* Estilos para estado vacío */
 .empty-state {
   text-align: center;
-  padding: 1em 0;
+  padding: 2em 1em;
+  background: linear-gradient(145deg, #f9fafc, #f0f4ff);
+  border-radius: 10px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.empty-state .btn {
+  padding: 0.7em 1.5em;
+  font-size: var(--font-size-regular);
+  margin-top: 1em;
+  min-width: 200px;
+  transition: all 0.3s ease;
 }
 
 .empty-state p {
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
   color: var(--dark-grey);
 }
 
@@ -1005,24 +1117,27 @@ input:focus, select:focus, textarea:focus {
 .rewards-level {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.8em;
 }
 
 .level-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  background-color: var(--primary);
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: var(--white);
   border-radius: 50%;
   font-weight: 700;
-  margin-right: 0.5em;
+  margin-right: 0.8em;
+  box-shadow: 0 3px 10px rgba(58, 123, 213, 0.2);
 }
 
 .level-name {
   font-weight: 600;
+  font-size: var(--font-size-medium);
+  color: var(--primary);
 }
 
 .progress-bar {
@@ -1043,7 +1158,8 @@ input:focus, select:focus, textarea:focus {
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1em;
+  gap: 1.5em;
+  margin-top: 1em;
 }
 
 .quick-action {
@@ -1051,35 +1167,107 @@ input:focus, select:focus, textarea:focus {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 1em;
-  border-radius: 4px;
-  background-color: rgba(66, 133, 244, 0.05);
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  padding: 1.8em 1.2em;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #f0f4ff, #e1eaff);
+  box-shadow: 0 5px 15px rgba(58, 123, 213, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
 .quick-action:hover {
   text-decoration: none;
   transform: translateY(-5px);
-  background-color: rgba(66, 133, 244, 0.1);
+  box-shadow: 0 8px 20px rgba(58, 123, 213, 0.15);
+  background: linear-gradient(145deg, #e6edff, #d4e0ff);
+  border: 2px solid rgba(58, 123, 213, 0.2);
 }
 
 .quick-action i {
-  font-size: 1.5em;
+  font-size: 2.2em;
   color: var(--primary);
-  margin-bottom: 0.5em;
+  margin-bottom: 0.8em;
+  background: rgba(255, 255, 255, 0.8);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(58, 123, 213, 0.15);
 }
 
 .quick-action span {
   color: var(--black);
   font-weight: 600;
-  font-size: var(--font-size-small);
+  font-size: 1.2rem;
+  margin-top: 0.5em;
+  line-height: 1.3;
+}
+
+.quick-action-type {
+  display: block;
+  font-size: 1rem;
+  color: var(--dark-grey);
+  margin-top: 0.3em;
+}
+
+/* Estilos específicos para cada tipo de acción */
+.action-medication {
+  background: linear-gradient(145deg, #e6edff, #d4e0ff);
+}
+
+.action-medication i {
+  color: var(--primary);
+}
+
+.action-appointment {
+  background: linear-gradient(145deg, #e3f5ed, #d0eee0);  
+}
+
+.action-appointment i {
+  color: var(--secondary);
+}
+
+.action-symptom {
+  background: linear-gradient(145deg, #fff6e6, #ffedd3);
+}
+
+.action-symptom i {
+  color: var(--accent);
+}
+
+.action-reward {
+  background: linear-gradient(145deg, #f9d9d9, #ffecec);
+}
+
+.action-reward i {
+  color: var(--warning);
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-action {
+    padding: 1.5em 1em;
+  }
+  
+  .quick-action i {
+    width: 70px;
+    height: 70px;
+    font-size: 2em;
+  }
 }
 
 /* Estilos para la página de inicio */
 .hero {
-  padding: 4em 0;
-  background-color: var(--white);
-  border-bottom: 1px solid var(--grey);
+  background: linear-gradient(135deg, var(--primary-light) 0%, rgba(255, 255, 255, 0.9) 100%);
+  padding: 3em 0 4em;
+  margin-top: 0; /* Ensure no gap with the fixed navigation */
+  position: relative;
 }
 
 .hero .container {
@@ -1508,6 +1696,8 @@ input:focus, select:focus, textarea:focus {
   padding: 0;
   min-height: 100vh;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -1536,9 +1726,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .content-area {
-  padding: 12px;
+  padding: 0 1.5em 1.5em;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 1.5em auto 0;
+  width: 100%;
 }
 
 /* Mobile Bottom Navigation */
@@ -1828,12 +2019,21 @@ input:focus, select:focus, textarea:focus {
   margin-bottom: 0;
 }
 
+/* Estilo para la imagen hero principal */
+.hero-main-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  object-fit: contain;
+}
+
 /* Nuevos estilos para el dashboard mejorado */
 .health-status-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1em;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 .health-status-item {
@@ -2219,226 +2419,414 @@ input:focus, select:focus, textarea:focus {
   }
   
   .day-indicators {
-    justify-content: center;
-  }
-  
-  .adherence-percentage {
-    font-size: 2rem;
-    text-align: center;
-  }
-  
-  .adherence-chart p {
-    text-align: center;
-    font-size: 0.8rem;
-  }
-  
-  .rewards-progress {
-    text-align: center;
-  }
-  
-  .rewards-level {
-    justify-content: center;
-  }
-  
-  .badges-preview {
-    justify-content: center;
-  }
-  
-  .sidebar-nav-item {
-    padding: 0.65em 1.25em;
+    gap: 0.25em;
   }
 }
 
-/* Reglas específicas de visualización en dispositivos muy pequeños */
-@media (max-width: 320px) {
-  .dashboard-header h1 {
-    font-size: 1.1rem;
-  }
-  
-  .health-status-item {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .status-icon {
-    margin-right: 0;
-    margin-bottom: 5px;
-  }
-  
-  .week-day {
-    padding: 3px 1px;
-  }
-  
-  .day-name {
-    font-size: 0.6rem;
-  }
-  
-  .day-number {
-    font-size: 0.8rem;
-  }
-  
-  .bottom-nav-item span {
-    font-size: 0.65rem;
-  }
-}
-
-/* Ajustes adicionales para el dashboard */
+/* Mejoras para móvil */
 @media (max-width: 768px) {
-  /* Mejorar layout de tarjetas para móvil */
-  .dashboard-cards {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    padding: 0 5px 80px 5px;
+  /* Ajustes generales para móvil */
+  body {
+    padding-bottom: 60px;
   }
-  
-  .dashboard-card {
+
+  .container {
+    padding: 0 15px;
     width: 100%;
-    max-width: 450px;
-    margin: 0;
-    border-radius: 12px;
-    overflow: hidden;
   }
-  
-  /* Mejorar espaciado y alineación */
-  .reminder {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    margin-bottom: 8px;
+
+  /* Navegación responsiva */
+  .nav {
+    padding: 0.8em 0;
   }
-  
-  .reminder-icon {
-    margin-right: 10px;
+
+  .nav-container {
+    padding: 0 15px;
   }
-  
-  .reminder-content {
-    flex: 1;
+
+  .logo {
+    font-size: 1.3rem;
   }
-  
-  .take-dose-btn {
-    padding: 0.4em 0.8em;
-    font-size: 0.85rem;
-    white-space: nowrap;
+
+  .logo-icon {
+    width: 24px;
+    height: 24px;
   }
-  
-  /* Centrar elementos dentro de las tarjetas */
-  .empty-state {
+
+  /* Hero section responsivo */
+  .hero {
+    padding: 2em 0;
     text-align: center;
-    padding: 15px 10px;
   }
-  
-  /* Mejorar visualización de síntomas */
-  .symptom-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    margin-bottom: 8px;
-  }
-}
 
-/* Ajustes para orientación horizontal en móviles */
-@media (max-width: 768px) and (orientation: landscape) {
-  .health-status-summary {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+  .hero .container {
+    flex-direction: column;
   }
   
-  .dashboard-cards {
-    padding-bottom: 70px;
+  .hero-content {
+    flex: 0 0 100%;
+    padding-right: 0;
+    margin-bottom: 2em;
+    text-align: center;
   }
-  
-  .bottom-nav {
-    height: 55px;
+
+  .hero h1 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+    margin-bottom: 0.5em;
   }
-  
-  .bottom-nav-item i {
+
+  .hero-text {
     font-size: 1rem;
-    margin-bottom: 1px;
+    margin-bottom: 1.5em;
   }
   
-  .bottom-nav-item span {
-    font-size: 0.65rem;
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+  }
+
+  .hero-buttons .btn {
+    width: 80%;
+    max-width: 240px;
+  }
+  
+  .hero-image {
+    flex: 0 0 100%;
+    margin: 0 auto;
+    max-width: 260px;
+  }
+
+  /* Features section */
+  .features {
+    padding: 2em 0;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5em;
+  }
+
+  .feature-card {
+    padding: 1.5em;
+    text-align: center;
+  }
+
+  /* About section */
+  .about {
+    padding: 2em 0;
+  }
+
+  .about-content {
+    flex-direction: column;
+  }
+  
+  .about-text {
+    flex: 0 0 100%;
+    padding-right: 0;
+    margin-bottom: 2em;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 1.7rem;
+    margin-bottom: 1em;
+  }
+  
+  .about-image {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Testimonials */
+  .testimonials {
+    padding: 2em 0;
+  }
+
+  .testimonial-card {
+    flex: 0 0 280px;
+    margin: 0 auto;
+  }
+
+  /* CTA section */
+  .cta {
+    padding: 2em 0;
+    text-align: center;
+  }
+
+  .cta h2 {
+    font-size: 1.7rem;
+  }
+
+  .cta p {
+    font-size: 1rem;
+    margin-bottom: 1.5em;
+  }
+
+  .cta .btn {
+    font-size: 1rem;
+    padding: 0.8em 1.5em;
+    width: 80%;
+    max-width: 240px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 2em 0 1em;
+    text-align: center;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 2em;
+  }
+
+  .footer-logo {
+    margin: 0 auto;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .footer-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+  }
+
+  .footer-contact p {
+    justify-content: center;
   }
 }
 
-/* Mejoras de interacción táctil para móviles */
-@media (max-width: 768px) {
-  /* Botones y elementos clicables más grandes */
+/* Ajustes específicos para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.2em;
+  }
+
+  .testimonial-card {
+    flex: 0 0 100%;
+    padding: 1.2em;
+  }
+
+  .cta h2 {
+    font-size: 1.5rem;
+  }
+
+  .hero-buttons .btn,
+  .cta .btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Mejor visualización de botones */
   .btn {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0.7em 1.2em;
+    font-size: 0.9rem;
   }
-  
-  .sidebar-nav-item {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
+
+  /* Ajustar tarjetas para mejor visualización */
+  .feature-card,
+  .about-text p,
+  .testimonial-content,
+  .cta p {
+    font-size: 0.9rem;
   }
-  
-  .bottom-nav-item {
-    min-height: 50px;
+
+  /* Padding reducido para mejor uso del espacio */
+  .hero, 
+  .features,
+  .about,
+  .testimonials,
+  .cta {
+    padding: 1.5em 0;
   }
-  
-  .quick-action {
-    min-height: 70px;
-  }
-  
-  /* Espaciado para elementos interactivos */
-  input[type="text"],
-  input[type="password"],
-  input[type="email"],
-  input[type="number"],
-  input[type="date"],
-  input[type="time"],
-  select,
-  textarea {
-    font-size: 16px; /* Evita el zoom automático en iPhone */
-    padding: 10px 12px;
-    min-height: 44px;
-  }
-  
-  /* Agregar feedback visual al tocar elementos */
-  .btn:active,
-  .sidebar-nav-item:active,
-  .bottom-nav-item:active,
-  .quick-action:active,
-  .week-day:active,
-  .reminder:active {
-    transform: scale(0.97);
-    opacity: 0.9;
-  }
-  
-  /* Mejorar la visualización de elementos activos */
-  .bottom-nav-item.active {
-    position: relative;
-  }
-  
-  .bottom-nav-item.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40%;
-    height: 3px;
-    background-color: var(--primary);
-    border-radius: 3px 3px 0 0;
-  }
-  
-  /* Mejorar visualización del menú móvil */
-  .menu-toggle {
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
-  }
+}
+
+/* Prevenir desplazamiento cuando el menú móvil está abierto */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Estilos para página de síntomas */
+.symptom-card {
+  padding: 1.5em;
+  border-left: 4px solid var(--primary);
+  margin-bottom: 1.2em;
+  border-radius: var(--border-radius);
+  background-color: var(--white);
+  box-shadow: var(--card-shadow);
+}
+
+.symptom-high {
+  border-left-color: var(--warning);
+}
+
+.symptom-medium {
+  border-left-color: var(--accent);
+}
+
+.symptom-low {
+  border-left-color: var(--secondary);
+}
+
+/* Mejoras para perfil de usuario */
+.profile-header {
+  background-color: var(--primary-light);
+  padding: 2em 0;
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 1em;
+  border: 4px solid var(--white);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-weight: 700;
+  margin-bottom: 0.2em;
+  font-size: var(--font-size-large);
+}
+
+.profile-info {
+  color: var(--dark-grey);
+  font-size: var(--font-size-medium);
+}
+
+/* Mejoras para sección de medicamentos */
+.med-time-indicator {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.med-time-morning {
+  background-color: #fff4db;
+  color: #ffa000;
+}
+
+.med-time-noon {
+  background-color: #ffedea;
+  color: #ff6b6b;
+}
+
+.med-time-evening {
+  background-color: #e0efff;
+  color: #3a7bd5;
+}
+
+.med-time-night {
+  background-color: #e8e6ff;
+  color: #6b66ff;
+}
+
+.med-time-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.med-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.med-taken {
+  background-color: var(--secondary);
+}
+
+.med-missed {
+  background-color: var(--warning);
+}
+
+.med-pending {
+  background-color: var(--accent);
+}
+
+/* Estilos para iconos de funciones principales */
+.feature-icon-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5em;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.feature-icon-container i {
+  font-size: 32px;
+}
+
+.feature-icon-med {
+  background: linear-gradient(145deg, #e6edff, #d4e0ff);
+}
+
+.feature-icon-med i {
+  color: var(--primary);
+}
+
+.feature-icon-appointment {
+  background: linear-gradient(145deg, #e3f5ed, #d0eee0);
+}
+
+.feature-icon-appointment i {
+  color: var(--secondary);
+}
+
+.feature-icon-symptom {
+  background: linear-gradient(145deg, #fff6e6, #ffedd3);
+}
+
+.feature-icon-symptom i {
+  color: var(--accent);
+}
+
+.feature-icon-profile {
+  background: linear-gradient(145deg, #e8e6ff, #d4d2fa);
+}
+
+.feature-icon-profile i {
+  color: #6b66ff;
 } 

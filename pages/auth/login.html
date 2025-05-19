@@ -7,6 +7,125 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="images/app-icon.png" type="image/png">
+    <!-- Cargar app.js con manejo de errores -->
+    <script>
+        // Verificar si estamos ejecutando desde sistema de archivos o servidor
+        const isLocalFile = window.location.protocol === 'file:';
+
+        // Función para corregir rutas de archivos cuando se ejecuta localmente
+        function getCorrectPath(path) {
+            return path;
+        }
+        
+        // Función para cargar un script dinámicamente con manejo de errores
+        function loadScript(src, callback) {
+            var script = document.createElement('script');
+            // Asegurar que el script se carga correctamente independientemente de cómo se acceda
+            script.src = src;
+            script.onload = function() { callback(true); };
+            script.onerror = function() { 
+                console.error('Error al cargar script:', src);
+                // Intentar con ruta alternativa
+                if (src === 'js/app.js') {
+                    var script2 = document.createElement('script');
+                    script2.src = './js/app.js'; // Intentar con ruta relativa alternativa
+                    script2.onload = function() { callback(true); };
+                    script2.onerror = function() { callback(false); };
+                    document.head.appendChild(script2);
+                } else {
+                    callback(false);
+                }
+            };
+            document.head.appendChild(script);
+        }
+        
+        // Cargar app.js
+        window.appLoaded = false;
+        loadScript('js/app.js', function(success) {
+            window.appLoaded = success;
+            console.log('App.js cargado:', success);
+            if (!success) {
+                console.error('No se pudo cargar app.js, usando implementación alternativa');
+                // Implementación fallback mínima de Meditrack
+                window.Meditrack = (function() {
+                    let hasLocalStorage = false;
+                    try {
+                        hasLocalStorage = typeof Storage !== 'undefined';
+                        if (hasLocalStorage) {
+                            localStorage.setItem('test_storage', 'test');
+                            localStorage.removeItem('test_storage');
+                        }
+                    } catch (e) {
+                        console.error('Error al acceder a localStorage:', e);
+                        hasLocalStorage = false;
+                    }
+                    
+                    return {
+                        setCurrentUser: function(user) {
+                            if (!hasLocalStorage) return false;
+                            try {
+                                localStorage.setItem('currentUser', JSON.stringify(user));
+                                return true;
+                            } catch (e) {
+                                console.error('Error al guardar el usuario:', e);
+                                return false;
+                            }
+                        },
+                        getCurrentUser: function() {
+                            if (!hasLocalStorage) return null;
+                            try {
+                                const userData = localStorage.getItem('currentUser');
+                                return userData ? JSON.parse(userData) : null;
+                            } catch (e) {
+                                console.error('Error al leer el usuario:', e);
+                                return null;
+                            }
+                        },
+                        logout: function() {
+                            if (!hasLocalStorage) return;
+                            try {
+                                localStorage.removeItem('currentUser');
+                                window.location.href = 'index.html';
+                            } catch (e) {
+                                console.error('Error al cerrar sesión:', e);
+                                window.location.href = 'index.html';
+                            }
+                        },
+                        login: function(email, password) {
+                            // Simulación simple de login para el fallback
+                            if (!hasLocalStorage) {
+                                return { success: false, error: 'Almacenamiento local no disponible' };
+                            }
+                            
+                            if (!email || !password) {
+                                return { success: false, error: 'Por favor, introduce email y contraseña' };
+                            }
+                            
+                            try {
+                                // En un entorno real, aquí se validaría con una API
+                                const user = {
+                                    id: Date.now().toString(),
+                                    name: username,
+                                    email: email,
+                                    userType: 'patient',
+                                    notificationSettings: {
+                                        enabled: false,
+                                        permissionAsked: false
+                                    },
+                                    points: 0
+                                };
+                                
+                                localStorage.setItem('currentUser', JSON.stringify(user));
+                                return { success: true, user: user };
+                            } catch (e) {
+                                return { success: false, error: 'Error de almacenamiento: ' + e.message };
+                            }
+                        }
+                    };
+                })();
+            }
+        });
+    </script>
     <style>
         /* Estilos específicos para la página de login */
         body {
@@ -98,7 +217,11 @@
                 <p>Accede a tu cuenta para gestionar tu salud</p>
             </div>
             
-            <form id="loginForm" class="login-form">
+            <div class="alert alert-success" style="margin-bottom: 20px;">
+                <strong>Credenciales de demostración:</strong> Usa cualquier nombre de usuario y contraseña.
+            </div>
+            
+            <form id="loginForm" class="login-form" method="POST" onsubmit="return false;">
                 <div class="form-group">
                     <label for="username">Nombre de usuario</label>
                     <input type="text" id="username" name="username" required>
@@ -140,12 +263,108 @@
         </div>
     </div>
     
-    <script src="js/app.js"></script>
     <script>
+        // Asegurarnos de que las variables están definidas antes de usarlas
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+        
+        // Función para mostrar mensajes de error
+        function showError(message) {
+            loginMessage.textContent = message;
+            loginMessage.className = 'alert alert-error';
+            loginMessage.style.display = 'block';
+        }
+        
+        // Función para mostrar mensajes de éxito
+        function showSuccess(message) {
+            loginMessage.textContent = message;
+            loginMessage.className = 'alert alert-success';
+            loginMessage.style.display = 'block';
+        }
+        
+        // Función para intentar iniciar sesión con un manejador de errores robusto
+        function attemptLogin(username, password, userType) {
+            if (!username || !password) {
+                showError('Por favor, completa todos los campos.');
+                return false;
+            }
+
+            try {
+                // Si no existe Meditrack, intentamos usar nuestra implementación fallback
+                if (typeof window.Meditrack === 'undefined') {
+                    console.warn('Usando implementación fallback de Meditrack');
+                    
+                    // Implementación mínima para pruebas
+                    window.Meditrack = {
+                        login: function(email, password) {
+                            const user = {
+                                id: Date.now().toString(),
+                                name: username,
+                                email: email,
+                                userType: 'patient',
+                                points: 0
+                            };
+                            
+                            try {
+                                localStorage.setItem('currentUser', JSON.stringify(user));
+                                return { success: true, user: user };
+                            } catch (e) {
+                                return { 
+                                    success: false, 
+                                    error: 'Error al guardar datos: ' + e.message 
+                                };
+                            }
+                        },
+                        
+                        setCurrentUser: function(user) {
+                            try {
+                                localStorage.setItem('currentUser', JSON.stringify(user));
+                                return true;
+                            } catch (e) {
+                                return false;
+                            }
+                        }
+                    };
+                }
+                
+                // Intentar login
+                const loginResult = window.Meditrack.login(username, password);
+                console.log('Resultado del login:', loginResult);
+                
+                if (loginResult && loginResult.success) {
+                    // Actualizar el tipo de usuario
+                    const user = loginResult.user;
+                    user.userType = userType;
+                    window.Meditrack.setCurrentUser(user);
+                    
+                    showSuccess('Inicio de sesión exitoso. Redirigiendo...');
+                    console.log('Redirigiendo al dashboard...');
+                    
+                    setTimeout(function() {
+                        window.location.href = 'patient_dashboard.html';
+                    }, 500);
+                    
+                    return true;
+                } else {
+                    const errorMsg = loginResult && loginResult.error ? 
+                        loginResult.error : 
+                        'Error al iniciar sesión. Inténtalo nuevamente.';
+                    showError(errorMsg);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error durante el inicio de sesión:', error);
+                showError('Ocurrió un error inesperado. Por favor, inténtalo de nuevo.');
+                return false;
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const loginMessage = document.getElementById('loginMessage');
+            // Debug information
+            console.log('MediTrack: Init login page');
+            console.log('MediTrack API available:', typeof window.Meditrack !== 'undefined');
             
+            // Configurar el formulario de login
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -153,40 +372,13 @@
                 const password = document.getElementById('password').value;
                 const userType = document.querySelector('input[name="userType"]:checked').value;
                 
-                // Simulación de autenticación
-                if (username && password) {
-                    // Crear un usuario simulado
-                    const user = {
-                        id: Date.now().toString(),
-                        username: username,
-                        userType: userType,
-                        name: username, // Para simplificar, usamos el nombre de usuario como nombre
-                        points: 0
-                    };
-                    
-                    // Guardar en localStorage
-                    Meditrack.setCurrentUser(user);
-                    
-                    // Redirigir según el tipo de usuario
-                    switch (userType) {
-                        case 'patient':
-                            window.location.href = 'patient_dashboard.html';
-                            break;
-                        case 'family':
-                            window.location.href = 'family_dashboard.html';
-                            break;
-                        case 'doctor':
-                            window.location.href = 'doctor_dashboard.html';
-                            break;
-                        default:
-                            window.location.href = 'patient_dashboard.html';
-                    }
-                } else {
-                    loginMessage.textContent = 'Por favor, completa todos los campos.';
-                    loginMessage.className = 'alert alert-error';
-                    loginMessage.style.display = 'block';
-                }
+                console.log('Intentando iniciar sesión:', username, userType);
+                attemptLogin(username, password, userType);
             });
+            
+            // Credenciales de demostración
+            document.getElementById('username').value = 'demo';
+            document.getElementById('password').value = 'password';
         });
     </script>
 </body>

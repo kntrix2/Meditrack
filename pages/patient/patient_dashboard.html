@@ -8,13 +8,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="../../images/app-icon.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Verificar si estamos ejecutando desde sistema de archivos o servidor
+        const isLocalFile = window.location.protocol === 'file:';
+
+        // Función para corregir rutas de archivos cuando se ejecuta localmente
+        function getCorrectPath(path) {
+            return path;
+        }
+        
+        // Función para cargar un script dinámicamente con manejo de errores
+        function loadScript(src, callback) {
+            var script = document.createElement('script');
+            script.src = src;
+            script.onload = function() { callback(true); };
+            script.onerror = function() { 
+                console.error('Error al cargar script:', src);
+                // Intentar con ruta alternativa
+                if (src === 'js/app.js') {
+                    var script2 = document.createElement('script');
+                    script2.src = './js/app.js'; // Intentar con ruta relativa alternativa
+                    script2.onload = function() { callback(true); };
+                    script2.onerror = function() { callback(false); };
+                    document.head.appendChild(script2);
+                } else {
+                    callback(false);
+                }
+            };
+            document.head.appendChild(script);
+        }
+        
+        // Cargar app.js
+        window.appLoaded = false;
+        loadScript('js/app.js', function(success) {
+            window.appLoaded = success;
+            console.log('App.js cargado:', success);
+            if (!success) {
+                console.warn('No se pudo cargar app.js, la aplicación puede no funcionar correctamente');
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="app-container">
         <!-- Barra lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">MediTrack</div>
+                <div class="sidebar-logo">
+                    <img src="images/app-icon.png" alt="MediTrack" width="30" height="30">
+                    MediTrack
+                </div>
             </div>
             <nav class="sidebar-nav">
                 <a href="patient_dashboard.html" class="sidebar-nav-item active">
@@ -78,7 +121,7 @@
                     </div>
                     <div class="health-status-item">
                         <div class="status-icon">
-                            <i class="fas fa-check-circle"></i>
+                            <i class="fas fa-prescription-bottle-medical"></i>
                         </div>
                         <div class="status-info">
                             <h3>Medicamentos</h3>
@@ -87,7 +130,7 @@
                     </div>
                     <div class="health-status-item">
                         <div class="status-icon">
-                            <i class="fas fa-calendar"></i>
+                            <i class="fas fa-stethoscope"></i>
                         </div>
                         <div class="status-info">
                             <h3>Próxima Cita</h3>
@@ -95,12 +138,27 @@
                         </div>
                     </div>
                     <div class="health-status-item">
-                        <div class="status-icon">
-                            <i class="fas fa-trophy"></i>
+                        <div class="status-icon feature-icon-profile">
+                            <i class="fas fa-award"></i>
                         </div>
                         <div class="status-info">
                             <h3>Nivel</h3>
                             <div class="status-value" id="levelSummary">Nivel 1</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendario semanal -->
+                <div class="dashboard-card">
+                    <div class="dashboard-card-title">
+                        <i class="fas fa-calendar-days"></i> Tu Semana
+                    </div>
+                    <div class="dashboard-card-content">
+                        <div class="week-days" id="weekDays">
+                            <!-- Se generará dinámicamente -->
+                        </div>
+                        <div class="health-tip mt-3">
+                            <p><i class="fas fa-lightbulb"></i> <span id="healthTip">Mantener una buena hidratación es fundamental para facilitar la absorción de medicamentos.</span></p>
                         </div>
                     </div>
                 </div>
@@ -113,6 +171,9 @@
                         </div>
                         <div id="medicationsReminders" class="dashboard-card-content">
                             <div class="empty-state">
+                                <div class="feature-icon-container feature-icon-med">
+                                    <i class="fas fa-prescription-bottle-medical"></i>
+                                </div>
                                 <p>No tienes medicamentos registrados.</p>
                                 <a href="add_medication.html" class="btn btn-primary mt-2">Añadir Medicamento</a>
                             </div>
@@ -126,6 +187,9 @@
                         </div>
                         <div id="appointmentsReminders" class="dashboard-card-content">
                             <div class="empty-state">
+                                <div class="feature-icon-container feature-icon-appointment">
+                                    <i class="fas fa-stethoscope"></i>
+                                </div>
                                 <p>No tienes citas programadas.</p>
                                 <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
                             </div>
@@ -139,6 +203,9 @@
                         </div>
                         <div id="recentSymptoms" class="dashboard-card-content">
                             <div class="empty-state">
+                                <div class="feature-icon-container feature-icon-symptom">
+                                    <i class="fas fa-clipboard-list"></i>
+                                </div>
                                 <p>No has registrado ningún síntoma recientemente.</p>
                                 <a href="log_symptom.html" class="btn btn-primary mt-2">Registrar Síntoma</a>
                             </div>
@@ -193,45 +260,21 @@
                         <div class="dashboard-card-content">
                             <div class="quick-actions">
                                 <a href="add_medication.html" class="quick-action">
-                                    <i class="fas fa-pills"></i>
+                                    <i class="fas fa-prescription-bottle-medical"></i>
                                     <span>Añadir Medicamento</span>
                                 </a>
                                 <a href="add_appointment.html" class="quick-action">
                                     <i class="fas fa-calendar-plus"></i>
-                                    <span>Programar Cita</span>
+                                    <span>Añadir Cita</span>
                                 </a>
                                 <a href="log_symptom.html" class="quick-action">
                                     <i class="fas fa-clipboard-list"></i>
                                     <span>Registrar Síntoma</span>
                                 </a>
-                                <a href="report.html" class="quick-action">
-                                    <i class="fas fa-file-pdf"></i>
-                                    <span>Generar Informe</span>
+                                <a href="patient_profile.html" class="quick-action">
+                                    <i class="fas fa-user-gear"></i>
+                                    <span>Editar Perfil</span>
                                 </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Consejo de salud del día -->
-                    <div class="dashboard-card">
-                        <div class="dashboard-card-title">
-                            <i class="fas fa-lightbulb"></i> Consejo del Día
-                        </div>
-                        <div class="dashboard-card-content">
-                            <div id="healthTip" class="health-tip">
-                                <p>Recuerda beber al menos 8 vasos de agua al día para mantenerte bien hidratado y mejorar la función de tus órganos.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Calendario de medicación semanal -->
-                    <div class="dashboard-card">
-                        <div class="dashboard-card-title">
-                            <i class="fas fa-calendar-week"></i> Mi Semana
-                        </div>
-                        <div class="dashboard-card-content">
-                            <div class="week-calendar" id="weekCalendar">
-                                <!-- El calendario semanal se cargará dinámicamente aquí -->
                             </div>
                         </div>
                     </div>
@@ -266,6 +309,7 @@
         </nav>
     </div>
 
+<<<<<<< HEAD:pages/patient/patient_dashboard.html
     <script src="../../js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -273,93 +317,242 @@
             const currentUser = Meditrack.getCurrentUser();
             if (!currentUser || currentUser.userType !== 'patient') {
                 window.location.href = '../auth/login.html';
+=======
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard cargado, verificando autenticación...');
+            
+            // Implementación fallback si Meditrack no está disponible
+            if (typeof window.Meditrack === 'undefined') {
+                console.warn('Meditrack no está disponible, usando implementación fallback');
+                
+                window.Meditrack = {
+                    getCurrentUser: function() {
+                        try {
+                            const userData = localStorage.getItem('currentUser');
+                            return userData ? JSON.parse(userData) : null;
+                        } catch (e) {
+                            console.error('Error al leer el usuario:', e);
+                            return null;
+                        }
+                    },
+                    
+                    logout: function() {
+                        try {
+                            localStorage.removeItem('currentUser');
+                            window.location.href = 'index.html';
+                        } catch (e) {
+                            console.error('Error al cerrar sesión:', e);
+                            window.location.href = 'index.html';
+                        }
+                    },
+                    
+                    medications: {
+                        getAll: function() {
+                            try {
+                                const medsData = localStorage.getItem('medications');
+                                return medsData ? JSON.parse(medsData) : [];
+                            } catch (e) {
+                                console.error('Error al obtener medicamentos:', e);
+                                return [];
+                            }
+                        }
+                    },
+                    
+                    utils: {
+                        loadAdherenceChart: function(canvasId) {
+                            console.log('Cargando gráfico de adherencia (fallback)...');
+                            if (window.Chart && document.getElementById(canvasId)) {
+                                const ctx = document.getElementById(canvasId).getContext('2d');
+                                const data = [85, 80, 90, 85, 90, 75, 85];
+                                
+                                document.getElementById('adherenceSummary').textContent = '85%';
+                                document.getElementById('adherencePercentage').textContent = '85%';
+                                
+                                // Datos de ejemplo
+                                const chartData = {
+                                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                                    datasets: [{
+                                        label: 'Adherencia',
+                                        data: data,
+                                        backgroundColor: 'rgba(58, 123, 213, 0.2)',
+                                        borderColor: '#3a7bd5',
+                                        borderWidth: 2,
+                                        borderRadius: 5,
+                                        tension: 0.3
+                                    }]
+                                };
+                                
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: chartData,
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 100,
+                                                ticks: {
+                                                    callback: function(value) {
+                                                        return value + '%';
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                };
+            }
+            
+            // Verificar que el usuario está autenticado
+            const currentUser = window.Meditrack.getCurrentUser();
+            console.log('Usuario actual:', currentUser);
+            
+            if (!currentUser) {
+                console.error('Usuario no autenticado, redirigiendo a login');
+                window.location.href = 'login.html';
+>>>>>>> cambios-temporales:patient_dashboard.html
                 return;
             }
             
-            // Mostrar nombre del paciente
-            document.getElementById('patientName').textContent = currentUser.name;
-            document.getElementById('patientNameHeader').textContent = currentUser.name;
+            // Mostrar información del usuario
+            const patientNameSpan = document.getElementById('patientName');
+            const patientNameHeader = document.getElementById('patientNameHeader');
             
-            // Mostrar puntos del usuario
-            document.getElementById('userPoints').textContent = currentUser.points || 0;
+            if (patientNameSpan) patientNameSpan.textContent = currentUser.name || 'Usuario';
+            if (patientNameHeader) patientNameHeader.textContent = currentUser.name || 'Usuario';
             
-            // Toggle del menú móvil
-            document.querySelector('.menu-toggle').addEventListener('click', function() {
-                document.querySelector('.sidebar').classList.toggle('active');
-            });
-            
-            // Calcular y mostrar progreso del nivel
-            const userPoints = currentUser.points || 0;
-            let nextLevelPoints = 100; // Puntos para el siguiente nivel
-            let currentLevelPoints = 0; // Puntos del nivel actual
-            
-            const level = Meditrack.gamification.getLevel(userPoints);
-            document.querySelector('.level-icon').textContent = level.level;
-            document.querySelector('.level-name').textContent = level.name;
-            document.getElementById('levelSummary').textContent = `Nivel ${level.level}`;
-            
-            // Determinar puntos necesarios para el siguiente nivel
-            if (level.level === 1) {
-                nextLevelPoints = 100;
-                currentLevelPoints = 0;
-            } else if (level.level === 2) {
-                nextLevelPoints = 200;
-                currentLevelPoints = 100;
-            } else if (level.level === 3) {
-                nextLevelPoints = 300;
-                currentLevelPoints = 200;
-            } else if (level.level === 4) {
-                nextLevelPoints = 500;
-                currentLevelPoints = 300;
-            } else {
-                // Nivel máximo
-                nextLevelPoints = 500;
-                currentLevelPoints = 500;
+            // Configurar botón de cierre de sesión
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Cerrando sesión...');
+                    window.Meditrack.logout();
+                });
             }
             
-            // Calcular porcentaje de progreso para el siguiente nivel
-            let progressPercentage = 100;
-            if (level.level < 5) { // Si no está en el nivel máximo
-                progressPercentage = ((userPoints - currentLevelPoints) / (nextLevelPoints - currentLevelPoints)) * 100;
+            // Configurar la barra lateral en dispositivos móviles
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    document.body.classList.toggle('sidebar-open');
+                });
             }
             
-            document.getElementById('levelProgress').style.width = `${progressPercentage}%`;
-            
-            // Cargar medicamentos pendientes
-            loadPendingMedications();
-            
-            // Cargar próximas citas
-            loadUpcomingAppointments();
-            
-            // Cargar síntomas recientes
-            loadRecentSymptoms();
-            
-            // Calcular y mostrar adherencia
-            const adherencePercentage = Meditrack.utils.calculateAdherence(7);
-            document.getElementById('adherencePercentage').textContent = `${adherencePercentage}%`;
-            document.getElementById('adherenceSummary').textContent = `${adherencePercentage}%`;
-            
-            // Cargar estadísticas de medicamentos
-            loadMedicationStats();
-            
-            // Mostrar próxima cita
-            displayNextAppointment();
-            
-            // Mostrar insignias
-            displayBadges();
-            
-            // Inicializar gráfico de adherencia
-            initAdherenceChart();
+            // Cargar datos de medicamentos
+            loadMedicationData();
             
             // Generar calendario semanal
             generateWeekCalendar();
             
-            // Configurar botón de cerrar sesión
-            document.getElementById('logoutBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                Meditrack.logout();
+            // Cargar gráfico de adherencia
+            if (window.Chart && document.getElementById('adherenceChart')) {
+                window.Meditrack.utils.loadAdherenceChart('adherenceChart');
+            }
+            
+            // Mostrar tip aleatorio de salud
+            showRandomHealthTip();
+        });
+        
+        // Función para generar el calendario semanal
+        function generateWeekCalendar() {
+            const weekDaysContainer = document.getElementById('weekDays');
+            if (!weekDaysContainer) return;
+            
+            const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+            const today = new Date();
+            const currentDay = today.getDay(); // 0-6, 0 = Domingo
+            
+            let html = '';
+            
+            // Ajustar para que la semana comience el lunes
+            const adjustedCurrentDay = currentDay === 0 ? 6 : currentDay - 1;
+            
+            for (let i = 0; i < 7; i++) {
+                const isToday = i === adjustedCurrentDay;
+                const dayClass = isToday ? 'day today' : 'day';
+                
+                html += `
+                    <div class="${dayClass}">
+                        <div class="day-name">${days[i]}</div>
+                        <div class="day-number">${getDayNumber(i, adjustedCurrentDay)}</div>
+                        <div class="day-status">${isToday ? '<i class="fas fa-circle"></i>' : ''}</div>
+                    </div>
+                `;
+            }
+            
+            weekDaysContainer.innerHTML = html;
+        }
+        
+        // Función para obtener el número de día para el calendario
+        function getDayNumber(dayIndex, currentDayIndex) {
+            const today = new Date();
+            const diff = dayIndex - currentDayIndex;
+            const day = new Date(today);
+            day.setDate(today.getDate() + diff);
+            return day.getDate();
+        }
+        
+        // Cargar datos de medicamentos
+        function loadMedicationData() {
+            if (typeof window.Meditrack === 'undefined' || !window.Meditrack.medications) {
+                console.error('API de medicamentos no disponible');
+                return;
+            }
+            
+            const medications = window.Meditrack.medications.getAll();
+            const medicationsContainer = document.getElementById('medicationsReminders');
+            
+            if (medications.length === 0) {
+                console.log('No hay medicamentos registrados');
+                return;
+            }
+            
+            // Actualizar contador de medicamentos
+            const medicationCountElement = document.getElementById('medicationCount');
+            if (medicationCountElement) {
+                medicationCountElement.textContent = medications.length;
+            }
+            
+            // Mostrar medicamentos activos
+            let html = '';
+            const activeMeds = medications.filter(med => med.active);
+            
+            if (activeMeds.length === 0) {
+                return;
+            }
+            
+            activeMeds.forEach(med => {
+                html += `
+                <div class="reminder-item">
+                    <div class="reminder-icon medication-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <div class="reminder-details">
+                        <h4>${med.name}</h4>
+                        <p>${med.dose || ''} - ${med.form || ''}</p>
+                    </div>
+                    <div class="reminder-time">
+                        ${getNextDoseTime(med)}
+                    </div>
+                </div>
+                `;
             });
             
+<<<<<<< HEAD:pages/patient/patient_dashboard.html
             // Funciones para cargar datos
             function loadPendingMedications() {
                 const pendingMedications = Meditrack.medications.getPendingMedications();
@@ -429,288 +622,70 @@
                     `;
                 }
             }
+=======
+            medicationsContainer.innerHTML = html;
+        }
+        
+        // Obtener el tiempo para la próxima dosis
+        function getNextDoseTime(medication) {
+            if (!medication.schedule) return 'Sin horario';
+>>>>>>> cambios-temporales:patient_dashboard.html
             
-            function loadUpcomingAppointments() {
-                const upcomingAppointments = Meditrack.appointments.getUpcoming();
-                const appointmentsContainer = document.getElementById('appointmentsReminders');
+            if (medication.schedule.frequency === 'daily') {
+                const now = new Date();
+                const currentHour = now.getHours();
+                const currentMinutes = now.getMinutes();
+                const currentTime = currentHour * 60 + currentMinutes;
                 
-                if (upcomingAppointments.length > 0) {
-                    appointmentsContainer.innerHTML = '';
+                // Buscar la próxima hora de toma
+                if (medication.schedule.times && medication.schedule.times.length > 0) {
+                    let nextDoseTime = null;
+                    let minTimeDiff = Infinity;
                     
-                    // Mostrar solo las próximas 3 citas
-                    const appointmentsToShow = upcomingAppointments.slice(0, 3);
-                    
-                    appointmentsToShow.forEach(apt => {
-                        const appointmentDate = new Date(apt.date + 'T' + apt.time);
-                        const today = new Date();
-                        const tomorrow = new Date(today);
-                        tomorrow.setDate(today.getDate() + 1);
+                    for (const time of medication.schedule.times) {
+                        const [hours, minutes] = time.split(':').map(Number);
+                        const doseTime = hours * 60 + minutes;
                         
-                        let isUrgent = false;
-                        // Marcar como urgente si la cita es hoy o mañana
-                        if (appointmentDate.toDateString() === today.toDateString() || 
-                            appointmentDate.toDateString() === tomorrow.toDateString()) {
-                            isUrgent = true;
-                        }
+                        // Calcular diferencia de tiempo
+                        let timeDiff = doseTime - currentTime;
+                        if (timeDiff < 0) timeDiff += 24 * 60; // Si ya pasó, sumar un día completo
                         
-                        const reminderElement = document.createElement('div');
-                        reminderElement.className = isUrgent ? 'reminder reminder-urgent' : 'reminder';
-                        
-                        const formattedDate = Meditrack.utils.formatDate(apt.date);
-                        
-                        reminderElement.innerHTML = `
-                            <div class="reminder-icon">
-                                <i class="fas fa-calendar-check"></i>
-                            </div>
-                            <div class="reminder-content">
-                                <h4>Dr. ${apt.doctorName} - ${apt.specialty}</h4>
-                                <p>${formattedDate} a las ${apt.time}</p>
-                                <p>${apt.location}</p>
-                            </div>
-                        `;
-                        
-                        appointmentsContainer.appendChild(reminderElement);
-                    });
-                    
-                    if (upcomingAppointments.length > 3) {
-                        const moreAppointmentsLink = document.createElement('a');
-                        moreAppointmentsLink.href = 'appointments.html';
-                        moreAppointmentsLink.className = 'btn btn-outline mt-2';
-                        moreAppointmentsLink.textContent = 'Ver todas las citas';
-                        appointmentsContainer.appendChild(moreAppointmentsLink);
-                    }
-                    
-                } else {
-                    appointmentsContainer.innerHTML = `
-                        <div class="empty-state">
-                            <p>No tienes citas programadas.</p>
-                            <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
-                        </div>
-                    `;
-                }
-            }
-            
-            function loadRecentSymptoms() {
-                const recentSymptoms = Meditrack.symptoms.getRecent(3); // Obtener solo 3 síntomas recientes
-                const symptomsContainer = document.getElementById('recentSymptoms');
-                
-                if (recentSymptoms.length > 0) {
-                    symptomsContainer.innerHTML = '';
-                    
-                    recentSymptoms.forEach(symptom => {
-                        const symptomElement = document.createElement('div');
-                        symptomElement.className = 'symptom-item';
-                        
-                        // Determinar clase de intensidad
-                        let intensityClass = '';
-                        let intensityText = '';
-                        
-                        if (symptom.intensity === 1) {
-                            intensityClass = 'intensity-low';
-                            intensityText = 'Leve';
-                        } else if (symptom.intensity === 2) {
-                            intensityClass = 'intensity-medium';
-                            intensityText = 'Moderada';
-                        } else if (symptom.intensity === 3) {
-                            intensityClass = 'intensity-high';
-                            intensityText = 'Severa';
-                        }
-                        
-                        // Formatear fecha
-                        const symptomDate = new Date(symptom.date);
-                        const formattedDate = symptomDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-                        
-                        symptomElement.innerHTML = `
-                            <div class="symptom-info">
-                                <span class="symptom-name">${symptom.name}</span>
-                                <span class="symptom-date">${formattedDate}</span>
-                            </div>
-                            <span class="symptom-intensity ${intensityClass}">${intensityText}</span>
-                        `;
-                        
-                        symptomsContainer.appendChild(symptomElement);
-                    });
-                    
-                    const viewAllLink = document.createElement('a');
-                    viewAllLink.href = 'symptom_history.html';
-                    viewAllLink.className = 'btn btn-outline mt-2';
-                    viewAllLink.textContent = 'Ver historial completo';
-                    symptomsContainer.appendChild(viewAllLink);
-                    
-                } else {
-                    symptomsContainer.innerHTML = `
-                        <div class="empty-state">
-                            <p>No has registrado ningún síntoma recientemente.</p>
-                            <a href="log_symptom.html" class="btn btn-primary mt-2">Registrar Síntoma</a>
-                        </div>
-                    `;
-                }
-            }
-            
-            function loadMedicationStats() {
-                const medications = Meditrack.medications.getAll();
-                const activeCount = medications.filter(med => med.active).length;
-                
-                document.getElementById('medicationCount').textContent = activeCount;
-                
-                // Actualizar contador de notificaciones
-                const pendingMedications = Meditrack.medications.getPendingMedications();
-                document.getElementById('notificationCount').textContent = pendingMedications.length;
-            }
-            
-            function displayNextAppointment() {
-                const upcomingAppointments = Meditrack.appointments.getUpcoming();
-                
-                if (upcomingAppointments.length > 0) {
-                    const nextAppointment = upcomingAppointments[0]; // El primer elemento es la próxima cita
-                    const appointmentDate = new Date(nextAppointment.date);
-                    const formattedDate = appointmentDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-                    
-                    document.getElementById('nextAppointment').textContent = formattedDate;
-                } else {
-                    document.getElementById('nextAppointment').textContent = 'No hay citas';
-                }
-            }
-            
-            function displayBadges() {
-                const badges = Meditrack.gamification.getBadges(currentUser);
-                const badgesContainer = document.getElementById('badgesPreview');
-                
-                if (badges.length > 0) {
-                    badgesContainer.innerHTML = '';
-                    
-                    // Mostrar solo hasta 3 insignias
-                    const badgesToShow = badges.slice(0, 3);
-                    
-                    badgesToShow.forEach(badge => {
-                        const badgeElement = document.createElement('div');
-                        badgeElement.className = 'badge-item-small';
-                        badgeElement.innerHTML = badge.icon;
-                        badgeElement.title = badge.name;
-                        
-                        badgesContainer.appendChild(badgeElement);
-                    });
-                    
-                    if (badges.length > 3) {
-                        const moreBadgesElement = document.createElement('div');
-                        moreBadgesElement.className = 'badge-item-small badge-more';
-                        moreBadgesElement.textContent = `+${badges.length - 3}`;
-                        badgesContainer.appendChild(moreBadgesElement);
-                    }
-                }
-            }
-            
-            function initAdherenceChart() {
-                const adherenceCanvas = document.getElementById('adherenceChart');
-                
-                // Obtener datos para los últimos 7 días
-                const labels = [];
-                const data = [];
-                
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    labels.push(date.toLocaleDateString('es-ES', { weekday: 'short' }));
-                    
-                    // Calcular adherencia para este día
-                    const dailyAdherence = Math.floor(Math.random() * 40) + 60; // Simulado para la demo
-                    data.push(dailyAdherence);
-                }
-                
-                window.adherenceChart = new Chart(adherenceCanvas, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Adherencia diaria (%)',
-                            data: data,
-                            borderColor: '#4285f4',
-                            backgroundColor: 'rgba(66, 133, 244, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                min: 0,
-                                max: 100,
-                                ticks: {
-                                    callback: function(value) {
-                                        return value + '%';
-                                    }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
+                        if (timeDiff < minTimeDiff) {
+                            minTimeDiff = timeDiff;
+                            nextDoseTime = time;
                         }
                     }
-                });
-            }
-            
-            function updateAdherenceChart() {
-                // Actualizar datos del gráfico de adherencia
-                // En una app real, esto obtendría los datos reales de adherencia
-                const newData = [];
-                for (let i = 0; i < 7; i++) {
-                    const dailyAdherence = Math.floor(Math.random() * 40) + 60;
-                    newData.push(dailyAdherence);
-                }
-                
-                if (window.adherenceChart) {
-                    window.adherenceChart.data.datasets[0].data = newData;
-                    window.adherenceChart.update();
-                }
-            }
-            
-            function generateWeekCalendar() {
-                const calendarContainer = document.getElementById('weekCalendar');
-                const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-                const today = new Date();
-                const currentDay = today.getDay(); // 0-6 (Domingo-Sábado)
-                
-                calendarContainer.innerHTML = '';
-                
-                const weekView = document.createElement('div');
-                weekView.className = 'week-days';
-                
-                // Generar 7 días, empezando por el domingo
-                for (let i = 0; i < 7; i++) {
-                    const dayDate = new Date(today);
-                    dayDate.setDate(today.getDate() - currentDay + i);
                     
-                    const dayElement = document.createElement('div');
-                    dayElement.className = 'week-day';
-                    if (i === currentDay) {
-                        dayElement.classList.add('today');
+                    if (nextDoseTime) {
+                        return nextDoseTime;
                     }
-                    
-                    const formattedDay = dayDate.getDate();
-                    
-                    // Verificar si hay medicamentos o citas para este día
-                    const hasMedication = Math.random() > 0.5; // Simulado
-                    const hasAppointment = Math.random() > 0.7; // Simulado
-                    
-                    dayElement.innerHTML = `
-                        <div class="day-name">${daysOfWeek[i]}</div>
-                        <div class="day-number">${formattedDay}</div>
-                        <div class="day-indicators">
-                            ${hasMedication ? '<span class="day-indicator medication"><i class="fas fa-pills"></i></span>' : ''}
-                            ${hasAppointment ? '<span class="day-indicator appointment"><i class="fas fa-calendar-check"></i></span>' : ''}
-                        </div>
-                    `;
-                    
-                    weekView.appendChild(dayElement);
                 }
                 
-                calendarContainer.appendChild(weekView);
+                return 'Hoy';
+            } else if (medication.schedule.frequency === 'as-needed') {
+                return 'Según necesidad';
             }
-        });
+            
+            return 'Sin horario';
+        }
+        
+        // Mostrar un tip de salud aleatorio
+        function showRandomHealthTip() {
+            const tips = [
+                'Mantener una buena hidratación es fundamental para facilitar la absorción de medicamentos.',
+                'Establecer rutinas diarias te ayudará a recordar tomar tus medicamentos a tiempo.',
+                'Asegúrate de leer las instrucciones de almacenamiento de tus medicamentos.',
+                'Infórmale a tu médico sobre todos los medicamentos que estás tomando, incluidos suplementos.',
+                'Descansar adecuadamente es tan importante como tomar tus medicamentos correctamente.',
+                'La actividad física regular puede mejorar la efectividad de muchos tratamientos médicos.'
+            ];
+            
+            const tipElement = document.getElementById('healthTip');
+            if (tipElement) {
+                const randomIndex = Math.floor(Math.random() * tips.length);
+                tipElement.textContent = tips[randomIndex];
+            }
+        }
     </script>
 </body>
 </html> 

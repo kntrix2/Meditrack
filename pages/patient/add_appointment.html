@@ -7,6 +7,80 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="images/app-icon.png" type="image/png">
+    <style>
+        /* Estilos específicos para mejorar la usabilidad para adultos mayores */
+        .step-container {
+            background: linear-gradient(145deg, #f0f4ff, #e1eaff);
+            border-radius: 15px;
+            padding: 2em;
+            margin-bottom: 2em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5em;
+            padding-bottom: 0.75em;
+            border-bottom: 2px solid rgba(58, 123, 213, 0.2);
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-right: 1em;
+            box-shadow: 0 3px 10px rgba(58, 123, 213, 0.2);
+        }
+        
+        .step-heading {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .form-row {
+            gap: 2em;
+        }
+        
+        .form-group {
+            margin-bottom: 2em;
+        }
+        
+        label {
+            font-size: 1.15rem;
+            margin-bottom: 0.75em;
+        }
+        
+        input, select, textarea {
+            font-size: 1.15rem;
+            padding: 0.9em;
+            border-radius: 8px;
+        }
+        
+        .form-help-text {
+            font-size: 1rem;
+            margin-top: 0.75em;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2em;
+        }
+        
+        .btn {
+            font-size: 1.15rem;
+            padding: 1em 2em;
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -58,70 +132,107 @@
             <!-- Área de contenido -->
             <div class="content-area">
                 <div class="page-header">
-                    <p>Completa el formulario para programar una nueva cita médica.</p>
+                    <h1>Programar una nueva cita médica</h1>
+                    <p>Complete cada paso para agendar su cita. Los campos marcados con * son obligatorios.</p>
                 </div>
                 
-                <div class="card">
-                    <form id="addAppointmentForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="doctorName">Nombre del Médico*</label>
-                                <input type="text" id="doctorName" name="doctorName" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="specialty">Especialidad*</label>
-                                <select id="specialty" name="specialty" required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="Medicina General">Medicina General</option>
-                                    <option value="Cardiología">Cardiología</option>
-                                    <option value="Dermatología">Dermatología</option>
-                                    <option value="Endocrinología">Endocrinología</option>
-                                    <option value="Gastroenterología">Gastroenterología</option>
-                                    <option value="Neurología">Neurología</option>
-                                    <option value="Oftalmología">Oftalmología</option>
-                                    <option value="Pediatría">Pediatría</option>
-                                    <option value="Psiquiatría">Psiquiatría</option>
-                                    <option value="Traumatología">Traumatología</option>
-                                    <option value="Urología">Urología</option>
-                                    <option value="Otra">Otra</option>
-                                </select>
-                            </div>
+                <form id="addAppointmentForm">
+                    <!-- PASO 1: Información del médico -->
+                    <div class="step-container" id="step1">
+                        <div class="step-title">
+                            <div class="step-number">1</div>
+                            <div class="step-heading">Información del médico</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="doctorName">Nombre del Médico*</label>
+                            <input type="text" id="doctorName" name="doctorName" 
+                                placeholder="Ej: Dr. González, Dra. Martínez..." required>
+                            <p class="form-help-text">Nombre completo de su médico tratante</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="specialty">Especialidad*</label>
+                            <select id="specialty" name="specialty" required>
+                                <option value="">Seleccionar</option>
+                                <option value="Medicina General">Medicina General</option>
+                                <option value="Cardiología">Cardiología</option>
+                                <option value="Dermatología">Dermatología</option>
+                                <option value="Endocrinología">Endocrinología</option>
+                                <option value="Gastroenterología">Gastroenterología</option>
+                                <option value="Neurología">Neurología</option>
+                                <option value="Oftalmología">Oftalmología</option>
+                                <option value="Pediatría">Pediatría</option>
+                                <option value="Psiquiatría">Psiquiatría</option>
+                                <option value="Traumatología">Traumatología</option>
+                                <option value="Urología">Urología</option>
+                                <option value="Otra">Otra</option>
+                            </select>
+                            <p class="form-help-text">Tipo de especialidad médica para esta cita</p>
                         </div>
                         
                         <div class="form-group" id="otherSpecialtyGroup" style="display: none;">
                             <label for="otherSpecialty">Especificar Otra Especialidad</label>
-                            <input type="text" id="otherSpecialty" name="otherSpecialty">
+                            <input type="text" id="otherSpecialty" name="otherSpecialty"
+                                placeholder="Escriba el nombre de la especialidad">
                         </div>
                         
-                        <div class="form-divider">
-                            <h3>Fecha y Hora</h3>
+                        <div class="navigation-buttons">
+                            <div></div>
+                            <button type="button" class="btn btn-primary next-btn" data-next="step2">
+                                Siguiente <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- PASO 2: Fecha y hora -->
+                    <div class="step-container" id="step2" style="display: none;">
+                        <div class="step-title">
+                            <div class="step-number">2</div>
+                            <div class="step-heading">¿Cuándo es su cita?</div>
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="appointmentDate">Fecha de la Cita*</label>
-                                <input type="date" id="appointmentDate" name="appointmentDate" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="appointmentTime">Hora de la Cita*</label>
-                                <input type="time" id="appointmentTime" name="appointmentTime" required>
-                            </div>
+                        <div class="form-group">
+                            <label for="appointmentDate">Fecha de la Cita*</label>
+                            <input type="date" id="appointmentDate" name="appointmentDate" required>
+                            <p class="form-help-text">Seleccione el día en que tiene programada la cita</p>
                         </div>
                         
-                        <div class="form-divider">
-                            <h3>Ubicación</h3>
+                        <div class="form-group">
+                            <label for="appointmentTime">Hora de la Cita*</label>
+                            <input type="time" id="appointmentTime" name="appointmentTime" required>
+                            <p class="form-help-text">Seleccione la hora exacta de su cita</p>
+                        </div>
+                        
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn btn-outline back-btn" data-back="step1">
+                                <i class="fas fa-arrow-left"></i> Anterior
+                            </button>
+                            <button type="button" class="btn btn-primary next-btn" data-next="step3">
+                                Siguiente <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- PASO 3: Ubicación y notas -->
+                    <div class="step-container" id="step3" style="display: none;">
+                        <div class="step-title">
+                            <div class="step-number">3</div>
+                            <div class="step-heading">¿Dónde es su cita?</div>
                         </div>
                         
                         <div class="form-group">
                             <label for="location">Ubicación / Dirección*</label>
-                            <input type="text" id="location" name="location" required>
+                            <input type="text" id="location" name="location" 
+                                placeholder="Ej: Hospital San Juan, Av. Principal 123..." required>
+                            <p class="form-help-text">Dirección completa donde tendrá lugar la cita médica</p>
                         </div>
                         
                         <div class="form-group">
-                            <label for="notes">Notas / Motivo de la consulta</label>
-                            <textarea id="notes" name="notes" rows="3"></textarea>
+                            <label for="notes">Motivo de la consulta (opcional)</label>
+                            <textarea id="notes" name="notes" rows="3"
+                                placeholder="Ej: Control mensual, dolor de cabeza, revisión de análisis..."></textarea>
+                            <p class="form-help-text">Escriba cualquier información relevante sobre esta cita</p>
                         </div>
                         
                         <div class="form-group">
@@ -129,16 +240,21 @@
                                 <input type="checkbox" id="enableReminders" name="enableReminders" checked>
                                 <label for="enableReminders">Activar recordatorios para esta cita</label>
                             </div>
+                            <p class="form-help-text">Recibirá notificaciones antes de la fecha de su cita</p>
                         </div>
                         
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" onclick="window.history.back()">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar Cita</button>
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn btn-outline back-btn" data-back="step2">
+                                <i class="fas fa-arrow-left"></i> Anterior
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Guardar Cita <i class="fas fa-check"></i>
+                            </button>
                         </div>
-                        
-                        <div id="formMessage" class="alert" style="display: none;"></div>
-                    </form>
-                </div>
+                    </div>
+                    
+                    <div id="formMessage" class="alert" style="display: none;"></div>
+                </form>
             </div>
         </main>
 
@@ -190,6 +306,85 @@
                 Meditrack.logout();
             });
             
+            // Navegación por pasos
+            document.querySelectorAll('.next-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const nextStep = this.getAttribute('data-next');
+                    const currentStep = this.closest('.step-container').id;
+                    
+                    // Validar campos del paso actual
+                    if (currentStep === 'step1') {
+                        if (!validateStep1()) return;
+                    } else if (currentStep === 'step2') {
+                        if (!validateStep2()) return;
+                    }
+                    
+                    // Ocultar paso actual y mostrar siguiente
+                    document.getElementById(currentStep).style.display = 'none';
+                    document.getElementById(nextStep).style.display = 'block';
+                    
+                    // Scroll al inicio del contenedor
+                    window.scrollTo(0, 0);
+                });
+            });
+            
+            document.querySelectorAll('.back-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const prevStep = this.getAttribute('data-back');
+                    const currentStep = this.closest('.step-container').id;
+                    
+                    // Ocultar paso actual y mostrar anterior
+                    document.getElementById(currentStep).style.display = 'none';
+                    document.getElementById(prevStep).style.display = 'block';
+                    
+                    // Scroll al inicio del contenedor
+                    window.scrollTo(0, 0);
+                });
+            });
+            
+            // Validar paso 1
+            function validateStep1() {
+                const doctorName = document.getElementById('doctorName').value;
+                const specialty = document.getElementById('specialty').value;
+                
+                if (!doctorName || !specialty) {
+                    showMessage('Por favor complete todos los campos obligatorios marcados con *', 'error');
+                    return false;
+                }
+                
+                if (specialty === 'Otra' && !document.getElementById('otherSpecialty').value) {
+                    showMessage('Por favor especifique la especialidad médica', 'error');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Validar paso 2
+            function validateStep2() {
+                const appointmentDate = document.getElementById('appointmentDate').value;
+                const appointmentTime = document.getElementById('appointmentTime').value;
+                
+                if (!appointmentDate || !appointmentTime) {
+                    showMessage('Por favor seleccione la fecha y hora de la cita', 'error');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Mostrar mensaje de error/éxito
+            function showMessage(message, type) {
+                const formMessage = document.getElementById('formMessage');
+                formMessage.textContent = message;
+                formMessage.className = `alert alert-${type}`;
+                formMessage.style.display = 'block';
+                
+                setTimeout(() => {
+                    formMessage.style.display = 'none';
+                }, 5000);
+            }
+            
             // Control de cambio de especialidad
             const specialty = document.getElementById('specialty');
             const otherSpecialtyGroup = document.getElementById('otherSpecialtyGroup');
@@ -204,32 +399,25 @@
             
             // Manejo del formulario
             const addAppointmentForm = document.getElementById('addAppointmentForm');
-            const formMessage = document.getElementById('formMessage');
             
             addAppointmentForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Validar campos requeridos
-                const doctorName = document.getElementById('doctorName').value;
-                const specialtyValue = specialty.value;
-                const appointmentDate = document.getElementById('appointmentDate').value;
-                const appointmentTime = document.getElementById('appointmentTime').value;
+                // Validar campos del último paso
                 const location = document.getElementById('location').value;
                 
-                if (!doctorName || !specialtyValue || !appointmentDate || !appointmentTime || !location) {
-                    formMessage.textContent = 'Por favor completa todos los campos requeridos.';
-                    formMessage.className = 'alert alert-error';
-                    formMessage.style.display = 'block';
+                if (!location) {
+                    showMessage('Por favor ingrese la ubicación de la cita', 'error');
                     return;
                 }
                 
                 // Crear objeto para la cita
                 const appointment = {
                     id: Date.now().toString(),
-                    doctorName: doctorName,
-                    specialty: specialtyValue === 'Otra' ? document.getElementById('otherSpecialty').value : specialtyValue,
-                    date: appointmentDate,
-                    time: appointmentTime,
+                    doctorName: document.getElementById('doctorName').value,
+                    specialty: specialty.value === 'Otra' ? document.getElementById('otherSpecialty').value : specialty.value,
+                    date: document.getElementById('appointmentDate').value,
+                    time: document.getElementById('appointmentTime').value,
                     location: location,
                     notes: document.getElementById('notes').value,
                     enableReminders: document.getElementById('enableReminders').checked,
@@ -240,9 +428,7 @@
                 Meditrack.appointments.add(appointment);
                 
                 // Mostrar mensaje de éxito
-                formMessage.textContent = 'Cita programada correctamente.';
-                formMessage.className = 'alert alert-success';
-                formMessage.style.display = 'block';
+                showMessage('Cita programada correctamente. Redirigiendo...', 'success');
                 
                 // Redirigir a la lista de citas después de 2 segundos
                 setTimeout(() => {
