@@ -7,8 +7,40 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="images/app-icon.png" type="image/png">
+    <!-- Cargar app.js con manejo de errores -->
+    <script>
+        // Verificar si estamos ejecutando desde sistema de archivos o servidor
+        const isLocalFile = window.location.protocol === 'file:';
+
+        // Función para corregir rutas de archivos cuando se ejecuta localmente
+        function getCorrectPath(path) {
+            return path;
+        }
+        
+        // Función para cargar un script dinámicamente con manejo de errores
+        function loadScript(src, callback) {
+            var script = document.createElement('script');
+            script.src = src;
+            script.onload = function() { callback(true); };
+            script.onerror = function() { callback(false); };
+            document.head.appendChild(script);
+        }
+        
+        // Cargar app.js
+        window.appLoaded = false;
+        loadScript('js/app.js', function(success) {
+            window.appLoaded = success;
+            console.log('App.js cargado:', success);
+            if (!success) {
+                console.error('Error al cargar app.js');
+            }
+        });
+    </script>
 </head>
 <body>
+    <!-- Overlay para el menú móvil -->
+    <div class="menu-overlay" id="menu-overlay"></div>
+    
     <!-- Navegación -->
     <nav class="nav">
         <div class="container nav-container">
@@ -16,14 +48,14 @@
                 <img src="images/app-icon.png" alt="MediTrack Icon" class="logo-icon">
                 MediTrack
             </div>
-            <div class="menu-toggle">
+            <div class="menu-toggle" id="menu-toggle">
                 <i class="fas fa-bars"></i>
             </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Inicio</a></li>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html" class="active">Inicio</a></li>
                 <li><a href="#features">Características</a></li>
                 <li><a href="#about">Acerca de</a></li>
-                <li><a href="faq.html">Preguntas Frecuentes</a></li>
+                <li><a href="#testimonials">Testimonios</a></li>
                 <li><a href="login.html" class="btn btn-primary">Iniciar Sesión</a></li>
             </ul>
         </div>
@@ -41,11 +73,7 @@
                 </div>
             </div>
             <div class="hero-image">
-                <div class="app-preview">
-                    <img src="images/app-icon.png" alt="MediTrack" class="app-icon-large">
-                    <h2>MediTrack</h2>
-                    <p>Tu asistente personal de salud</p>
-                </div>
+                <img src="images/mainPage.png" alt="MediTrack App" class="hero-main-image">
             </div>
         </div>
     </section>
@@ -126,7 +154,7 @@
     </section>
 
     <!-- Testimonios -->
-    <section class="testimonials">
+    <section id="testimonials" class="testimonials">
         <div class="container">
             <h2 class="section-title text-center">Lo que dicen nuestros usuarios</h2>
             <div class="testimonials-slider">
@@ -201,7 +229,7 @@
                         <li><a href="index.html">Inicio</a></li>
                         <li><a href="#features">Características</a></li>
                         <li><a href="#about">Acerca de</a></li>
-                        <li><a href="faq.html">Preguntas Frecuentes</a></li>
+                        <li><a href="#testimonials">Testimonios</a></li>
                         <li><a href="login.html">Iniciar Sesión</a></li>
                     </ul>
                 </div>
@@ -223,7 +251,6 @@
         </div>
     </footer>
 
-    <script src="js/app.js"></script>
     <script>
         // Código JavaScript específico de la página de inicio
         document.addEventListener('DOMContentLoaded', function() {
@@ -236,6 +263,35 @@
                     });
                 });
             });
+            
+            // Menú móvil
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+            const menuOverlay = document.getElementById('menu-overlay');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
+                });
+                
+                // Cerrar el menú al hacer clic en un enlace
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('active');
+                        menuOverlay.classList.remove('active');
+                        document.body.classList.remove('no-scroll');
+                    });
+                });
+                
+                // Cerrar el menú al hacer clic en el overlay
+                menuOverlay.addEventListener('click', function() {
+                    navLinks.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.classList.remove('no-scroll');
+                });
+            }
         });
     </script>
 </body>

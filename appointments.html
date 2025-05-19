@@ -7,6 +7,155 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="images/app-icon.png" type="image/png">
+    <style>
+        /* Estilos específicos para mejorar la usabilidad para adultos mayores */
+        .appointment-card {
+            padding: 1.5em;
+            margin-bottom: 1.5em;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .appointment-card-header {
+            background: none;
+            border-bottom: 2px solid rgba(58, 123, 213, 0.2);
+            padding: 0 0 1em 0;
+            margin-bottom: 1.2em;
+        }
+        
+        .appointment-card-header h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+        }
+        
+        .appointment-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2em;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 1em;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .appointment-info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1em;
+            flex-shrink: 0;
+        }
+        
+        .appointment-info-icon i {
+            font-size: 1.5em;
+            color: var(--primary);
+        }
+        
+        .appointment-info-content {
+            flex-grow: 1;
+        }
+        
+        .appointment-info-content p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+        
+        .appointment-info-content .info-label {
+            font-size: 0.9em;
+            color: var(--dark-grey);
+            margin-bottom: 0.3em;
+        }
+        
+        .appointment-card-footer {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 1em;
+            border-top: 2px solid rgba(58, 123, 213, 0.1);
+        }
+        
+        .btn {
+            font-size: 1.15rem;
+            padding: 1em 2em;
+        }
+        
+        .specialty-badge {
+            font-size: 1rem;
+            padding: 0.5em 1em;
+            border-radius: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 2em 0 1em;
+        }
+        
+        .tab {
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 1em 2em;
+            border-radius: 30px;
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+            margin: 0 0.5em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 3px 10px rgba(58, 123, 213, 0.2);
+        }
+        
+        .tab.active::after {
+            display: none;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: var(--grey);
+        }
+        
+        /* Estado vacío */
+        .empty-state {
+            padding: 3em 2em;
+            background: linear-gradient(145deg, #f0f4ff, #e1eaff);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .empty-state p {
+            font-size: 1.2em;
+            margin-bottom: 1.5em;
+        }
+        
+        .empty-state .btn {
+            min-width: 250px;
+        }
+        
+        /* Estilos específicos para dispositivos móviles */
+        @media (max-width: 768px) {
+            .appointments-list {
+                display: block;
+            }
+            
+            .appointment-card {
+                margin-bottom: 1.5em;
+            }
+            
+            .tab {
+                padding: 0.75em 1.5em;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -50,7 +199,7 @@
                 <div class="header-title">Mis Citas</div>
                 <div class="header-actions">
                     <a href="add_appointment.html" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Añadir
+                        <i class="fas fa-plus"></i> Nueva Cita
                     </a>
                 </div>
             </header>
@@ -58,12 +207,13 @@
             <!-- Área de contenido -->
             <div class="content-area">
                 <div class="page-header">
-                    <p>Gestiona tus citas médicas programadas y pasadas.</p>
+                    <h1>Mis Citas Médicas</h1>
+                    <p>Aquí puede visualizar y administrar todas sus citas médicas.</p>
                     
                     <!-- Tabs para cambiar entre citas futuras y pasadas -->
                     <div class="tabs">
-                        <button id="upcomingTab" class="tab active">Próximas</button>
-                        <button id="pastTab" class="tab">Pasadas</button>
+                        <button id="upcomingTab" class="tab active">Próximas Citas</button>
+                        <button id="pastTab" class="tab">Citas Pasadas</button>
                     </div>
                 </div>
                 
@@ -75,7 +225,7 @@
                     <!-- Se llenará dinámicamente con JavaScript -->
                     <div class="empty-state">
                         <p>No se encontraron citas programadas.</p>
-                        <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
+                        <a href="add_appointment.html" class="btn btn-primary mt-2">Programar una Nueva Cita</a>
                     </div>
                 </div>
             </div>
@@ -135,7 +285,8 @@
                 <button class="modal-close" id="closeConfirmModal">&times;</button>
             </div>
             <div class="modal-body">
-                <p>¿Estás seguro de que deseas cancelar esta cita? Esta acción no se puede deshacer.</p>
+                <p>¿Está seguro de que desea cancelar esta cita?</p>
+                <p>Esta acción no se puede deshacer.</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" id="cancelDeleteBtn">No, Mantener</button>
@@ -280,13 +431,13 @@
                     });
                 } else {
                     let message = currentTab === 'upcoming' 
-                        ? 'No tienes citas programadas.' 
-                        : 'No tienes citas pasadas.';
+                        ? 'No tiene citas médicas programadas.' 
+                        : 'No tiene historial de citas pasadas.';
                     
                     appointmentsList.innerHTML = `
                         <div class="empty-state">
                             <p>${message}</p>
-                            <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
+                            <a href="add_appointment.html" class="btn btn-primary mt-2">Programar una Nueva Cita</a>
                         </div>
                     `;
                 }
@@ -307,27 +458,51 @@
                 twoDaysLater.setDate(today.getDate() + 2);
                 
                 const isUrgent = appointmentDate <= twoDaysLater && appointmentDate >= today;
-                const cardClass = isUrgent ? 'appointment-card urgent' : 'appointment-card';
                 
-                card.className = cardClass;
+                // Añadir clase para citas urgentes
+                if (isUrgent) {
+                    card.classList.add('urgent');
+                    card.style.borderLeft = '5px solid var(--warning)';
+                }
                 
                 card.innerHTML = `
                     <div class="appointment-card-header">
-                        <h3>${appointment.doctorName}</h3>
+                        <h3>
+                            ${isUrgent ? '<i class="fas fa-exclamation-circle" style="color: var(--warning); margin-right: 10px;"></i>' : ''}
+                            Cita con ${appointment.doctorName}
+                        </h3>
                         <span class="specialty-badge">${appointment.specialty}</span>
                     </div>
-                    <div class="appointment-card-body">
-                        <p><i class="fas fa-calendar-day"></i> ${formattedDate}</p>
-                        <p><i class="fas fa-clock"></i> ${appointment.time}</p>
-                        <p><i class="fas fa-map-marker-alt"></i> ${appointment.location}</p>
+                    
+                    <!-- Fecha y hora -->
+                    <div class="appointment-info">
+                        <div class="appointment-info-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="appointment-info-content">
+                            <div class="info-label">Fecha y hora de la cita</div>
+                            <p><strong>${formattedDate}</strong> a las <strong>${appointment.time}</strong></p>
+                        </div>
                     </div>
+                    
+                    <!-- Lugar -->
+                    <div class="appointment-info">
+                        <div class="appointment-info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="appointment-info-content">
+                            <div class="info-label">Lugar de la cita</div>
+                            <p>${appointment.location}</p>
+                        </div>
+                    </div>
+                    
                     <div class="appointment-card-footer">
-                        <button class="btn btn-outline btn-sm view-details-btn" data-id="${appointment.id}">
+                        <button class="btn btn-primary view-details-btn" data-id="${appointment.id}">
                             Ver Detalles
                         </button>
                         ${currentTab === 'upcoming' ? `
-                            <button class="btn btn-warning btn-sm cancel-btn" data-id="${appointment.id}">
-                                Cancelar
+                            <button class="btn btn-warning cancel-btn" data-id="${appointment.id}">
+                                Cancelar Cita
                             </button>
                         ` : ''}
                     </div>

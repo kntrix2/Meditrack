@@ -13,7 +13,10 @@
         <!-- Barra lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">MediTrack</div>
+                <div class="sidebar-logo">
+                    <img src="images/app-icon.png" alt="MediTrack" width="30" height="30">
+                    MediTrack
+                </div>
             </div>
             <nav class="sidebar-nav">
                 <a href="patient_dashboard.html" class="sidebar-nav-item">
@@ -85,8 +88,36 @@
                 
                 <!-- Lista de medicamentos -->
                 <div id="medicationsList" class="medications-list">
-                    <!-- Se llenará dinámicamente con JavaScript -->
-                    <div class="empty-state">
+                    <!-- Ejemplo de tarjeta de medicamento (se cargará dinámicamente) -->
+                    <div class="medication-card">
+                        <div class="medication-card-header">
+                            <h3>Ibuprofeno</h3>
+                            <span class="medication-status status-active">Activo</span>
+                        </div>
+                        <div class="medication-card-body">
+                            <div class="med-info-row">
+                                <div class="med-time-row">
+                                    <div class="med-time-indicator med-time-morning">M</div>
+                                    <span>8:00 AM</span>
+                                </div>
+                                <div class="med-time-row">
+                                    <div class="med-time-indicator med-time-evening">T</div>
+                                    <span>8:00 PM</span>
+                                </div>
+                            </div>
+                            <p><strong>Dosis:</strong> 400mg</p>
+                            <p><strong>Próxima toma:</strong> <span class="highlight-text">Hoy, 8:00 PM</span></p>
+                        </div>
+                        <div class="medication-card-footer">
+                            <button class="btn btn-sm btn-primary take-dose-btn">Tomar dosis</button>
+                            <button class="btn btn-sm btn-outline view-details-btn">Ver detalles</button>
+                        </div>
+                    </div>
+                    
+                    <div class="empty-state" style="display: none;">
+                        <div class="feature-icon-container feature-icon-med">
+                            <i class="fas fa-prescription-bottle-medical"></i>
+                        </div>
                         <p>No se encontraron medicamentos.</p>
                         <a href="add_medication.html" class="btn btn-primary mt-2">Añadir Medicamento</a>
                     </div>
@@ -131,12 +162,56 @@
             <div class="modal-body">
                 <div id="medicationDetails">
                     <!-- Detalles del medicamento -->
+                    <div class="details-section">
+                        <h3>Información General</h3>
+                        <p><strong>Dosis:</strong> <span id="modalDose">400mg</span></p>
+                        <p><strong>Instrucciones:</strong> <span id="modalInstructions">Tomar con alimentos</span></p>
+                        <p><strong>Fecha de inicio:</strong> <span id="modalStartDate">01/06/2024</span></p>
+                        <p><strong>Fecha de finalización:</strong> <span id="modalEndDate">30/06/2024</span></p>
+                    </div>
+                    
+                    <div class="details-section">
+                        <h3>Horario</h3>
+                        <div class="med-schedule">
+                            <div class="med-time-row">
+                                <div class="med-time-indicator med-time-morning">M</div>
+                                <span>8:00 AM</span>
+                            </div>
+                            <div class="med-time-row">
+                                <div class="med-time-indicator med-time-evening">T</div>
+                                <span>8:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="dose-history">
                     <h3>Historial de Dosis</h3>
                     <div id="doseHistory">
                         <!-- Historial de dosis -->
+                        <ul class="dose-list">
+                            <li class="dose-item">
+                                <div class="dose-info">
+                                    <span class="med-status med-taken"></span>
+                                    <span>Ibuprofeno 400mg</span>
+                                </div>
+                                <span class="dose-date">Hoy, 8:00 AM</span>
+                            </li>
+                            <li class="dose-item">
+                                <div class="dose-info">
+                                    <span class="med-status med-taken"></span>
+                                    <span>Ibuprofeno 400mg</span>
+                                </div>
+                                <span class="dose-date">Ayer, 8:00 PM</span>
+                            </li>
+                            <li class="dose-item">
+                                <div class="dose-info">
+                                    <span class="med-status med-missed"></span>
+                                    <span>Ibuprofeno 400mg</span>
+                                </div>
+                                <span class="dose-date">Ayer, 8:00 AM</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -306,6 +381,9 @@
                 } else {
                     medicationsList.innerHTML = `
                         <div class="empty-state">
+                            <div class="feature-icon-container feature-icon-med">
+                                <i class="fas fa-prescription-bottle-medical"></i>
+                            </div>
                             <p>No se encontraron medicamentos.</p>
                             <a href="add_medication.html" class="btn btn-primary mt-2">Añadir Medicamento</a>
                         </div>
@@ -349,9 +427,19 @@
                         <span class="medication-status ${statusClass}">${statusText}</span>
                     </div>
                     <div class="medication-card-body">
+                        <div class="med-info-row">
+                            <div class="med-time-row">
+                                <div class="med-time-indicator med-time-morning">M</div>
+                                <span>${medication.schedule && medication.schedule.times && medication.schedule.times.length > 0 ? medication.schedule.times[0] : 'No programado'}</span>
+                            </div>
+                            <div class="med-time-row">
+                                <div class="med-time-indicator med-time-evening">T</div>
+                                <span>${medication.schedule && medication.schedule.times && medication.schedule.times.length > 1 ? medication.schedule.times[1] : 'No programado'}</span>
+                            </div>
+                        </div>
                         <p><strong>Dosis:</strong> ${medication.dose}</p>
                         <p><strong>Forma:</strong> ${medication.form}</p>
-                        <p><strong>Próxima dosis:</strong> ${nextDoseText}</p>
+                        <p><strong>Próxima toma:</strong> <span class="highlight-text">${nextDoseText}</span></p>
                     </div>
                     <div class="medication-card-footer">
                         <button class="btn btn-outline btn-sm view-details-btn" data-id="${medication.id}">
@@ -409,6 +497,7 @@
                     
                     medicationDetails.innerHTML = `
                         <div class="details-section">
+                            <h3>Información General</h3>
                             <p><strong>Dosis:</strong> ${medication.dose}</p>
                             <p><strong>Forma:</strong> ${medication.form}</p>
                             <p><strong>Instrucciones:</strong> ${medication.instructions || 'No especificadas'}</p>
@@ -427,10 +516,11 @@
                             const doseDate = new Date(dose.timestamp);
                             doseHistoryHtml += `
                                 <li class="dose-item">
+                                    <div class="dose-info">
+                                        <span class="med-status ${dose.taken ? 'med-taken' : 'med-missed'}"></span>
+                                        <span>${medication.name} ${medication.dose}mg</span>
+                                    </div>
                                     <span class="dose-date">${doseDate.toLocaleString()}</span>
-                                    <span class="dose-status ${dose.taken ? 'status-taken' : 'status-missed'}">
-                                        ${dose.taken ? 'Tomada' : 'Omitida'}
-                                    </span>
                                 </li>
                             `;
                         });
@@ -452,11 +542,14 @@
                     // Mostrar mensaje de éxito
                     showAlert('Dosis registrada correctamente.', 'success');
                     
-                    // Mostrar notificación
-                    Meditrack.showNotification('Dosis registrada', {
-                        body: '¡Bien hecho! Has registrado correctamente tu medicación.',
-                        icon: 'images/med-icon.png'
-                    });
+                    // Mostrar notificación solo si el permiso ya ha sido otorgado
+                    const notificationState = Meditrack.getNotificationPermissionState();
+                    if (notificationState === 'granted') {
+                        Meditrack.showNotification('Dosis registrada', {
+                            body: '¡Bien hecho! Has registrado correctamente tu medicación.',
+                            icon: 'images/med-icon.png'
+                        });
+                    }
                     
                     // Recargar la lista
                     loadMedications();
