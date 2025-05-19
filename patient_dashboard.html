@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del Paciente - Meditrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item active">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Dashboard</div>
+                <div class="header-actions">
+                    <span id="patientName">Paciente</span>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="dashboard-header">
+                    <h1>Bienvenido, <span id="patientNameHeader">Paciente</span></h1>
+                    <p>Aquí puedes gestionar todos los aspectos de tu salud.</p>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <!-- Tarjeta de Medicamentos -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-pills"></i> Mis Medicamentos
+                        </div>
+                        <div id="medicationsReminders" class="dashboard-card-content">
+                            <div class="empty-state">
+                                <p>No tienes medicamentos registrados.</p>
+                                <a href="add_medication.html" class="btn btn-primary mt-2">Añadir Medicamento</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta de Citas -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-calendar-check"></i> Próximas Citas
+                        </div>
+                        <div id="appointmentsReminders" class="dashboard-card-content">
+                            <div class="empty-state">
+                                <p>No tienes citas programadas.</p>
+                                <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta de Síntomas -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-heart-pulse"></i> Seguimiento de Síntomas
+                        </div>
+                        <div class="dashboard-card-content">
+                            <p>Registra tus síntomas y mediciones para un mejor seguimiento de tu salud.</p>
+                            <a href="log_symptom.html" class="btn btn-primary mt-2">Registrar Síntoma</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta de Adherencia -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-chart-line"></i> Mi Adherencia
+                        </div>
+                        <div class="dashboard-card-content">
+                            <div class="adherence-chart">
+                                <div class="adherence-percentage" id="adherencePercentage">0%</div>
+                                <p>Adherencia a la medicación en los últimos 7 días</p>
+                            </div>
+                            <a href="report.html" class="btn btn-outline mt-2">Ver Informe Completo</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta de Recompensas -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-trophy"></i> Mis Recompensas
+                        </div>
+                        <div id="rewardsPreview" class="dashboard-card-content">
+                            <div class="rewards-progress">
+                                <div class="rewards-level">
+                                    <span class="level-icon">1</span>
+                                    <span class="level-name">Principiante en Salud</span>
+                                </div>
+                                <p>Puntos: <span id="userPoints">0</span></p>
+                                <div class="progress-bar">
+                                    <div class="progress" id="levelProgress" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <a href="rewards.html" class="btn btn-outline mt-2">Ver Todas mis Recompensas</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Tarjeta de Acciones Rápidas -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-bolt"></i> Acciones Rápidas
+                        </div>
+                        <div class="dashboard-card-content">
+                            <div class="quick-actions">
+                                <a href="add_medication.html" class="quick-action">
+                                    <i class="fas fa-pills"></i>
+                                    <span>Añadir Medicamento</span>
+                                </a>
+                                <a href="add_appointment.html" class="quick-action">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <span>Programar Cita</span>
+                                </a>
+                                <a href="log_symptom.html" class="quick-action">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    <span>Registrar Síntoma</span>
+                                </a>
+                                <a href="report.html" class="quick-action">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>Generar Informe</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Mostrar nombre del paciente
+            document.getElementById('patientName').textContent = currentUser.name;
+            document.getElementById('patientNameHeader').textContent = currentUser.name;
+            
+            // Mostrar puntos del usuario
+            document.getElementById('userPoints').textContent = currentUser.points || 0;
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Calcular y mostrar progreso del nivel
+            const userPoints = currentUser.points || 0;
+            let nextLevelPoints = 100; // Puntos para el siguiente nivel
+            let currentLevelPoints = 0; // Puntos del nivel actual
+            
+            const level = Meditrack.gamification.getLevel(userPoints);
+            document.querySelector('.level-icon').textContent = level.level;
+            document.querySelector('.level-name').textContent = level.name;
+            
+            // Determinar puntos necesarios para el siguiente nivel
+            if (level.level === 1) {
+                nextLevelPoints = 100;
+                currentLevelPoints = 0;
+            } else if (level.level === 2) {
+                nextLevelPoints = 200;
+                currentLevelPoints = 100;
+            } else if (level.level === 3) {
+                nextLevelPoints = 300;
+                currentLevelPoints = 200;
+            } else if (level.level === 4) {
+                nextLevelPoints = 500;
+                currentLevelPoints = 300;
+            } else {
+                // Nivel máximo
+                nextLevelPoints = 500;
+                currentLevelPoints = 500;
+            }
+            
+            // Calcular porcentaje de progreso para el siguiente nivel
+            let progressPercentage = 100;
+            if (level.level < 5) { // Si no está en el nivel máximo
+                progressPercentage = ((userPoints - currentLevelPoints) / (nextLevelPoints - currentLevelPoints)) * 100;
+            }
+            
+            document.getElementById('levelProgress').style.width = `${progressPercentage}%`;
+            
+            // Cargar medicamentos pendientes
+            loadPendingMedications();
+            
+            // Cargar próximas citas
+            loadUpcomingAppointments();
+            
+            // Calcular y mostrar adherencia
+            const adherencePercentage = Meditrack.utils.calculateAdherence(7);
+            document.getElementById('adherencePercentage').textContent = `${adherencePercentage}%`;
+            
+            // Configurar botón de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Funciones para cargar datos
+            function loadPendingMedications() {
+                const pendingMedications = Meditrack.medications.getPendingMedications();
+                const medicationsContainer = document.getElementById('medicationsReminders');
+                
+                if (pendingMedications.length > 0) {
+                    medicationsContainer.innerHTML = '';
+                    
+                    pendingMedications.forEach(med => {
+                        const reminderElement = document.createElement('div');
+                        reminderElement.className = 'reminder';
+                        
+                        let nextDoseTime = 'Hoy';
+                        if (med.schedule && med.schedule.times && med.schedule.times.length > 0) {
+                            nextDoseTime = `Hoy a las ${med.schedule.times[0]}`;
+                        }
+                        
+                        reminderElement.innerHTML = `
+                            <div class="reminder-icon">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <div class="reminder-content">
+                                <h4>${med.name} - ${med.dose} ${med.form}</h4>
+                                <p>Próxima dosis: ${nextDoseTime}</p>
+                            </div>
+                            <button class="btn btn-primary take-dose-btn" data-id="${med.id}">
+                                Tomar
+                            </button>
+                        `;
+                        
+                        medicationsContainer.appendChild(reminderElement);
+                    });
+                    
+                    // Agregar eventos a los botones de tomar dosis
+                    document.querySelectorAll('.take-dose-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const medicationId = this.getAttribute('data-id');
+                            Meditrack.medications.takeDose(medicationId);
+                            loadPendingMedications(); // Recargar lista
+                            
+                            // Recalcular y mostrar adherencia
+                            const adherencePercentage = Meditrack.utils.calculateAdherence(7);
+                            document.getElementById('adherencePercentage').textContent = `${adherencePercentage}%`;
+                            
+                            // Actualizar puntos del usuario
+                            const currentUser = Meditrack.getCurrentUser();
+                            document.getElementById('userPoints').textContent = currentUser.points || 0;
+                            
+                            // Mostrar notificación
+                            Meditrack.showNotification('Dosis registrada', {
+                                body: '¡Bien hecho! Has registrado correctamente tu medicación.',
+                                icon: 'images/med-icon.png'
+                            });
+                        });
+                    });
+                    
+                } else {
+                    medicationsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <p>No tienes medicamentos pendientes para hoy.</p>
+                            <a href="add_medication.html" class="btn btn-primary mt-2">Añadir Medicamento</a>
+                        </div>
+                    `;
+                }
+            }
+            
+            function loadUpcomingAppointments() {
+                const upcomingAppointments = Meditrack.appointments.getUpcoming();
+                const appointmentsContainer = document.getElementById('appointmentsReminders');
+                
+                if (upcomingAppointments.length > 0) {
+                    appointmentsContainer.innerHTML = '';
+                    
+                    // Mostrar solo las próximas 3 citas
+                    const appointmentsToShow = upcomingAppointments.slice(0, 3);
+                    
+                    appointmentsToShow.forEach(apt => {
+                        const appointmentDate = new Date(apt.date + 'T' + apt.time);
+                        const today = new Date();
+                        const tomorrow = new Date(today);
+                        tomorrow.setDate(today.getDate() + 1);
+                        
+                        let isUrgent = false;
+                        // Marcar como urgente si la cita es hoy o mañana
+                        if (appointmentDate.toDateString() === today.toDateString() || 
+                            appointmentDate.toDateString() === tomorrow.toDateString()) {
+                            isUrgent = true;
+                        }
+                        
+                        const reminderElement = document.createElement('div');
+                        reminderElement.className = isUrgent ? 'reminder reminder-urgent' : 'reminder';
+                        
+                        const formattedDate = Meditrack.utils.formatDate(apt.date);
+                        
+                        reminderElement.innerHTML = `
+                            <div class="reminder-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="reminder-content">
+                                <h4>Dr. ${apt.doctorName} - ${apt.specialty}</h4>
+                                <p>${formattedDate} a las ${apt.time}</p>
+                                <p>${apt.location}</p>
+                            </div>
+                        `;
+                        
+                        appointmentsContainer.appendChild(reminderElement);
+                    });
+                    
+                    if (upcomingAppointments.length > 3) {
+                        const moreAppointmentsLink = document.createElement('a');
+                        moreAppointmentsLink.href = 'appointments.html';
+                        moreAppointmentsLink.className = 'btn btn-outline mt-2';
+                        moreAppointmentsLink.textContent = 'Ver todas las citas';
+                        appointmentsContainer.appendChild(moreAppointmentsLink);
+                    }
+                    
+                } else {
+                    appointmentsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <p>No tienes citas programadas.</p>
+                            <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
+                        </div>
+                    `;
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

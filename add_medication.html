@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Medicamento - MediTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item active">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Añadir Medicamento</div>
+                <div class="header-actions">
+                    <button type="button" class="btn btn-outline" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="page-header">
+                    <p>Completa el formulario para registrar un nuevo medicamento.</p>
+                </div>
+                
+                <div class="card">
+                    <form id="addMedicationForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="medicationName">Nombre del Medicamento*</label>
+                                <input type="text" id="medicationName" name="medicationName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="medicationDose">Dosis*</label>
+                                <div class="dose-input">
+                                    <input type="number" id="medicationDose" name="medicationDose" min="0" step="0.01" required>
+                                    <select id="doseUnit" name="doseUnit">
+                                        <option value="mg">mg</option>
+                                        <option value="g">g</option>
+                                        <option value="ml">ml</option>
+                                        <option value="mcg">mcg</option>
+                                        <option value="UI">UI</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="medicationForm">Forma Farmacéutica*</label>
+                                <select id="medicationForm" name="medicationForm" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="tableta">Tableta</option>
+                                    <option value="cápsula">Cápsula</option>
+                                    <option value="jarabe">Jarabe</option>
+                                    <option value="gotas">Gotas</option>
+                                    <option value="inyección">Inyección</option>
+                                    <option value="crema">Crema</option>
+                                    <option value="parche">Parche</option>
+                                    <option value="inhalador">Inhalador</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="otherFormGroup" style="display: none;">
+                                <label for="otherForm">Especificar Otra Forma</label>
+                                <input type="text" id="otherForm" name="otherForm">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="medicationInstructions">Instrucciones / Notas</label>
+                            <textarea id="medicationInstructions" name="medicationInstructions" rows="2"></textarea>
+                        </div>
+                        
+                        <div class="form-divider">
+                            <h3>Programación de Dosis</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Frecuencia*</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="frequency" value="daily" checked>
+                                    <span>Diario</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="frequency" value="specific-days">
+                                    <span>Días específicos</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="dailyFrequency" class="frequency-option">
+                            <div class="form-group">
+                                <label for="timesPerDay">Veces al día*</label>
+                                <select id="timesPerDay" name="timesPerDay">
+                                    <option value="1">1 vez al día</option>
+                                    <option value="2">2 veces al día</option>
+                                    <option value="3">3 veces al día</option>
+                                    <option value="4">4 veces al día</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group times-container">
+                                <label>Horas Específicas</label>
+                                <div id="timesInputs">
+                                    <div class="time-input">
+                                        <input type="time" name="medicationTime[]" class="medication-time">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="specificDaysFrequency" class="frequency-option" style="display: none;">
+                            <div class="form-group">
+                                <label>Días de la Semana*</label>
+                                <div class="days-selector">
+                                    <label class="day-checkbox">
+                                        <input type="checkbox" name="weekDays[]" value="1"> L
+                                    </label>
+                                    <label class="day-checkbox">
+                                        <input type="checkbox" name="weekDays[]" value="2"> M
+                                    </label>
+                                    <label class="day-checkbox">
+                                        <input type="checkbox" name="weekDays[]" value="3"> X
+                                    </label>
+                                    <label class="day-checkbox">
+                                        <input type="checkbox" name="weekDays[]" value="4"> J
+                                    </label>
+                                    <label class="day-checkbox">
+                                        <input type="checkbox" name="weekDays[]" value="5"> V
+                                    </label>
+                                    <label class="day-checkbox">
+                                        <input type="checkbox" name="weekDays[]" value="6"> S
+                                    </label>
+                                    <label class="day-checkbox">
+                                        <input type="checkbox" name="weekDays[]" value="0"> D
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="specificDaysTimesPerDay">Veces al día en estos días*</label>
+                                <select id="specificDaysTimesPerDay" name="specificDaysTimesPerDay">
+                                    <option value="1">1 vez al día</option>
+                                    <option value="2">2 veces al día</option>
+                                    <option value="3">3 veces al día</option>
+                                    <option value="4">4 veces al día</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group times-container">
+                                <label>Horas Específicas</label>
+                                <div id="specificDaysTimesInputs">
+                                    <div class="time-input">
+                                        <input type="time" name="specificDaysMedicationTime[]" class="medication-time">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-divider">
+                            <h3>Duración del Tratamiento</h3>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Fecha de Inicio*</label>
+                                <input type="date" id="startDate" name="startDate" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="endDate">Fecha de Fin (opcional)</label>
+                                <input type="date" id="endDate" name="endDate">
+                            </div>
+                        </div>
+                        
+                        <div class="form-divider">
+                            <h3>Opciones Adicionales</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="button" id="scanPrescriptionBtn" class="btn btn-outline">
+                                <i class="fas fa-camera"></i> Escanear Receta
+                            </button>
+                            <p class="form-help-text">Esta función permite escanear una receta médica para facilitar el registro.</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="enableReminders" name="enableReminders" checked>
+                                <label for="enableReminders">Activar recordatorios para este medicamento</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" onclick="window.history.back()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Medicamento</button>
+                        </div>
+                        
+                        <div id="formMessage" class="alert" style="display: none;"></div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item active">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Configurar botón de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Control de cambio de forma farmacéutica
+            const medicationForm = document.getElementById('medicationForm');
+            const otherFormGroup = document.getElementById('otherFormGroup');
+            
+            medicationForm.addEventListener('change', function() {
+                if (this.value === 'otro') {
+                    otherFormGroup.style.display = 'block';
+                } else {
+                    otherFormGroup.style.display = 'none';
+                }
+            });
+            
+            // Control de cambio de frecuencia
+            const frequencyRadios = document.querySelectorAll('input[name="frequency"]');
+            const dailyFrequency = document.getElementById('dailyFrequency');
+            const specificDaysFrequency = document.getElementById('specificDaysFrequency');
+            
+            frequencyRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'daily') {
+                        dailyFrequency.style.display = 'block';
+                        specificDaysFrequency.style.display = 'none';
+                    } else if (this.value === 'specific-days') {
+                        dailyFrequency.style.display = 'none';
+                        specificDaysFrequency.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Control de cambio en veces al día (daily)
+            const timesPerDay = document.getElementById('timesPerDay');
+            const timesInputs = document.getElementById('timesInputs');
+            
+            timesPerDay.addEventListener('change', function() {
+                updateTimeInputs(this.value, timesInputs, 'medicationTime[]');
+            });
+            
+            // Control de cambio en veces al día (specific days)
+            const specificDaysTimesPerDay = document.getElementById('specificDaysTimesPerDay');
+            const specificDaysTimesInputs = document.getElementById('specificDaysTimesInputs');
+            
+            specificDaysTimesPerDay.addEventListener('change', function() {
+                updateTimeInputs(this.value, specificDaysTimesInputs, 'specificDaysMedicationTime[]');
+            });
+            
+            // Función para actualizar campos de hora
+            function updateTimeInputs(count, container, inputName) {
+                container.innerHTML = '';
+                
+                for (let i = 0; i < count; i++) {
+                    const timeInput = document.createElement('div');
+                    timeInput.className = 'time-input';
+                    timeInput.innerHTML = `<input type="time" name="${inputName}" class="medication-time">`;
+                    container.appendChild(timeInput);
+                }
+            }
+            
+            // Botón de escanear receta
+            const scanPrescriptionBtn = document.getElementById('scanPrescriptionBtn');
+            const formMessage = document.getElementById('formMessage');
+            
+            scanPrescriptionBtn.addEventListener('click', function() {
+                formMessage.textContent = 'La funcionalidad de escaneo de recetas está simulada en este prototipo.';
+                formMessage.className = 'alert alert-warning';
+                formMessage.style.display = 'block';
+                
+                // Ocultar el mensaje después de 5 segundos
+                setTimeout(() => {
+                    formMessage.style.display = 'none';
+                }, 5000);
+            });
+            
+            // Validación y envío del formulario
+            const addMedicationForm = document.getElementById('addMedicationForm');
+            
+            addMedicationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validar formulario
+                const medicationName = document.getElementById('medicationName').value;
+                const medicationDose = document.getElementById('medicationDose').value;
+                const doseUnit = document.getElementById('doseUnit').value;
+                const form = document.getElementById('medicationForm').value;
+                const startDate = document.getElementById('startDate').value;
+                
+                if (!medicationName || !medicationDose || !form || !startDate) {
+                    formMessage.textContent = 'Por favor completa todos los campos requeridos.';
+                    formMessage.className = 'alert alert-error';
+                    formMessage.style.display = 'block';
+                    return;
+                }
+                
+                // Validar días seleccionados si la frecuencia es específica
+                const frequency = document.querySelector('input[name="frequency"]:checked').value;
+                if (frequency === 'specific-days') {
+                    const selectedDays = document.querySelectorAll('input[name="weekDays[]"]:checked');
+                    if (selectedDays.length === 0) {
+                        formMessage.textContent = 'Por favor selecciona al menos un día de la semana.';
+                        formMessage.className = 'alert alert-error';
+                        formMessage.style.display = 'block';
+                        return;
+                    }
+                }
+                
+                // Crear objeto para guardar
+                const medication = {
+                    id: Date.now().toString(),
+                    name: medicationName,
+                    dose: medicationDose + ' ' + doseUnit,
+                    form: form === 'otro' ? document.getElementById('otherForm').value : form,
+                    instructions: document.getElementById('medicationInstructions').value,
+                    startDate: startDate,
+                    endDate: document.getElementById('endDate').value || null,
+                    active: true,
+                    schedule: {
+                        frequency: frequency
+                    }
+                };
+                
+                // Agregar detalles específicos según frecuencia
+                if (frequency === 'daily') {
+                    medication.schedule.timesPerDay = parseInt(timesPerDay.value);
+                    
+                    // Obtener horas seleccionadas
+                    const times = [];
+                    document.querySelectorAll('input[name="medicationTime[]"]').forEach(input => {
+                        if (input.value) times.push(input.value);
+                    });
+                    
+                    if (times.length > 0) {
+                        medication.schedule.times = times;
+                    }
+                } else if (frequency === 'specific-days') {
+                    // Obtener días seleccionados
+                    const specificDays = [];
+                    document.querySelectorAll('input[name="weekDays[]"]:checked').forEach(input => {
+                        specificDays.push(parseInt(input.value));
+                    });
+                    
+                    medication.schedule.specificDays = specificDays;
+                    medication.schedule.timesPerDay = parseInt(specificDaysTimesPerDay.value);
+                    
+                    // Obtener horas seleccionadas
+                    const times = [];
+                    document.querySelectorAll('input[name="specificDaysMedicationTime[]"]').forEach(input => {
+                        if (input.value) times.push(input.value);
+                    });
+                    
+                    if (times.length > 0) {
+                        medication.schedule.times = times;
+                    }
+                }
+                
+                // Guardar en localStorage
+                Meditrack.medications.add(medication);
+                
+                // Mostrar mensaje de éxito
+                formMessage.textContent = 'Medicamento añadido correctamente.';
+                formMessage.className = 'alert alert-success';
+                formMessage.style.display = 'block';
+                
+                // Redirigir a la lista de medicamentos después de 2 segundos
+                setTimeout(() => {
+                    window.location.href = 'medications.html';
+                }, 2000);
+            });
+            
+            // Inicializar campos dinámicos
+            updateTimeInputs(1, timesInputs, 'medicationTime[]');
+            updateTimeInputs(1, specificDaysTimesInputs, 'specificDaysMedicationTime[]');
+            
+            // Establecer fecha actual como valor predeterminado para la fecha de inicio
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+        });
+    </script>
+</body>
+</html> 
