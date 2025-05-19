@@ -6,17 +6,98 @@
     <title>Iniciar Sesión - Meditrack</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos específicos para la página de login */
+        body {
+            background-color: var(--app-background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 1em;
+        }
+        
+        .login-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 2em;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+        
+        .login-logo img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        
+        .app-name {
+            font-size: var(--font-size-large);
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 0.5em;
+        }
+        
+        .login-form {
+            margin-bottom: 1.5em;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 2em;
+            color: var(--dark-grey);
+            font-size: var(--font-size-small);
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 1.5em;
+            left: 1.5em;
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-grey);
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        .back-btn:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+    </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="logo">MediTrack</div>
-                <h2>Iniciar Sesión</h2>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="images/logo.png" alt="MediTrack Logo" onerror="this.src='https://via.placeholder.com/80?text=M'">
+                <div class="app-name">MediTrack</div>
                 <p>Accede a tu cuenta para gestionar tu salud</p>
             </div>
             
-            <form id="loginForm">
+            <form id="loginForm" class="login-form">
                 <div class="form-group">
                     <label for="username">Nombre de usuario</label>
                     <input type="text" id="username" name="username" required>
@@ -52,9 +133,8 @@
                 <div id="loginMessage" class="alert" style="display: none;"></div>
             </form>
             
-            <div class="auth-footer">
+            <div class="login-footer">
                 <p>¿No tienes una cuenta? <a href="#">Regístrate</a></p>
-                <p><a href="index.html">Volver a la página de inicio</a></p>
             </div>
         </div>
     </div>
