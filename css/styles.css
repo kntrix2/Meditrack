@@ -510,7 +510,7 @@ input:focus, select:focus, textarea:focus {
   }
   
   .container {
-    padding: 0 15px;
+    padding: 0 12px;
   }
 }
 
@@ -1517,7 +1517,7 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5em;
+  padding: 0 12px;
   position: sticky;
   top: 0;
   z-index: 50;
@@ -1526,7 +1526,7 @@ input:focus, select:focus, textarea:focus {
 
 .header-title {
   font-weight: 600;
-  font-size: var(--font-size-medium);
+  font-size: 1.2rem;
 }
 
 .header-actions {
@@ -1536,7 +1536,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .content-area {
-  padding: 1.5em;
+  padding: 12px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -1548,11 +1548,11 @@ input:focus, select:focus, textarea:focus {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: var(--bottom-nav-height);
+  height: 65px;
   background-color: var(--white);
   border-top: 1px solid var(--grey);
   z-index: 90;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .bottom-nav-items {
@@ -1571,7 +1571,7 @@ input:focus, select:focus, textarea:focus {
   color: var(--dark-grey);
   text-decoration: none;
   transition: color 0.2s;
-  padding: 0.5em;
+  padding: 8px 0;
 }
 
 .bottom-nav-item:hover,
@@ -1581,12 +1581,12 @@ input:focus, select:focus, textarea:focus {
 }
 
 .bottom-nav-item i {
-  font-size: 1.25em;
-  margin-bottom: 0.25em;
+  font-size: 1.2rem;
+  margin-bottom: 2px;
 }
 
 .bottom-nav-item span {
-  font-size: var(--font-size-small);
+  font-size: 0.7rem;
 }
 
 /* Mobile menu toggle */
@@ -1666,11 +1666,12 @@ input:focus, select:focus, textarea:focus {
   }
   
   .content-area {
-    padding: 1em;
+    padding: 12px;
   }
   
   .header {
-    padding: 0 1em;
+    padding: 0 12px;
+    height: 50px;
   }
 }
 
@@ -1977,7 +1978,7 @@ input:focus, select:focus, textarea:focus {
 
 /* Gráfico de adherencia */
 .canvas-container {
-  height: 180px;
+  height: 150px;
   margin: 1em 0;
 }
 
@@ -1999,7 +2000,7 @@ input:focus, select:focus, textarea:focus {
 .week-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5em;
+  gap: 3px;
   margin-top: 0.5em;
 }
 
@@ -2007,7 +2008,7 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.75em 0.5em;
+  padding: 5px 3px;
   background-color: var(--light-grey);
   border-radius: 8px;
   text-align: center;
@@ -2019,16 +2020,16 @@ input:focus, select:focus, textarea:focus {
 }
 
 .day-name {
-  font-size: var(--font-size-small);
+  font-size: 0.7rem;
   color: var(--dark-grey);
   margin-bottom: 0.25em;
 }
 
 .day-number {
-  font-size: var(--font-size-medium);
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--black);
-  margin-bottom: 0.5em;
+  margin-bottom: 3px;
 }
 
 .day-indicators {
@@ -2063,36 +2064,381 @@ input:focus, select:focus, textarea:focus {
 @media (max-width: 768px) {
   .health-status-summary {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .health-status-item {
+    padding: 10px;
+  }
+  
+  .status-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .status-info h3 {
+    font-size: 0.7rem;
+  }
+  
+  .status-value {
+    font-size: 1.1rem;
   }
   
   .week-days {
     grid-template-columns: repeat(7, 1fr);
-    gap: 0.25em;
-  }
-  
-  .day-name {
-    font-size: 0.7em;
-  }
-  
-  .day-number {
-    font-size: 0.9em;
-  }
-}
-
-@media (max-width: 480px) {
-  .health-status-summary {
-    grid-template-columns: 1fr;
-  }
-  
-  .week-days {
-    gap: 0.1em;
+    gap: 3px;
   }
   
   .week-day {
-    padding: 0.5em 0.25em;
+    padding: 5px 3px;
+  }
+  
+  .day-name {
+    font-size: 0.7rem;
+  }
+  
+  .day-number {
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+  }
+  
+  .content-area {
+    padding: 12px;
+  }
+  
+  .dashboard-header {
+    margin: 10px 0 15px;
+    text-align: center;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .dashboard-header p {
+    font-size: 0.9rem;
+  }
+  
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .quick-action {
+    padding: 12px 8px;
+  }
+  
+  .quick-action i {
+    font-size: 1.2rem;
+  }
+  
+  .quick-action span {
+    font-size: 0.8rem;
+  }
+  
+  .bottom-nav {
+    height: 65px;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bottom-nav-item {
+    padding: 8px 0;
+  }
+  
+  .bottom-nav-item i {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+  }
+  
+  .bottom-nav-item span {
+    font-size: 0.7rem;
+  }
+}
+
+/* Ajustes adicionales para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .header-actions {
+    font-size: 0.9rem;
+  }
+  
+  .notification-badge {
+    font-size: 0.6rem;
+  }
+  
+  .health-status-summary {
+    margin-bottom: 12px;
+  }
+  
+  .health-status-item {
+    padding: 8px;
+  }
+  
+  .status-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+  }
+  
+  .status-icon i {
+    font-size: 1rem;
+  }
+  
+  .status-value {
+    font-size: 1rem;
+  }
+  
+  .dashboard-card {
+    padding: 10px;
+  }
+  
+  .dashboard-card-title {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  
+  .btn {
+    padding: 0.6em 1.2em;
+    font-size: 0.9rem;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+  }
+  
+  .quick-actions {
+    margin: 0 auto;
+    max-width: 300px;
+  }
+  
+  .health-tip p {
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
   
   .day-indicators {
-    gap: 0.25em;
+    justify-content: center;
+  }
+  
+  .adherence-percentage {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .adherence-chart p {
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  
+  .rewards-progress {
+    text-align: center;
+  }
+  
+  .rewards-level {
+    justify-content: center;
+  }
+  
+  .badges-preview {
+    justify-content: center;
+  }
+  
+  .sidebar-nav-item {
+    padding: 0.65em 1.25em;
+  }
+}
+
+/* Reglas específicas de visualización en dispositivos muy pequeños */
+@media (max-width: 320px) {
+  .dashboard-header h1 {
+    font-size: 1.1rem;
+  }
+  
+  .health-status-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .status-icon {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  
+  .week-day {
+    padding: 3px 1px;
+  }
+  
+  .day-name {
+    font-size: 0.6rem;
+  }
+  
+  .day-number {
+    font-size: 0.8rem;
+  }
+  
+  .bottom-nav-item span {
+    font-size: 0.65rem;
+  }
+}
+
+/* Ajustes adicionales para el dashboard */
+@media (max-width: 768px) {
+  /* Mejorar layout de tarjetas para móvil */
+  .dashboard-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 0 5px 80px 5px;
+  }
+  
+  .dashboard-card {
+    width: 100%;
+    max-width: 450px;
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  /* Mejorar espaciado y alineación */
+  .reminder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .reminder-icon {
+    margin-right: 10px;
+  }
+  
+  .reminder-content {
+    flex: 1;
+  }
+  
+  .take-dose-btn {
+    padding: 0.4em 0.8em;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  
+  /* Centrar elementos dentro de las tarjetas */
+  .empty-state {
+    text-align: center;
+    padding: 15px 10px;
+  }
+  
+  /* Mejorar visualización de síntomas */
+  .symptom-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+  }
+}
+
+/* Ajustes para orientación horizontal en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+  .health-status-summary {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  
+  .dashboard-cards {
+    padding-bottom: 70px;
+  }
+  
+  .bottom-nav {
+    height: 55px;
+  }
+  
+  .bottom-nav-item i {
+    font-size: 1rem;
+    margin-bottom: 1px;
+  }
+  
+  .bottom-nav-item span {
+    font-size: 0.65rem;
+  }
+}
+
+/* Mejoras de interacción táctil para móviles */
+@media (max-width: 768px) {
+  /* Botones y elementos clicables más grandes */
+  .btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sidebar-nav-item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .bottom-nav-item {
+    min-height: 50px;
+  }
+  
+  .quick-action {
+    min-height: 70px;
+  }
+  
+  /* Espaciado para elementos interactivos */
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  select,
+  textarea {
+    font-size: 16px; /* Evita el zoom automático en iPhone */
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+  
+  /* Agregar feedback visual al tocar elementos */
+  .btn:active,
+  .sidebar-nav-item:active,
+  .bottom-nav-item:active,
+  .quick-action:active,
+  .week-day:active,
+  .reminder:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+  
+  /* Mejorar la visualización de elementos activos */
+  .bottom-nav-item.active {
+    position: relative;
+  }
+  
+  .bottom-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 3px 3px 0 0;
+  }
+  
+  /* Mejorar visualización del menú móvil */
+  .menu-toggle {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
   }
 } 
