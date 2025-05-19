@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Más Opciones - Meditrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Más Opciones</div>
+                <div class="header-actions">
+                    <span id="patientName">Paciente</span>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h1>Más Opciones</h1>
+                    <p>Accede a funciones adicionales y configura tu experiencia.</p>
+                </div>
+                
+                <!-- Menú de opciones -->
+                <div class="more-menu">
+                    <!-- Perfil y configuración -->
+                    <div class="more-section">
+                        <h2 class="more-section-title">Perfil y Configuración</h2>
+                        <div class="more-option-list">
+                            <a href="patient_profile.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Mi Perfil</h3>
+                                    <p>Gestiona tu información personal</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            
+                            <a href="rewards.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Mis Recompensas</h3>
+                                    <p>Ver tus puntos y logros</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            
+                            <a href="notifications.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Notificaciones</h3>
+                                    <p>Configura tus notificaciones</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Informes y análisis -->
+                    <div class="more-section">
+                        <h2 class="more-section-title">Informes y Análisis</h2>
+                        <div class="more-option-list">
+                            <a href="report.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Informes de Salud</h3>
+                                    <p>Visualiza tendencias y genera reportes</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            
+                            <a href="adherence.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Adherencia al Tratamiento</h3>
+                                    <p>Revisa tu historial de adherencia</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Compartir y contactos -->
+                    <div class="more-section">
+                        <h2 class="more-section-title">Compartir y Contactos</h2>
+                        <div class="more-option-list">
+                            <a href="caregivers.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Cuidadores</h3>
+                                    <p>Gestiona quién puede ver tu información</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            
+                            <a href="share_data.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-share-alt"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Compartir Datos</h3>
+                                    <p>Exporta y comparte información médica</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Ayuda y soporte -->
+                    <div class="more-section">
+                        <h2 class="more-section-title">Ayuda y Soporte</h2>
+                        <div class="more-option-list">
+                            <a href="faq.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Preguntas Frecuentes</h3>
+                                    <p>Resuelve tus dudas sobre la aplicación</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                            
+                            <a href="contact.html" class="more-option">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Contacto</h3>
+                                    <p>Ponte en contacto con nuestro equipo</p>
+                                </div>
+                                <div class="more-option-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Acción de cerrar sesión -->
+                    <div class="more-section">
+                        <div class="more-option-list">
+                            <a href="#" id="moreLogoutBtn" class="more-option more-option-danger">
+                                <div class="more-option-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <div class="more-option-content">
+                                    <h3>Cerrar Sesión</h3>
+                                    <p>Salir de tu cuenta</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Información de la versión -->
+                <div class="version-info">
+                    <p>MediTrack v1.0</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item active">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Mostrar nombre del paciente
+            document.getElementById('patientName').textContent = currentUser.name;
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Configurar botones de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            document.getElementById('moreLogoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Evento para opciones no implementadas
+            const notImplementedOptions = document.querySelectorAll('.more-option[href="notifications.html"], .more-option[href="adherence.html"], .more-option[href="caregivers.html"], .more-option[href="share_data.html"], .more-option[href="contact.html"]');
+            
+            notImplementedOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Esta funcionalidad no está disponible en la versión de demostración.');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

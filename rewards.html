@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recompensas - Meditrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item active">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Recompensas</div>
+                <div class="header-actions">
+                    <span id="userPoints" class="badge badge-points">0 pts</span>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h1>Mis Recompensas</h1>
+                    <p>Mejora tu adherencia al tratamiento y obtén más puntos y logros.</p>
+                </div>
+                
+                <!-- Nivel actual -->
+                <div class="level-card">
+                    <div class="level-info">
+                        <div class="level-title">
+                            <h2>Nivel <span id="levelNumber">1</span></h2>
+                            <span id="levelName" class="level-name">Principiante en Salud</span>
+                        </div>
+                        <div class="level-progress-container">
+                            <div class="level-progress">
+                                <div class="progress-bar">
+                                    <div id="levelProgressBar" class="progress" style="width: 0%;"></div>
+                                </div>
+                                <div class="progress-labels">
+                                    <span id="currentPoints">0</span>
+                                    <span id="nextLevelPoints">/ 100 pts</span>
+                                </div>
+                            </div>
+                            <div id="levelDescription" class="level-description">
+                                Estás comenzando tu viaje hacia una mejor salud. ¡Sigue así!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Insignias -->
+                <div class="rewards-section">
+                    <h2 class="section-subtitle">Mis Insignias</h2>
+                    <div id="badgesContainer" class="badges-container">
+                        <!-- Las insignias se cargarán dinámicamente -->
+                        <div class="empty-state-small">
+                            <p>Aún no has obtenido ninguna insignia. ¡Sigue utilizando la aplicación para desbloquearlas!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Niveles -->
+                <div class="rewards-section">
+                    <h2 class="section-subtitle">Niveles de Recompensa</h2>
+                    <div class="levels-container">
+                        <div class="level-item" id="level1">
+                            <div class="level-icon">1</div>
+                            <div class="level-details">
+                                <h3>Principiante en Salud</h3>
+                                <p>0 - 99 puntos</p>
+                                <div class="level-description">
+                                    <p>Comenzando tu viaje de salud. Completa acciones diarias para subir de nivel.</p>
+                                </div>
+                            </div>
+                            <div class="level-status">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="level-item" id="level2">
+                            <div class="level-icon">2</div>
+                            <div class="level-details">
+                                <h3>Entusiasta de la Salud</h3>
+                                <p>100 - 199 puntos</p>
+                                <div class="level-description">
+                                    <p>Estás tomando en serio tu salud. Mantén tu racha para avanzar.</p>
+                                </div>
+                            </div>
+                            <div class="level-status">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="level-item" id="level3">
+                            <div class="level-icon">3</div>
+                            <div class="level-details">
+                                <h3>Profesional de la Salud</h3>
+                                <p>200 - 299 puntos</p>
+                                <div class="level-description">
+                                    <p>Has demostrado compromiso con tu tratamiento. ¡Sigue con el buen trabajo!</p>
+                                </div>
+                            </div>
+                            <div class="level-status">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="level-item" id="level4">
+                            <div class="level-icon">4</div>
+                            <div class="level-details">
+                                <h3>Experto en Salud</h3>
+                                <p>300 - 499 puntos</p>
+                                <div class="level-description">
+                                    <p>Un verdadero experto en gestión de tu salud. Cerca de alcanzar el nivel máximo.</p>
+                                </div>
+                            </div>
+                            <div class="level-status">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="level-item" id="level5">
+                            <div class="level-icon">5</div>
+                            <div class="level-details">
+                                <h3>Maestro del Bienestar</h3>
+                                <p>500+ puntos</p>
+                                <div class="level-description">
+                                    <p>¡Has alcanzado el nivel máximo! Tu dedicación a tu salud es ejemplar.</p>
+                                </div>
+                            </div>
+                            <div class="level-status">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cómo ganar puntos -->
+                <div class="rewards-section">
+                    <h2 class="section-subtitle">Cómo Ganar Puntos</h2>
+                    <div class="points-actions">
+                        <div class="point-action">
+                            <div class="point-action-icon">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <div class="point-action-details">
+                                <h3>Tomar Medicamento</h3>
+                                <p>Registra que has tomado tu medicación a tiempo</p>
+                            </div>
+                            <div class="point-action-value">
+                                +10 pts
+                            </div>
+                        </div>
+                        
+                        <div class="point-action">
+                            <div class="point-action-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="point-action-details">
+                                <h3>Asistir a Cita</h3>
+                                <p>Marca tu cita médica como completada</p>
+                            </div>
+                            <div class="point-action-value">
+                                +20 pts
+                            </div>
+                        </div>
+                        
+                        <div class="point-action">
+                            <div class="point-action-icon">
+                                <i class="fas fa-heart-pulse"></i>
+                            </div>
+                            <div class="point-action-details">
+                                <h3>Registrar Síntoma</h3>
+                                <p>Registra un nuevo síntoma o signo vital</p>
+                            </div>
+                            <div class="point-action-value">
+                                +5 pts
+                            </div>
+                        </div>
+                        
+                        <div class="point-action">
+                            <div class="point-action-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="point-action-details">
+                                <h3>Adherencia Perfecta</h3>
+                                <p>Logra una adherencia del 100% durante una semana</p>
+                            </div>
+                            <div class="point-action-value">
+                                +50 pts
+                            </div>
+                        </div>
+                        
+                        <div class="point-action">
+                            <div class="point-action-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="point-action-details">
+                                <h3>Uso Diario</h3>
+                                <p>Utiliza la aplicación durante 7 días consecutivos</p>
+                            </div>
+                            <div class="point-action-value">
+                                +25 pts
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item active">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Configurar botón de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Obtener y mostrar información de puntos y nivel
+            const userPoints = currentUser.points || 0;
+            const level = Meditrack.gamification.getLevel(userPoints);
+            const badges = Meditrack.gamification.getBadges(currentUser);
+            
+            // Mostrar puntos
+            document.getElementById('userPoints').textContent = `${userPoints} pts`;
+            document.getElementById('currentPoints').textContent = userPoints;
+            
+            // Mostrar nivel
+            document.getElementById('levelNumber').textContent = level.level;
+            document.getElementById('levelName').textContent = level.name;
+            
+            // Actualizar descripciones del nivel según el nivel actual
+            let levelDescription = "";
+            switch(level.level) {
+                case 1:
+                    levelDescription = "Estás comenzando tu viaje hacia una mejor salud. ¡Sigue así!";
+                    break;
+                case 2:
+                    levelDescription = "¡Buen progreso! Estás desarrollando hábitos de salud positivos.";
+                    break;
+                case 3:
+                    levelDescription = "Impresionante compromiso con tu salud. Continúa con el buen trabajo.";
+                    break;
+                case 4:
+                    levelDescription = "Casi en la cima. Tu dedicación a tu salud es admirable.";
+                    break;
+                case 5:
+                    levelDescription = "¡Has alcanzado el nivel máximo! Eres un ejemplo de adherencia y cuidado de la salud.";
+                    break;
+            }
+            document.getElementById('levelDescription').textContent = levelDescription;
+            
+            // Calcular próximo nivel y progreso
+            let nextLevelPoints = 100; // Puntos para el siguiente nivel
+            let currentLevelPoints = 0; // Puntos del nivel actual
+            
+            // Determinar puntos necesarios para el siguiente nivel
+            if (level.level === 1) {
+                nextLevelPoints = 100;
+                currentLevelPoints = 0;
+            } else if (level.level === 2) {
+                nextLevelPoints = 200;
+                currentLevelPoints = 100;
+            } else if (level.level === 3) {
+                nextLevelPoints = 300;
+                currentLevelPoints = 200;
+            } else if (level.level === 4) {
+                nextLevelPoints = 500;
+                currentLevelPoints = 300;
+            } else {
+                // Nivel máximo
+                nextLevelPoints = 500;
+                currentLevelPoints = 500;
+            }
+            
+            // Mostrar puntos para el siguiente nivel
+            if (level.level < 5) {
+                document.getElementById('nextLevelPoints').textContent = `/ ${nextLevelPoints} pts`;
+            } else {
+                document.getElementById('nextLevelPoints').textContent = "Nivel Máximo";
+            }
+            
+            // Calcular porcentaje de progreso
+            let progressPercentage = 100;
+            if (level.level < 5) { // Si no está en el nivel máximo
+                progressPercentage = ((userPoints - currentLevelPoints) / (nextLevelPoints - currentLevelPoints)) * 100;
+            }
+            
+            document.getElementById('levelProgressBar').style.width = `${progressPercentage}%`;
+            
+            // Mostrar estado de los niveles (desbloqueado/bloqueado)
+            for (let i = 1; i <= 5; i++) {
+                const levelElement = document.getElementById(`level${i}`);
+                
+                if (i <= level.level) {
+                    // Nivel actual o desbloqueado
+                    levelElement.classList.add('level-unlocked');
+                    const statusIcon = levelElement.querySelector('.level-status i');
+                    statusIcon.className = 'fas fa-check-circle';
+                    
+                    if (i === level.level) {
+                        // Nivel actual
+                        levelElement.classList.add('level-current');
+                    }
+                } else {
+                    // Nivel bloqueado
+                    levelElement.classList.add('level-locked');
+                    const statusIcon = levelElement.querySelector('.level-status i');
+                    statusIcon.className = 'fas fa-lock';
+                }
+            }
+            
+            // Mostrar insignias
+            const badgesContainer = document.getElementById('badgesContainer');
+            
+            if (badges.length > 0) {
+                badgesContainer.innerHTML = '';
+                
+                badges.forEach(badge => {
+                    const badgeElement = document.createElement('div');
+                    badgeElement.className = 'badge-item';
+                    
+                    badgeElement.innerHTML = `
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-details">
+                            <h3>${badge.name}</h3>
+                        </div>
+                    `;
+                    
+                    badgesContainer.appendChild(badgeElement);
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

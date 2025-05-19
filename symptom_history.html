@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Síntomas - Meditrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item active">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Historial de Síntomas</div>
+                <div class="header-actions">
+                    <a href="log_symptom.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nuevo Síntoma
+                    </a>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h1>Historial de Síntomas</h1>
+                    <p>Aquí puedes ver y gestionar todos tus registros de síntomas.</p>
+                </div>
+                
+                <!-- Filtros -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="periodFilter">Periodo:</label>
+                        <select id="periodFilter" class="filter-select">
+                            <option value="all">Todos</option>
+                            <option value="7" selected>Últimos 7 días</option>
+                            <option value="30">Últimos 30 días</option>
+                            <option value="90">Últimos 3 meses</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="categoryFilter">Categoría:</label>
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="all">Todas</option>
+                            <option value="pain">Dolor</option>
+                            <option value="digestive">Digestivo</option>
+                            <option value="respiratory">Respiratorio</option>
+                            <option value="emotional">Emocional</option>
+                            <option value="sleep">Sueño</option>
+                            <option value="other">Otros</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="intensityFilter">Intensidad:</label>
+                        <select id="intensityFilter" class="filter-select">
+                            <option value="all">Todas</option>
+                            <option value="1">Leve</option>
+                            <option value="2">Moderada</option>
+                            <option value="3">Severa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Visualización de síntomas -->
+                <div class="symptoms-view">
+                    <div class="symptoms-charts">
+                        <div class="chart-container">
+                            <canvas id="intensityChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lista de síntomas -->
+                <div class="symptoms-list" id="symptomsList">
+                    <!-- Los síntomas se cargarán dinámicamente aquí -->
+                    <div class="empty-state" id="emptyState">
+                        <p>No hay registros de síntomas en el periodo seleccionado.</p>
+                        <a href="log_symptom.html" class="btn btn-primary mt-2">Registrar Síntoma</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item active">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Configurar botón de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Cargar síntomas
+            loadSymptoms();
+            
+            // Configurar filtros
+            document.getElementById('periodFilter').addEventListener('change', loadSymptoms);
+            document.getElementById('categoryFilter').addEventListener('change', loadSymptoms);
+            document.getElementById('intensityFilter').addEventListener('change', loadSymptoms);
+            
+            // Función para cargar síntomas
+            function loadSymptoms() {
+                const periodValue = document.getElementById('periodFilter').value;
+                const categoryValue = document.getElementById('categoryFilter').value;
+                const intensityValue = document.getElementById('intensityFilter').value;
+                
+                // Obtener todos los síntomas
+                let symptoms = Meditrack.symptoms.getAll();
+                
+                // Aplicar filtro de periodo
+                if (periodValue !== 'all') {
+                    const daysToFilter = parseInt(periodValue);
+                    const dateLimit = new Date();
+                    dateLimit.setDate(dateLimit.getDate() - daysToFilter);
+                    
+                    symptoms = symptoms.filter(symptom => {
+                        const symptomDate = new Date(symptom.date);
+                        return symptomDate >= dateLimit;
+                    });
+                }
+                
+                // Aplicar filtro de categoría
+                if (categoryValue !== 'all') {
+                    symptoms = symptoms.filter(symptom => symptom.category === categoryValue);
+                }
+                
+                // Aplicar filtro de intensidad
+                if (intensityValue !== 'all') {
+                    const intensityToFilter = parseInt(intensityValue);
+                    symptoms = symptoms.filter(symptom => symptom.intensity === intensityToFilter);
+                }
+                
+                // Ordenar por fecha (más reciente primero)
+                symptoms.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateB - dateA;
+                });
+                
+                // Mostrar síntomas
+                displaySymptoms(symptoms);
+                
+                // Actualizar gráficos
+                updateCharts(symptoms);
+            }
+            
+            // Función para mostrar síntomas
+            function displaySymptoms(symptoms) {
+                const symptomsListElement = document.getElementById('symptomsList');
+                const emptyStateElement = document.getElementById('emptyState');
+                
+                // Limpiar lista actual
+                symptomsListElement.innerHTML = '';
+                
+                // Mostrar mensaje si no hay síntomas
+                if (symptoms.length === 0) {
+                    symptomsListElement.appendChild(emptyStateElement);
+                    return;
+                }
+                
+                // Crear elementos para cada síntoma
+                symptoms.forEach(symptom => {
+                    const symptomElement = document.createElement('div');
+                    symptomElement.className = 'symptom-card';
+                    
+                    // Determinar clase de intensidad
+                    let intensityClass = '';
+                    let intensityText = '';
+                    
+                    if (symptom.intensity === 1) {
+                        intensityClass = 'intensity-low';
+                        intensityText = 'Leve';
+                    } else if (symptom.intensity === 2) {
+                        intensityClass = 'intensity-medium';
+                        intensityText = 'Moderada';
+                    } else if (symptom.intensity === 3) {
+                        intensityClass = 'intensity-high';
+                        intensityText = 'Severa';
+                    }
+                    
+                    // Determinar icono de categoría
+                    let categoryIcon = '';
+                    let categoryText = '';
+                    
+                    switch(symptom.category) {
+                        case 'pain':
+                            categoryIcon = 'fa-bolt';
+                            categoryText = 'Dolor';
+                            break;
+                        case 'digestive':
+                            categoryIcon = 'fa-stomach';
+                            categoryText = 'Digestivo';
+                            break;
+                        case 'respiratory':
+                            categoryIcon = 'fa-lungs';
+                            categoryText = 'Respiratorio';
+                            break;
+                        case 'emotional':
+                            categoryIcon = 'fa-face-sad-tear';
+                            categoryText = 'Emocional';
+                            break;
+                        case 'sleep':
+                            categoryIcon = 'fa-bed';
+                            categoryText = 'Sueño';
+                            break;
+                        default:
+                            categoryIcon = 'fa-circle-question';
+                            categoryText = 'Otro';
+                    }
+                    
+                    // Formatear fecha y hora
+                    const symptomDate = new Date(symptom.date + 'T' + symptom.time);
+                    const formattedDate = Meditrack.utils.formatDate(symptom.date);
+                    const formattedTime = symptom.time;
+                    
+                    symptomElement.innerHTML = `
+                        <div class="symptom-header">
+                            <div class="symptom-info">
+                                <h3>${symptom.name}</h3>
+                                <span class="symptom-date">${formattedDate} - ${formattedTime}</span>
+                            </div>
+                            <div class="symptom-actions">
+                                <button class="btn btn-icon edit-btn" data-id="${symptom.id}">
+                                    <i class="fas fa-pencil"></i>
+                                </button>
+                                <button class="btn btn-icon delete-btn" data-id="${symptom.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="symptom-body">
+                            <div class="symptom-badges">
+                                <span class="badge ${intensityClass}">
+                                    <i class="fas fa-circle"></i> ${intensityText}
+                                </span>
+                                <span class="badge badge-category">
+                                    <i class="fas ${categoryIcon}"></i> ${categoryText}
+                                </span>
+                            </div>
+                            <p class="symptom-description">${symptom.description || ''}</p>
+                        </div>
+                    `;
+                    
+                    // Agregar eventos a los botones
+                    symptomsListElement.appendChild(symptomElement);
+                });
+                
+                // Agregar eventos a los botones de editar y eliminar
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const symptomId = this.getAttribute('data-id');
+                        window.location.href = `log_symptom.html?id=${symptomId}`;
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const symptomId = this.getAttribute('data-id');
+                        
+                        if (confirm('¿Estás seguro de que deseas eliminar este registro de síntoma?')) {
+                            Meditrack.symptoms.delete(symptomId);
+                            loadSymptoms(); // Recargar síntomas
+                        }
+                    });
+                });
+            }
+            
+            // Función para actualizar gráficos
+            function updateCharts(symptoms) {
+                // Gráfico de intensidad a lo largo del tiempo
+                updateIntensityChart(symptoms);
+                
+                // Gráfico de distribución por categoría
+                updateCategoryChart(symptoms);
+            }
+            
+            // Gráfico de intensidad a lo largo del tiempo
+            function updateIntensityChart(symptoms) {
+                // Destruir gráfico anterior si existe
+                const intensityChartCanvas = document.getElementById('intensityChart');
+                if (window.intensityChart) {
+                    window.intensityChart.destroy();
+                }
+                
+                // Si no hay síntomas, no mostrar gráfico
+                if (symptoms.length === 0) {
+                    return;
+                }
+                
+                // Ordenar síntomas por fecha (más antiguo primero)
+                const sortedSymptoms = [...symptoms].sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateA - dateB;
+                });
+                
+                // Preparar datos para el gráfico
+                const labels = sortedSymptoms.map(symptom => {
+                    const date = new Date(symptom.date);
+                    return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                });
+                
+                const data = sortedSymptoms.map(symptom => symptom.intensity);
+                
+                // Crear gráfico
+                window.intensityChart = new Chart(intensityChartCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Intensidad',
+                            data: data,
+                            borderColor: '#4a6fa5',
+                            backgroundColor: 'rgba(74, 111, 165, 0.2)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 3,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        if (value === 1) return 'Leve';
+                                        if (value === 2) return 'Moderado';
+                                        if (value === 3) return 'Severo';
+                                        return '';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Evolución de la Intensidad',
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico de distribución por categoría
+            function updateCategoryChart(symptoms) {
+                // Destruir gráfico anterior si existe
+                const categoryChartCanvas = document.getElementById('categoryChart');
+                if (window.categoryChart) {
+                    window.categoryChart.destroy();
+                }
+                
+                // Si no hay síntomas, no mostrar gráfico
+                if (symptoms.length === 0) {
+                    return;
+                }
+                
+                // Contar síntomas por categoría
+                const categoryCounts = {
+                    pain: 0,
+                    digestive: 0,
+                    respiratory: 0,
+                    emotional: 0,
+                    sleep: 0,
+                    other: 0
+                };
+                
+                symptoms.forEach(symptom => {
+                    const category = symptom.category || 'other';
+                    if (categoryCounts.hasOwnProperty(category)) {
+                        categoryCounts[category]++;
+                    } else {
+                        categoryCounts.other++;
+                    }
+                });
+                
+                // Preparar datos para el gráfico
+                const labels = {
+                    pain: 'Dolor',
+                    digestive: 'Digestivo',
+                    respiratory: 'Respiratorio',
+                    emotional: 'Emocional',
+                    sleep: 'Sueño',
+                    other: 'Otro'
+                };
+                
+                const chartLabels = Object.keys(categoryCounts).map(key => labels[key]);
+                const chartData = Object.values(categoryCounts);
+                const backgroundColor = [
+                    '#4a6fa5', '#ff6b6b', '#4ecdc4', '#ffd166', '#9e579d', '#bdbdbd'
+                ];
+                
+                // Crear gráfico
+                window.categoryChart = new Chart(categoryChartCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: backgroundColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distribución por Categoría',
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

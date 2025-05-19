@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Citas - MediTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item active">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Mis Citas</div>
+                <div class="header-actions">
+                    <a href="add_appointment.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Añadir
+                    </a>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="page-header">
+                    <p>Gestiona tus citas médicas programadas y pasadas.</p>
+                    
+                    <!-- Tabs para cambiar entre citas futuras y pasadas -->
+                    <div class="tabs">
+                        <button id="upcomingTab" class="tab active">Próximas</button>
+                        <button id="pastTab" class="tab">Pasadas</button>
+                    </div>
+                </div>
+                
+                <!-- Mensajes de alerta -->
+                <div id="alertMessage" class="alert" style="display: none;"></div>
+                
+                <!-- Lista de citas -->
+                <div id="appointmentsList" class="appointments-list">
+                    <!-- Se llenará dinámicamente con JavaScript -->
+                    <div class="empty-state">
+                        <p>No se encontraron citas programadas.</p>
+                        <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item active">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Modal para ver detalles de cita -->
+    <div class="modal" id="appointmentDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalAppointmentTitle">Detalles de la Cita</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="appointmentDetails">
+                    <!-- Detalles de la cita -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="editAppointmentBtn">Editar</button>
+                <button class="btn btn-warning" id="deleteAppointmentBtn">Cancelar Cita</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de confirmación para eliminar -->
+    <div class="modal" id="confirmDeleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Cancelación</h2>
+                <button class="modal-close" id="closeConfirmModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas cancelar esta cita? Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelDeleteBtn">No, Mantener</button>
+                <button class="btn btn-warning" id="confirmDeleteBtn">Sí, Cancelar Cita</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Configurar botón de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Referencias a elementos DOM
+            const appointmentsList = document.getElementById('appointmentsList');
+            const upcomingTab = document.getElementById('upcomingTab');
+            const pastTab = document.getElementById('pastTab');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            // Referencias a modales
+            const appointmentDetailsModal = document.getElementById('appointmentDetailsModal');
+            const closeModal = document.getElementById('closeModal');
+            const modalAppointmentTitle = document.getElementById('modalAppointmentTitle');
+            const appointmentDetails = document.getElementById('appointmentDetails');
+            const editAppointmentBtn = document.getElementById('editAppointmentBtn');
+            const deleteAppointmentBtn = document.getElementById('deleteAppointmentBtn');
+            
+            // Referencias al modal de confirmación
+            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            const closeConfirmModal = document.getElementById('closeConfirmModal');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            
+            let currentAppointment = null; // Para almacenar la cita actualmente seleccionada
+            let currentTab = 'upcoming'; // Por defecto, mostrar citas próximas
+            
+            // Cargar la lista de citas inicialmente
+            loadAppointments();
+            
+            // Eventos para tabs
+            upcomingTab.addEventListener('click', function() {
+                upcomingTab.classList.add('active');
+                pastTab.classList.remove('active');
+                currentTab = 'upcoming';
+                loadAppointments();
+            });
+            
+            pastTab.addEventListener('click', function() {
+                pastTab.classList.add('active');
+                upcomingTab.classList.remove('active');
+                currentTab = 'past';
+                loadAppointments();
+            });
+            
+            // Eventos para modales
+            closeModal.addEventListener('click', function() {
+                appointmentDetailsModal.style.display = 'none';
+            });
+            
+            closeConfirmModal.addEventListener('click', function() {
+                confirmDeleteModal.style.display = 'none';
+            });
+            
+            cancelDeleteBtn.addEventListener('click', function() {
+                confirmDeleteModal.style.display = 'none';
+            });
+            
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (currentAppointment) {
+                    Meditrack.appointments.delete(currentAppointment.id);
+                    confirmDeleteModal.style.display = 'none';
+                    appointmentDetailsModal.style.display = 'none';
+                    
+                    // Mostrar mensaje de éxito
+                    showAlert('Cita cancelada correctamente.', 'success');
+                    
+                    // Recargar la lista
+                    loadAppointments();
+                }
+            });
+            
+            editAppointmentBtn.addEventListener('click', function() {
+                if (currentAppointment) {
+                    // Implementación simplificada - en un escenario real, redirigir a una página de edición
+                    // con el ID de la cita, o abrir un formulario modal de edición
+                    showAlert('La funcionalidad de edición está simulada en este prototipo.', 'warning');
+                }
+            });
+            
+            deleteAppointmentBtn.addEventListener('click', function() {
+                if (currentAppointment) {
+                    confirmDeleteModal.style.display = 'block';
+                }
+            });
+            
+            // Cerrar modales al hacer clic fuera de ellos
+            window.addEventListener('click', function(e) {
+                if (e.target === appointmentDetailsModal) {
+                    appointmentDetailsModal.style.display = 'none';
+                }
+                if (e.target === confirmDeleteModal) {
+                    confirmDeleteModal.style.display = 'none';
+                }
+            });
+            
+            // Función para cargar citas
+            function loadAppointments() {
+                let appointments = [];
+                
+                if (currentTab === 'upcoming') {
+                    appointments = Meditrack.appointments.getUpcoming();
+                } else {
+                    appointments = Meditrack.appointments.getPast();
+                }
+                
+                // Filtrar por usuario actual
+                appointments = appointments.filter(apt => apt.userId === currentUser.id);
+                
+                // Mostrar resultados
+                if (appointments.length > 0) {
+                    appointmentsList.innerHTML = '';
+                    
+                    appointments.forEach(apt => {
+                        const card = createAppointmentCard(apt);
+                        appointmentsList.appendChild(card);
+                    });
+                } else {
+                    let message = currentTab === 'upcoming' 
+                        ? 'No tienes citas programadas.' 
+                        : 'No tienes citas pasadas.';
+                    
+                    appointmentsList.innerHTML = `
+                        <div class="empty-state">
+                            <p>${message}</p>
+                            <a href="add_appointment.html" class="btn btn-primary mt-2">Añadir Cita</a>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Función para crear una tarjeta de cita
+            function createAppointmentCard(appointment) {
+                const card = document.createElement('div');
+                card.className = 'appointment-card';
+                
+                // Formatear fecha
+                const formattedDate = Meditrack.utils.formatDate(appointment.date);
+                
+                // Determinar si la cita es urgente (próxima en 2 días)
+                const appointmentDate = new Date(appointment.date + 'T' + appointment.time);
+                const today = new Date();
+                const twoDaysLater = new Date(today);
+                twoDaysLater.setDate(today.getDate() + 2);
+                
+                const isUrgent = appointmentDate <= twoDaysLater && appointmentDate >= today;
+                const cardClass = isUrgent ? 'appointment-card urgent' : 'appointment-card';
+                
+                card.className = cardClass;
+                
+                card.innerHTML = `
+                    <div class="appointment-card-header">
+                        <h3>${appointment.doctorName}</h3>
+                        <span class="specialty-badge">${appointment.specialty}</span>
+                    </div>
+                    <div class="appointment-card-body">
+                        <p><i class="fas fa-calendar-day"></i> ${formattedDate}</p>
+                        <p><i class="fas fa-clock"></i> ${appointment.time}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${appointment.location}</p>
+                    </div>
+                    <div class="appointment-card-footer">
+                        <button class="btn btn-outline btn-sm view-details-btn" data-id="${appointment.id}">
+                            Ver Detalles
+                        </button>
+                        ${currentTab === 'upcoming' ? `
+                            <button class="btn btn-warning btn-sm cancel-btn" data-id="${appointment.id}">
+                                Cancelar
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Evento para ver detalles
+                card.querySelector('.view-details-btn').addEventListener('click', function() {
+                    const appointmentId = this.getAttribute('data-id');
+                    showAppointmentDetails(appointmentId);
+                });
+                
+                // Evento para cancelar cita (solo para citas futuras)
+                if (currentTab === 'upcoming') {
+                    card.querySelector('.cancel-btn').addEventListener('click', function() {
+                        const appointmentId = this.getAttribute('data-id');
+                        const appointment = Meditrack.appointments.getById(appointmentId);
+                        if (appointment) {
+                            currentAppointment = appointment;
+                            confirmDeleteModal.style.display = 'block';
+                        }
+                    });
+                }
+                
+                return card;
+            }
+            
+            // Función para mostrar detalles de una cita
+            function showAppointmentDetails(appointmentId) {
+                const appointment = Meditrack.appointments.getById(appointmentId);
+                
+                if (appointment) {
+                    currentAppointment = appointment;
+                    
+                    // Actualizar título del modal
+                    modalAppointmentTitle.textContent = `Cita con Dr. ${appointment.doctorName}`;
+                    
+                    // Formatear fecha
+                    const formattedDate = Meditrack.utils.formatDate(appointment.date);
+                    
+                    // Preparar detalles de la cita
+                    appointmentDetails.innerHTML = `
+                        <div class="details-section">
+                            <p><strong>Especialidad:</strong> ${appointment.specialty}</p>
+                            <p><strong>Fecha:</strong> ${formattedDate}</p>
+                            <p><strong>Hora:</strong> ${appointment.time}</p>
+                            <p><strong>Ubicación:</strong> ${appointment.location}</p>
+                            <p><strong>Notas:</strong> ${appointment.notes || 'No especificadas'}</p>
+                            <p><strong>Recordatorios:</strong> ${appointment.enableReminders ? 'Activados' : 'Desactivados'}</p>
+                        </div>
+                    `;
+                    
+                    // Mostrar u ocultar botón de cancelar según si la cita es futura o pasada
+                    const now = new Date();
+                    const appointmentDate = new Date(appointment.date + 'T' + appointment.time);
+                    
+                    if (appointmentDate > now) {
+                        deleteAppointmentBtn.style.display = 'block';
+                    } else {
+                        deleteAppointmentBtn.style.display = 'none';
+                    }
+                    
+                    // Mostrar modal
+                    appointmentDetailsModal.style.display = 'block';
+                }
+            }
+            
+            // Función para mostrar alertas
+            function showAlert(message, type = 'info') {
+                alertMessage.textContent = message;
+                alertMessage.className = `alert alert-${type}`;
+                alertMessage.style.display = 'block';
+                
+                // Ocultar después de 5 segundos
+                setTimeout(() => {
+                    alertMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html> 

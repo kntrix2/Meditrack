@@ -6,6 +6,8 @@
     <title>Dashboard del Paciente - Meditrack</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -48,6 +50,10 @@
                 </div>
                 <div class="header-title">Dashboard</div>
                 <div class="header-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span id="notificationCount" class="notification-badge">0</span>
+                    </div>
                     <span id="patientName">Paciente</span>
                 </div>
             </header>
@@ -57,6 +63,46 @@
                 <div class="dashboard-header">
                     <h1>Bienvenido, <span id="patientNameHeader">Paciente</span></h1>
                     <p>Aquí puedes gestionar todos los aspectos de tu salud.</p>
+                </div>
+                
+                <!-- Resumen de estado de salud -->
+                <div class="health-status-summary">
+                    <div class="health-status-item">
+                        <div class="status-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="status-info">
+                            <h3>Adherencia</h3>
+                            <div class="status-value" id="adherenceSummary">0%</div>
+                        </div>
+                    </div>
+                    <div class="health-status-item">
+                        <div class="status-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="status-info">
+                            <h3>Medicamentos</h3>
+                            <div class="status-value" id="medicationCount">0</div>
+                        </div>
+                    </div>
+                    <div class="health-status-item">
+                        <div class="status-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="status-info">
+                            <h3>Próxima Cita</h3>
+                            <div class="status-value" id="nextAppointment">No hay citas</div>
+                        </div>
+                    </div>
+                    <div class="health-status-item">
+                        <div class="status-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="status-info">
+                            <h3>Nivel</h3>
+                            <div class="status-value" id="levelSummary">Nivel 1</div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="dashboard-cards">
@@ -89,15 +135,17 @@
                     <!-- Tarjeta de Síntomas -->
                     <div class="dashboard-card">
                         <div class="dashboard-card-title">
-                            <i class="fas fa-heart-pulse"></i> Seguimiento de Síntomas
+                            <i class="fas fa-heart-pulse"></i> Últimos Síntomas
                         </div>
-                        <div class="dashboard-card-content">
-                            <p>Registra tus síntomas y mediciones para un mejor seguimiento de tu salud.</p>
-                            <a href="log_symptom.html" class="btn btn-primary mt-2">Registrar Síntoma</a>
+                        <div id="recentSymptoms" class="dashboard-card-content">
+                            <div class="empty-state">
+                                <p>No has registrado ningún síntoma recientemente.</p>
+                                <a href="log_symptom.html" class="btn btn-primary mt-2">Registrar Síntoma</a>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Tarjeta de Adherencia -->
+                    <!-- Tarjeta de Adherencia con gráfico -->
                     <div class="dashboard-card">
                         <div class="dashboard-card-title">
                             <i class="fas fa-chart-line"></i> Mi Adherencia
@@ -106,6 +154,9 @@
                             <div class="adherence-chart">
                                 <div class="adherence-percentage" id="adherencePercentage">0%</div>
                                 <p>Adherencia a la medicación en los últimos 7 días</p>
+                            </div>
+                            <div class="canvas-container">
+                                <canvas id="adherenceChart"></canvas>
                             </div>
                             <a href="report.html" class="btn btn-outline mt-2">Ver Informe Completo</a>
                         </div>
@@ -126,6 +177,9 @@
                                 <div class="progress-bar">
                                     <div class="progress" id="levelProgress" style="width: 0%;"></div>
                                 </div>
+                            </div>
+                            <div id="badgesPreview" class="badges-preview">
+                                <!-- Las insignias se cargarán dinámicamente aquí -->
                             </div>
                             <a href="rewards.html" class="btn btn-outline mt-2">Ver Todas mis Recompensas</a>
                         </div>
@@ -154,6 +208,30 @@
                                     <i class="fas fa-file-pdf"></i>
                                     <span>Generar Informe</span>
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Consejo de salud del día -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-lightbulb"></i> Consejo del Día
+                        </div>
+                        <div class="dashboard-card-content">
+                            <div id="healthTip" class="health-tip">
+                                <p>Recuerda beber al menos 8 vasos de agua al día para mantenerte bien hidratado y mejorar la función de tus órganos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Calendario de medicación semanal -->
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-calendar-week"></i> Mi Semana
+                        </div>
+                        <div class="dashboard-card-content">
+                            <div class="week-calendar" id="weekCalendar">
+                                <!-- El calendario semanal se cargará dinámicamente aquí -->
                             </div>
                         </div>
                     </div>
@@ -218,6 +296,7 @@
             const level = Meditrack.gamification.getLevel(userPoints);
             document.querySelector('.level-icon').textContent = level.level;
             document.querySelector('.level-name').textContent = level.name;
+            document.getElementById('levelSummary').textContent = `Nivel ${level.level}`;
             
             // Determinar puntos necesarios para el siguiente nivel
             if (level.level === 1) {
@@ -252,9 +331,28 @@
             // Cargar próximas citas
             loadUpcomingAppointments();
             
+            // Cargar síntomas recientes
+            loadRecentSymptoms();
+            
             // Calcular y mostrar adherencia
             const adherencePercentage = Meditrack.utils.calculateAdherence(7);
             document.getElementById('adherencePercentage').textContent = `${adherencePercentage}%`;
+            document.getElementById('adherenceSummary').textContent = `${adherencePercentage}%`;
+            
+            // Cargar estadísticas de medicamentos
+            loadMedicationStats();
+            
+            // Mostrar próxima cita
+            displayNextAppointment();
+            
+            // Mostrar insignias
+            displayBadges();
+            
+            // Inicializar gráfico de adherencia
+            initAdherenceChart();
+            
+            // Generar calendario semanal
+            generateWeekCalendar();
             
             // Configurar botón de cerrar sesión
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
@@ -305,10 +403,14 @@
                             // Recalcular y mostrar adherencia
                             const adherencePercentage = Meditrack.utils.calculateAdherence(7);
                             document.getElementById('adherencePercentage').textContent = `${adherencePercentage}%`;
+                            document.getElementById('adherenceSummary').textContent = `${adherencePercentage}%`;
                             
                             // Actualizar puntos del usuario
                             const currentUser = Meditrack.getCurrentUser();
                             document.getElementById('userPoints').textContent = currentUser.points || 0;
+                            
+                            // Actualizar gráfico de adherencia
+                            updateAdherenceChart();
                             
                             // Mostrar notificación
                             Meditrack.showNotification('Dosis registrada', {
@@ -386,6 +488,227 @@
                         </div>
                     `;
                 }
+            }
+            
+            function loadRecentSymptoms() {
+                const recentSymptoms = Meditrack.symptoms.getRecent(3); // Obtener solo 3 síntomas recientes
+                const symptomsContainer = document.getElementById('recentSymptoms');
+                
+                if (recentSymptoms.length > 0) {
+                    symptomsContainer.innerHTML = '';
+                    
+                    recentSymptoms.forEach(symptom => {
+                        const symptomElement = document.createElement('div');
+                        symptomElement.className = 'symptom-item';
+                        
+                        // Determinar clase de intensidad
+                        let intensityClass = '';
+                        let intensityText = '';
+                        
+                        if (symptom.intensity === 1) {
+                            intensityClass = 'intensity-low';
+                            intensityText = 'Leve';
+                        } else if (symptom.intensity === 2) {
+                            intensityClass = 'intensity-medium';
+                            intensityText = 'Moderada';
+                        } else if (symptom.intensity === 3) {
+                            intensityClass = 'intensity-high';
+                            intensityText = 'Severa';
+                        }
+                        
+                        // Formatear fecha
+                        const symptomDate = new Date(symptom.date);
+                        const formattedDate = symptomDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                        
+                        symptomElement.innerHTML = `
+                            <div class="symptom-info">
+                                <span class="symptom-name">${symptom.name}</span>
+                                <span class="symptom-date">${formattedDate}</span>
+                            </div>
+                            <span class="symptom-intensity ${intensityClass}">${intensityText}</span>
+                        `;
+                        
+                        symptomsContainer.appendChild(symptomElement);
+                    });
+                    
+                    const viewAllLink = document.createElement('a');
+                    viewAllLink.href = 'symptom_history.html';
+                    viewAllLink.className = 'btn btn-outline mt-2';
+                    viewAllLink.textContent = 'Ver historial completo';
+                    symptomsContainer.appendChild(viewAllLink);
+                    
+                } else {
+                    symptomsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <p>No has registrado ningún síntoma recientemente.</p>
+                            <a href="log_symptom.html" class="btn btn-primary mt-2">Registrar Síntoma</a>
+                        </div>
+                    `;
+                }
+            }
+            
+            function loadMedicationStats() {
+                const medications = Meditrack.medications.getAll();
+                const activeCount = medications.filter(med => med.active).length;
+                
+                document.getElementById('medicationCount').textContent = activeCount;
+                
+                // Actualizar contador de notificaciones
+                const pendingMedications = Meditrack.medications.getPendingMedications();
+                document.getElementById('notificationCount').textContent = pendingMedications.length;
+            }
+            
+            function displayNextAppointment() {
+                const upcomingAppointments = Meditrack.appointments.getUpcoming();
+                
+                if (upcomingAppointments.length > 0) {
+                    const nextAppointment = upcomingAppointments[0]; // El primer elemento es la próxima cita
+                    const appointmentDate = new Date(nextAppointment.date);
+                    const formattedDate = appointmentDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                    
+                    document.getElementById('nextAppointment').textContent = formattedDate;
+                } else {
+                    document.getElementById('nextAppointment').textContent = 'No hay citas';
+                }
+            }
+            
+            function displayBadges() {
+                const badges = Meditrack.gamification.getBadges(currentUser);
+                const badgesContainer = document.getElementById('badgesPreview');
+                
+                if (badges.length > 0) {
+                    badgesContainer.innerHTML = '';
+                    
+                    // Mostrar solo hasta 3 insignias
+                    const badgesToShow = badges.slice(0, 3);
+                    
+                    badgesToShow.forEach(badge => {
+                        const badgeElement = document.createElement('div');
+                        badgeElement.className = 'badge-item-small';
+                        badgeElement.innerHTML = badge.icon;
+                        badgeElement.title = badge.name;
+                        
+                        badgesContainer.appendChild(badgeElement);
+                    });
+                    
+                    if (badges.length > 3) {
+                        const moreBadgesElement = document.createElement('div');
+                        moreBadgesElement.className = 'badge-item-small badge-more';
+                        moreBadgesElement.textContent = `+${badges.length - 3}`;
+                        badgesContainer.appendChild(moreBadgesElement);
+                    }
+                }
+            }
+            
+            function initAdherenceChart() {
+                const adherenceCanvas = document.getElementById('adherenceChart');
+                
+                // Obtener datos para los últimos 7 días
+                const labels = [];
+                const data = [];
+                
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    labels.push(date.toLocaleDateString('es-ES', { weekday: 'short' }));
+                    
+                    // Calcular adherencia para este día
+                    const dailyAdherence = Math.floor(Math.random() * 40) + 60; // Simulado para la demo
+                    data.push(dailyAdherence);
+                }
+                
+                window.adherenceChart = new Chart(adherenceCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Adherencia diaria (%)',
+                            data: data,
+                            borderColor: '#4285f4',
+                            backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function updateAdherenceChart() {
+                // Actualizar datos del gráfico de adherencia
+                // En una app real, esto obtendría los datos reales de adherencia
+                const newData = [];
+                for (let i = 0; i < 7; i++) {
+                    const dailyAdherence = Math.floor(Math.random() * 40) + 60;
+                    newData.push(dailyAdherence);
+                }
+                
+                if (window.adherenceChart) {
+                    window.adherenceChart.data.datasets[0].data = newData;
+                    window.adherenceChart.update();
+                }
+            }
+            
+            function generateWeekCalendar() {
+                const calendarContainer = document.getElementById('weekCalendar');
+                const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                const today = new Date();
+                const currentDay = today.getDay(); // 0-6 (Domingo-Sábado)
+                
+                calendarContainer.innerHTML = '';
+                
+                const weekView = document.createElement('div');
+                weekView.className = 'week-days';
+                
+                // Generar 7 días, empezando por el domingo
+                for (let i = 0; i < 7; i++) {
+                    const dayDate = new Date(today);
+                    dayDate.setDate(today.getDate() - currentDay + i);
+                    
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'week-day';
+                    if (i === currentDay) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    const formattedDay = dayDate.getDate();
+                    
+                    // Verificar si hay medicamentos o citas para este día
+                    const hasMedication = Math.random() > 0.5; // Simulado
+                    const hasAppointment = Math.random() > 0.7; // Simulado
+                    
+                    dayElement.innerHTML = `
+                        <div class="day-name">${daysOfWeek[i]}</div>
+                        <div class="day-number">${formattedDay}</div>
+                        <div class="day-indicators">
+                            ${hasMedication ? '<span class="day-indicator medication"><i class="fas fa-pills"></i></span>' : ''}
+                            ${hasAppointment ? '<span class="day-indicator appointment"><i class="fas fa-calendar-check"></i></span>' : ''}
+                        </div>
+                    `;
+                    
+                    weekView.appendChild(dayElement);
+                }
+                
+                calendarContainer.appendChild(weekView);
             }
         });
     </script>

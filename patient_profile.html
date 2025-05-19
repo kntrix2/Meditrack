@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil del Paciente - Meditrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item active">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Mi Perfil</div>
+                <div class="header-actions">
+                    <button id="editProfileBtn" class="btn btn-primary">
+                        <i class="fas fa-pencil"></i> Editar
+                    </button>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h1>Información Personal</h1>
+                    <p>Gestiona tu información personal y preferencias.</p>
+                </div>
+                
+                <!-- Perfil del usuario -->
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="profile-overview">
+                            <h2 id="profileName">Nombre del Paciente</h2>
+                            <span id="userPoints" class="badge badge-points">0 pts</span>
+                            <span id="levelName" class="badge badge-level">Principiante en Salud</span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-sections">
+                        <!-- Vista del perfil (por defecto) -->
+                        <div id="profileView" class="profile-section">
+                            <div class="profile-section-header">
+                                <h3>Información básica</h3>
+                            </div>
+                            <div class="profile-info-group">
+                                <div class="profile-info-item">
+                                    <span class="info-label">Nombre completo</span>
+                                    <span id="viewName" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Correo electrónico</span>
+                                    <span id="viewEmail" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Teléfono</span>
+                                    <span id="viewPhone" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Fecha de nacimiento</span>
+                                    <span id="viewBirthdate" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Género</span>
+                                    <span id="viewGender" class="info-value">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-section-header">
+                                <h3>Información médica</h3>
+                            </div>
+                            <div class="profile-info-group">
+                                <div class="profile-info-item">
+                                    <span class="info-label">Alergias</span>
+                                    <span id="viewAllergies" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Condiciones médicas</span>
+                                    <span id="viewConditions" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Médico de cabecera</span>
+                                    <span id="viewDoctor" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Grupo sanguíneo</span>
+                                    <span id="viewBloodType" class="info-value">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-section-header">
+                                <h3>Contacto de emergencia</h3>
+                            </div>
+                            <div class="profile-info-group">
+                                <div class="profile-info-item">
+                                    <span class="info-label">Nombre del contacto</span>
+                                    <span id="viewEmergencyName" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Relación</span>
+                                    <span id="viewEmergencyRelation" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Teléfono</span>
+                                    <span id="viewEmergencyPhone" class="info-value">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-section-header">
+                                <h3>Preferencias</h3>
+                            </div>
+                            <div class="profile-info-group">
+                                <div class="profile-info-item">
+                                    <span class="info-label">Notificaciones</span>
+                                    <span id="viewNotifications" class="info-value">-</span>
+                                </div>
+                                <div class="profile-info-item">
+                                    <span class="info-label">Recordatorios diarios</span>
+                                    <span id="viewReminders" class="info-value">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Formulario de edición (oculto por defecto) -->
+                        <div id="profileEdit" class="profile-section" style="display: none;">
+                            <form id="profileForm" class="profile-form">
+                                <div class="profile-section-header">
+                                    <h3>Información básica</h3>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editName">Nombre completo</label>
+                                    <input type="text" id="editName" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editEmail">Correo electrónico</label>
+                                    <input type="email" id="editEmail" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editPhone">Teléfono</label>
+                                    <input type="tel" id="editPhone" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editBirthdate">Fecha de nacimiento</label>
+                                    <input type="date" id="editBirthdate" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editGender">Género</label>
+                                    <select id="editGender" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        <option value="male">Masculino</option>
+                                        <option value="female">Femenino</option>
+                                        <option value="non-binary">No binario</option>
+                                        <option value="prefer-not-to-say">Prefiero no decirlo</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="profile-section-header">
+                                    <h3>Información médica</h3>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editAllergies">Alergias</label>
+                                    <textarea id="editAllergies" class="form-control" rows="2" placeholder="Lista de alergias separadas por comas"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editConditions">Condiciones médicas</label>
+                                    <textarea id="editConditions" class="form-control" rows="2" placeholder="Lista de condiciones médicas separadas por comas"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editDoctor">Médico de cabecera</label>
+                                    <input type="text" id="editDoctor" class="form-control" placeholder="Nombre del médico">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editBloodType">Grupo sanguíneo</label>
+                                    <select id="editBloodType" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="profile-section-header">
+                                    <h3>Contacto de emergencia</h3>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editEmergencyName">Nombre del contacto</label>
+                                    <input type="text" id="editEmergencyName" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editEmergencyRelation">Relación</label>
+                                    <input type="text" id="editEmergencyRelation" class="form-control" placeholder="Ej: Cónyuge, Hijo/a, Familiar">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editEmergencyPhone">Teléfono</label>
+                                    <input type="tel" id="editEmergencyPhone" class="form-control">
+                                </div>
+                                
+                                <div class="profile-section-header">
+                                    <h3>Preferencias</h3>
+                                </div>
+                                <div class="form-group">
+                                    <label>Notificaciones</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="editNotifications" class="toggle-input">
+                                        <label for="editNotifications" class="toggle-label"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Recordatorios diarios</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="editReminders" class="toggle-input">
+                                        <label for="editReminders" class="toggle-label"></label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="button" id="cancelEditBtn" class="btn btn-outline">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Acciones adicionales -->
+                <div class="profile-extra-actions">
+                    <button id="exportDataBtn" class="btn btn-outline btn-block">
+                        <i class="fas fa-download"></i> Exportar Mis Datos
+                    </button>
+                    <button id="changePasswordBtn" class="btn btn-outline btn-block">
+                        <i class="fas fa-key"></i> Cambiar Contraseña
+                    </button>
+                    <button id="deleteAccountBtn" class="btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> Eliminar Mi Cuenta
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item active">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Configurar botón de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Obtener información de gamificación
+            const userPoints = currentUser.points || 0;
+            const level = Meditrack.gamification.getLevel(userPoints);
+            
+            // Mostrar información general del perfil
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('userPoints').textContent = `${userPoints} pts`;
+            document.getElementById('levelName').textContent = level.name;
+            
+            // Mostrar información detallada del perfil
+            populateProfileView(currentUser);
+            
+            // Preparar formulario de edición
+            populateProfileForm(currentUser);
+            
+            // Configurar botones
+            document.getElementById('editProfileBtn').addEventListener('click', function() {
+                document.getElementById('profileView').style.display = 'none';
+                document.getElementById('profileEdit').style.display = 'block';
+                this.style.display = 'none';
+            });
+            
+            document.getElementById('cancelEditBtn').addEventListener('click', function() {
+                document.getElementById('profileEdit').style.display = 'none';
+                document.getElementById('profileView').style.display = 'block';
+                document.getElementById('editProfileBtn').style.display = 'inline-block';
+            });
+            
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfile();
+            });
+            
+            document.getElementById('exportDataBtn').addEventListener('click', function() {
+                exportUserData();
+            });
+            
+            document.getElementById('changePasswordBtn').addEventListener('click', function() {
+                alert('Funcionalidad no disponible en esta versión de demostración.');
+            });
+            
+            document.getElementById('deleteAccountBtn').addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+                    alert('Cuenta eliminada con éxito. Serás redirigido a la página de inicio.');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            // Funciones
+            function populateProfileView(user) {
+                // Información básica
+                document.getElementById('viewName').textContent = user.name || '-';
+                document.getElementById('viewEmail').textContent = user.email || '-';
+                document.getElementById('viewPhone').textContent = user.phone || '-';
+                document.getElementById('viewBirthdate').textContent = formatDate(user.birthdate) || '-';
+                
+                // Género
+                let genderText = '-';
+                if (user.gender === 'male') genderText = 'Masculino';
+                else if (user.gender === 'female') genderText = 'Femenino';
+                else if (user.gender === 'non-binary') genderText = 'No binario';
+                else if (user.gender === 'prefer-not-to-say') genderText = 'Prefiero no decirlo';
+                document.getElementById('viewGender').textContent = genderText;
+                
+                // Información médica
+                document.getElementById('viewAllergies').textContent = user.allergies || '-';
+                document.getElementById('viewConditions').textContent = user.medicalConditions || '-';
+                document.getElementById('viewDoctor').textContent = user.primaryDoctor || '-';
+                document.getElementById('viewBloodType').textContent = user.bloodType || '-';
+                
+                // Contacto de emergencia
+                if (user.emergency) {
+                    document.getElementById('viewEmergencyName').textContent = user.emergency.name || '-';
+                    document.getElementById('viewEmergencyRelation').textContent = user.emergency.relation || '-';
+                    document.getElementById('viewEmergencyPhone').textContent = user.emergency.phone || '-';
+                }
+                
+                // Preferencias
+                document.getElementById('viewNotifications').textContent = user.preferences && user.preferences.notifications ? 'Activadas' : 'Desactivadas';
+                document.getElementById('viewReminders').textContent = user.preferences && user.preferences.dailyReminders ? 'Activados' : 'Desactivados';
+            }
+            
+            function populateProfileForm(user) {
+                // Información básica
+                document.getElementById('editName').value = user.name || '';
+                document.getElementById('editEmail').value = user.email || '';
+                document.getElementById('editPhone').value = user.phone || '';
+                document.getElementById('editBirthdate').value = user.birthdate || '';
+                document.getElementById('editGender').value = user.gender || '';
+                
+                // Información médica
+                document.getElementById('editAllergies').value = user.allergies || '';
+                document.getElementById('editConditions').value = user.medicalConditions || '';
+                document.getElementById('editDoctor').value = user.primaryDoctor || '';
+                document.getElementById('editBloodType').value = user.bloodType || '';
+                
+                // Contacto de emergencia
+                if (user.emergency) {
+                    document.getElementById('editEmergencyName').value = user.emergency.name || '';
+                    document.getElementById('editEmergencyRelation').value = user.emergency.relation || '';
+                    document.getElementById('editEmergencyPhone').value = user.emergency.phone || '';
+                }
+                
+                // Preferencias
+                document.getElementById('editNotifications').checked = user.preferences && user.preferences.notifications ? true : false;
+                document.getElementById('editReminders').checked = user.preferences && user.preferences.dailyReminders ? true : false;
+            }
+            
+            function saveProfile() {
+                // Obtener valores del formulario
+                const updatedUser = {...currentUser};
+                
+                // Información básica
+                updatedUser.name = document.getElementById('editName').value;
+                updatedUser.email = document.getElementById('editEmail').value;
+                updatedUser.phone = document.getElementById('editPhone').value;
+                updatedUser.birthdate = document.getElementById('editBirthdate').value;
+                updatedUser.gender = document.getElementById('editGender').value;
+                
+                // Información médica
+                updatedUser.allergies = document.getElementById('editAllergies').value;
+                updatedUser.medicalConditions = document.getElementById('editConditions').value;
+                updatedUser.primaryDoctor = document.getElementById('editDoctor').value;
+                updatedUser.bloodType = document.getElementById('editBloodType').value;
+                
+                // Contacto de emergencia
+                updatedUser.emergency = {
+                    name: document.getElementById('editEmergencyName').value,
+                    relation: document.getElementById('editEmergencyRelation').value,
+                    phone: document.getElementById('editEmergencyPhone').value
+                };
+                
+                // Preferencias
+                updatedUser.preferences = {
+                    notifications: document.getElementById('editNotifications').checked,
+                    dailyReminders: document.getElementById('editReminders').checked
+                };
+                
+                // Guardar usuario actualizado
+                Meditrack.setCurrentUser(updatedUser);
+                
+                // Actualizar vista
+                document.getElementById('profileName').textContent = updatedUser.name;
+                populateProfileView(updatedUser);
+                
+                // Volver a la vista del perfil
+                document.getElementById('profileEdit').style.display = 'none';
+                document.getElementById('profileView').style.display = 'block';
+                document.getElementById('editProfileBtn').style.display = 'inline-block';
+                
+                alert('Perfil actualizado correctamente.');
+            }
+            
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                
+                const date = new Date(dateString);
+                return date.toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+            
+            function exportUserData() {
+                // Preparar datos para exportar
+                const exportData = {
+                    profile: {...currentUser},
+                    medications: Meditrack.medications.getAll(),
+                    appointments: Meditrack.appointments.getAll(),
+                    symptoms: Meditrack.symptoms.getAll()
+                };
+                
+                // Eliminar datos sensibles
+                if (exportData.profile.hasOwnProperty('password')) {
+                    delete exportData.profile.password;
+                }
+                
+                // Convertir a JSON
+                const jsonData = JSON.stringify(exportData, null, 2);
+                
+                // Crear archivo para descargar
+                const blob = new Blob([jsonData], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                
+                // Crear enlace y simular clic
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'meditrack_datos_' + new Date().toISOString().slice(0, 10) + '.json';
+                document.body.appendChild(a);
+                a.click();
+                
+                // Limpiar
+                setTimeout(function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Síntoma - Meditrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MediTrack</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="patient_dashboard.html" class="sidebar-nav-item">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="medications.html" class="sidebar-nav-item">
+                    <i class="fas fa-pills"></i> Medicamentos
+                </a>
+                <a href="appointments.html" class="sidebar-nav-item">
+                    <i class="fas fa-calendar-check"></i> Citas
+                </a>
+                <a href="symptom_history.html" class="sidebar-nav-item active">
+                    <i class="fas fa-heart-pulse"></i> Síntomas
+                </a>
+                <a href="rewards.html" class="sidebar-nav-item">
+                    <i class="fas fa-trophy"></i> Recompensas
+                </a>
+                <a href="patient_profile.html" class="sidebar-nav-item">
+                    <i class="fas fa-user"></i> Perfil
+                </a>
+                <a href="#" id="logoutBtn" class="sidebar-nav-item">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Encabezado -->
+            <header class="header">
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="header-title">Registrar Síntoma</div>
+                <div class="header-actions">
+                    <a href="symptom_history.html" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </header>
+
+            <!-- Área de contenido -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h1>Registrar Nuevo Síntoma</h1>
+                    <p>Ingresa los detalles del síntoma que estás experimentando.</p>
+                </div>
+                
+                <div class="form-container">
+                    <form id="symptomForm" class="form">
+                        <input type="hidden" id="symptomId">
+                        
+                        <div class="form-group">
+                            <label for="symptomName">Nombre del Síntoma*</label>
+                            <input type="text" id="symptomName" required class="form-control" placeholder="Ej: Dolor de cabeza, Náuseas, Mareo">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group form-group-half">
+                                <label for="symptomDate">Fecha*</label>
+                                <input type="date" id="symptomDate" required class="form-control">
+                            </div>
+                            <div class="form-group form-group-half">
+                                <label for="symptomTime">Hora*</label>
+                                <input type="time" id="symptomTime" required class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="symptomCategory">Categoría*</label>
+                            <select id="symptomCategory" required class="form-control">
+                                <option value="">Seleccione una categoría</option>
+                                <option value="pain">Dolor</option>
+                                <option value="digestive">Digestivo</option>
+                                <option value="respiratory">Respiratorio</option>
+                                <option value="emotional">Emocional</option>
+                                <option value="sleep">Sueño</option>
+                                <option value="other">Otro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Intensidad*</label>
+                            <div class="intensity-selector">
+                                <label class="intensity-option">
+                                    <input type="radio" name="intensity" value="1" required>
+                                    <span class="intensity-indicator intensity-low"></span>
+                                    <span class="intensity-label">Leve</span>
+                                </label>
+                                <label class="intensity-option">
+                                    <input type="radio" name="intensity" value="2" required>
+                                    <span class="intensity-indicator intensity-medium"></span>
+                                    <span class="intensity-label">Moderada</span>
+                                </label>
+                                <label class="intensity-option">
+                                    <input type="radio" name="intensity" value="3" required>
+                                    <span class="intensity-indicator intensity-high"></span>
+                                    <span class="intensity-label">Severa</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="symptomDescription">Descripción</label>
+                            <textarea id="symptomDescription" class="form-control" rows="4" placeholder="Proporciona más detalles sobre este síntoma, cuándo comenzó, cómo se siente, etc."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Factores Relacionados</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="factorStress" class="related-factor">
+                                    <span>Estrés</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="factorFood" class="related-factor">
+                                    <span>Alimentación</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="factorExercise" class="related-factor">
+                                    <span>Ejercicio</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="factorSleep" class="related-factor">
+                                    <span>Sueño</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="factorMedication" class="related-factor">
+                                    <span>Medicación</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="factorWeather" class="related-factor">
+                                    <span>Clima</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="medication">Medicamento Relacionado</label>
+                            <select id="medication" class="form-control">
+                                <option value="">Ninguno</option>
+                                <!-- Las opciones se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" id="cancelBtn" class="btn btn-outline">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Barra de navegación inferior para móviles -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a href="patient_dashboard.html" class="bottom-nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="medications.html" class="bottom-nav-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Medicamentos</span>
+                </a>
+                <a href="appointments.html" class="bottom-nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Citas</span>
+                </a>
+                <a href="symptom_history.html" class="bottom-nav-item active">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Síntomas</span>
+                </a>
+                <a href="more.html" class="bottom-nav-item">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>Más</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser || currentUser.userType !== 'patient') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Toggle del menú móvil
+            document.querySelector('.menu-toggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Configurar botón de cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                Meditrack.logout();
+            });
+            
+            // Establecer fecha y hora actual por defecto
+            const now = new Date();
+            
+            // Formatear fecha YYYY-MM-DD para input date
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            
+            // Formatear hora HH:MM para input time
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}`;
+            
+            document.getElementById('symptomDate').value = formattedDate;
+            document.getElementById('symptomTime').value = formattedTime;
+            
+            // Cargar lista de medicamentos
+            loadMedications();
+            
+            // Comprobar si es edición o creación nueva
+            const urlParams = new URLSearchParams(window.location.search);
+            const symptomId = urlParams.get('id');
+            
+            if (symptomId) {
+                // Es una edición, cargar el síntoma existente
+                loadSymptom(symptomId);
+                document.querySelector('.section-header h1').textContent = 'Editar Síntoma';
+                document.querySelector('.section-header p').textContent = 'Modifica los detalles del síntoma registrado.';
+            }
+            
+            // Configurar acciones del formulario
+            document.getElementById('symptomForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveSymptom();
+            });
+            
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                window.location.href = 'symptom_history.html';
+            });
+            
+            // Funciones
+            function loadMedications() {
+                const medications = Meditrack.medications.getAll();
+                const medicationSelect = document.getElementById('medication');
+                
+                // Eliminar opciones anteriores excepto la primera
+                while (medicationSelect.options.length > 1) {
+                    medicationSelect.remove(1);
+                }
+                
+                // Agregar opciones basadas en las medicaciones
+                medications.forEach(med => {
+                    const option = document.createElement('option');
+                    option.value = med.id;
+                    option.textContent = `${med.name} - ${med.dose} ${med.form}`;
+                    medicationSelect.appendChild(option);
+                });
+            }
+            
+            function loadSymptom(id) {
+                const symptom = Meditrack.symptoms.getById(id);
+                
+                if (!symptom) {
+                    alert('No se encontró el síntoma solicitado.');
+                    window.location.href = 'symptom_history.html';
+                    return;
+                }
+                
+                // Llenar el formulario con los datos
+                document.getElementById('symptomId').value = symptom.id;
+                document.getElementById('symptomName').value = symptom.name || '';
+                document.getElementById('symptomDate').value = symptom.date || '';
+                document.getElementById('symptomTime').value = symptom.time || '';
+                document.getElementById('symptomCategory').value = symptom.category || '';
+                document.getElementById('symptomDescription').value = symptom.description || '';
+                
+                // Seleccionar intensidad
+                if (symptom.intensity) {
+                    document.querySelector(`input[name="intensity"][value="${symptom.intensity}"]`).checked = true;
+                }
+                
+                // Marcar factores relacionados
+                if (symptom.relatedFactors) {
+                    if (symptom.relatedFactors.stress) document.getElementById('factorStress').checked = true;
+                    if (symptom.relatedFactors.food) document.getElementById('factorFood').checked = true;
+                    if (symptom.relatedFactors.exercise) document.getElementById('factorExercise').checked = true;
+                    if (symptom.relatedFactors.sleep) document.getElementById('factorSleep').checked = true;
+                    if (symptom.relatedFactors.medication) document.getElementById('factorMedication').checked = true;
+                    if (symptom.relatedFactors.weather) document.getElementById('factorWeather').checked = true;
+                }
+                
+                // Seleccionar medicamento si existe
+                if (symptom.medicationId) {
+                    document.getElementById('medication').value = symptom.medicationId;
+                }
+            }
+            
+            function saveSymptom() {
+                // Obtener valores del formulario
+                const symptomId = document.getElementById('symptomId').value;
+                const symptomName = document.getElementById('symptomName').value;
+                const symptomDate = document.getElementById('symptomDate').value;
+                const symptomTime = document.getElementById('symptomTime').value;
+                const symptomCategory = document.getElementById('symptomCategory').value;
+                const symptomDescription = document.getElementById('symptomDescription').value;
+                const intensityElement = document.querySelector('input[name="intensity"]:checked');
+                
+                if (!intensityElement) {
+                    alert('Por favor, selecciona la intensidad del síntoma.');
+                    return;
+                }
+                
+                const intensity = parseInt(intensityElement.value);
+                
+                // Factores relacionados
+                const relatedFactors = {
+                    stress: document.getElementById('factorStress').checked,
+                    food: document.getElementById('factorFood').checked,
+                    exercise: document.getElementById('factorExercise').checked,
+                    sleep: document.getElementById('factorSleep').checked,
+                    medication: document.getElementById('factorMedication').checked,
+                    weather: document.getElementById('factorWeather').checked
+                };
+                
+                // Medicamento relacionado
+                const medicationId = document.getElementById('medication').value || null;
+                
+                // Crear objeto de síntoma
+                const symptom = {
+                    name: symptomName,
+                    date: symptomDate,
+                    time: symptomTime,
+                    category: symptomCategory,
+                    intensity: intensity,
+                    description: symptomDescription,
+                    relatedFactors: relatedFactors,
+                    medicationId: medicationId
+                };
+                
+                // Si tiene ID, es una actualización
+                if (symptomId) {
+                    symptom.id = symptomId;
+                    Meditrack.symptoms.update(symptom);
+                    alert('Síntoma actualizado correctamente.');
+                } else {
+                    // Es un nuevo síntoma
+                    Meditrack.symptoms.add(symptom);
+                    alert('Síntoma registrado correctamente.');
+                }
+                
+                // Redirigir al historial
+                window.location.href = 'symptom_history.html';
+            }
+        });
+    </script>
+</body>
+</html> 
