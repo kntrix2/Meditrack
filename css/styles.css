@@ -481,15 +481,22 @@ input:focus, select:focus, textarea:focus {
 .nav-links {
   display: flex;
   list-style: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .nav-links li {
-  margin-left: 1.5em;
+  margin-left: 1.2em;
+  margin-bottom: 0.5em;
 }
 
 .nav-links a {
   color: var(--black);
   font-weight: 600;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  display: block;
+  padding: 0.3em 0.2em;
 }
 
 .nav-links a:hover, .nav-links a.active {
@@ -504,7 +511,7 @@ input:focus, select:focus, textarea:focus {
 .nav-links a.active::after {
   content: '';
   position: absolute;
-  bottom: -5px;
+  bottom: -2px;
   left: 0;
   width: 100%;
   height: 2px;
