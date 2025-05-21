@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Meditrack</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="images/app-icon.png" type="image/png">
+    <link rel="icon" href="../../images/app-icon.png" type="image/png">
     <!-- Cargar app.js con manejo de errores -->
     <script>
         // Verificar si estamos ejecutando desde sistema de archivos o servidor
@@ -26,7 +26,7 @@
             script.onerror = function() { 
                 console.error('Error al cargar script:', src);
                 // Intentar con ruta alternativa
-                if (src === 'js/app.js') {
+                if (src === '../../js/app.js') {
                     var script2 = document.createElement('script');
                     script2.src = './js/app.js'; // Intentar con ruta relativa alternativa
                     script2.onload = function() { callback(true); };
@@ -41,7 +41,7 @@
         
         // Cargar app.js
         window.appLoaded = false;
-        loadScript('js/app.js', function(success) {
+        loadScript('../../js/app.js', function(success) {
             window.appLoaded = success;
             console.log('App.js cargado:', success);
             if (!success) {
@@ -85,10 +85,10 @@
                             if (!hasLocalStorage) return;
                             try {
                                 localStorage.removeItem('currentUser');
-                                window.location.href = 'index.html';
+                                window.location.href = '../../index.html';
                             } catch (e) {
                                 console.error('Error al cerrar sesión:', e);
-                                window.location.href = 'index.html';
+                                window.location.href = '../../index.html';
                             }
                         },
                         login: function(email, password) {
@@ -205,14 +205,14 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">
+    <a href="../../index.html" class="back-btn">
         <i class="fas fa-arrow-left"></i>
     </a>
     
     <div class="login-container">
         <div class="login-card">
             <div class="login-logo">
-                <img src="images/app-icon.png" alt="MediTrack Logo" onerror="this.src='https://via.placeholder.com/80?text=M'">
+                <img src="../../images/app-icon.png" alt="MediTrack Logo" onerror="this.src='https://via.placeholder.com/80?text=M'">
                 <div class="app-name">MediTrack</div>
                 <p>Accede a tu cuenta para gestionar tu salud</p>
             </div>
@@ -341,7 +341,7 @@
                     console.log('Redirigiendo al dashboard...');
                     
                     setTimeout(function() {
-                        window.location.href = 'patient_dashboard.html';
+                        window.location.href = '../patient/patient_dashboard.html';
                     }, 500);
                     
                     return true;

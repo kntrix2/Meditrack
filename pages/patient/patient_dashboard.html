@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard del Paciente - Meditrack</title>
+    <title>Dashboard - MediTrack</title>
     <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="../../images/app-icon.png" type="image/png">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../js/app.js"></script>
     <script>
         // Verificar si estamos ejecutando desde sistema de archivos o servidor
         const isLocalFile = window.location.protocol === 'file:';
@@ -25,7 +25,7 @@
             script.onerror = function() { 
                 console.error('Error al cargar script:', src);
                 // Intentar con ruta alternativa
-                if (src === 'js/app.js') {
+                if (src === '../../js/app.js') {
                     var script2 = document.createElement('script');
                     script2.src = './js/app.js'; // Intentar con ruta relativa alternativa
                     script2.onload = function() { callback(true); };
@@ -40,7 +40,7 @@
         
         // Cargar app.js
         window.appLoaded = false;
-        loadScript('js/app.js', function(success) {
+        loadScript('../../js/app.js', function(success) {
             window.appLoaded = success;
             console.log('App.js cargado:', success);
             if (!success) {
@@ -55,7 +55,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <img src="images/app-icon.png" alt="MediTrack" width="30" height="30">
+                    <img src="../../images/app-icon.png" alt="MediTrack" width="30" height="30">
                     MediTrack
                 </div>
             </div>
@@ -309,383 +309,56 @@
         </nav>
     </div>
 
-<<<<<<< HEAD:pages/patient/patient_dashboard.html
-    <script src="../../js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Verificar autenticación
-            const currentUser = Meditrack.getCurrentUser();
-            if (!currentUser || currentUser.userType !== 'patient') {
-                window.location.href = '../auth/login.html';
-=======
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Dashboard cargado, verificando autenticación...');
-            
-            // Implementación fallback si Meditrack no está disponible
-            if (typeof window.Meditrack === 'undefined') {
-                console.warn('Meditrack no está disponible, usando implementación fallback');
-                
-                window.Meditrack = {
-                    getCurrentUser: function() {
-                        try {
-                            const userData = localStorage.getItem('currentUser');
-                            return userData ? JSON.parse(userData) : null;
-                        } catch (e) {
-                            console.error('Error al leer el usuario:', e);
-                            return null;
-                        }
-                    },
-                    
-                    logout: function() {
-                        try {
-                            localStorage.removeItem('currentUser');
-                            window.location.href = 'index.html';
-                        } catch (e) {
-                            console.error('Error al cerrar sesión:', e);
-                            window.location.href = 'index.html';
-                        }
-                    },
-                    
-                    medications: {
-                        getAll: function() {
-                            try {
-                                const medsData = localStorage.getItem('medications');
-                                return medsData ? JSON.parse(medsData) : [];
-                            } catch (e) {
-                                console.error('Error al obtener medicamentos:', e);
-                                return [];
-                            }
-                        }
-                    },
-                    
-                    utils: {
-                        loadAdherenceChart: function(canvasId) {
-                            console.log('Cargando gráfico de adherencia (fallback)...');
-                            if (window.Chart && document.getElementById(canvasId)) {
-                                const ctx = document.getElementById(canvasId).getContext('2d');
-                                const data = [85, 80, 90, 85, 90, 75, 85];
-                                
-                                document.getElementById('adherenceSummary').textContent = '85%';
-                                document.getElementById('adherencePercentage').textContent = '85%';
-                                
-                                // Datos de ejemplo
-                                const chartData = {
-                                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-                                    datasets: [{
-                                        label: 'Adherencia',
-                                        data: data,
-                                        backgroundColor: 'rgba(58, 123, 213, 0.2)',
-                                        borderColor: '#3a7bd5',
-                                        borderWidth: 2,
-                                        borderRadius: 5,
-                                        tension: 0.3
-                                    }]
-                                };
-                                
-                                new Chart(ctx, {
-                                    type: 'bar',
-                                    data: chartData,
-                                    options: {
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true,
-                                                max: 100,
-                                                ticks: {
-                                                    callback: function(value) {
-                                                        return value + '%';
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        plugins: {
-                                            legend: {
-                                                display: false
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                };
+            // Verificar si el módulo Meditrack se ha cargado correctamente
+            function checkMeditrackLoaded() {
+                if (typeof Meditrack !== 'undefined') {
+                    initDashboard();
+                } else {
+                    console.warn('Meditrack no está cargado, reintentando...');
+                    setTimeout(checkMeditrackLoaded, 500);
+                }
             }
             
-            // Verificar que el usuario está autenticado
-            const currentUser = window.Meditrack.getCurrentUser();
-            console.log('Usuario actual:', currentUser);
+            // Iniciar verificación
+            checkMeditrackLoaded();
             
+            // Función principal para inicializar el dashboard
+            function initDashboard() {
+                // Obtener el usuario actual
+                const currentUser = Meditrack.getCurrentUser();
+                
+                // Si no hay usuario autenticado, redirigir al login
             if (!currentUser) {
-                console.error('Usuario no autenticado, redirigiendo a login');
-                window.location.href = 'login.html';
->>>>>>> cambios-temporales:patient_dashboard.html
+                    console.error('No hay usuario autenticado');
+                    window.location.href = '../auth/login.html';
                 return;
             }
             
-            // Mostrar información del usuario
-            const patientNameSpan = document.getElementById('patientName');
-            const patientNameHeader = document.getElementById('patientNameHeader');
-            
-            if (patientNameSpan) patientNameSpan.textContent = currentUser.name || 'Usuario';
-            if (patientNameHeader) patientNameHeader.textContent = currentUser.name || 'Usuario';
-            
-            // Configurar botón de cierre de sesión
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function(e) {
+                // Mostrar nombre del usuario
+                document.getElementById('patientName').textContent = currentUser.name;
+                document.getElementById('patientNameHeader').textContent = currentUser.name;
+                
+                // Configurar botón de logout
+                document.getElementById('logoutBtn').addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('Cerrando sesión...');
-                    window.Meditrack.logout();
+                    Meditrack.logout();
                 });
+                
+                // Resto de la inicialización...
             }
             
-            // Configurar la barra lateral en dispositivos móviles
+            // Menú móvil
             const menuToggle = document.querySelector('.menu-toggle');
             const sidebar = document.querySelector('.sidebar');
-            
             if (menuToggle && sidebar) {
                 menuToggle.addEventListener('click', function() {
                     sidebar.classList.toggle('active');
-                    document.body.classList.toggle('sidebar-open');
+                    document.body.classList.toggle('no-scroll');
                 });
             }
-            
-            // Cargar datos de medicamentos
-            loadMedicationData();
-            
-            // Generar calendario semanal
-            generateWeekCalendar();
-            
-            // Cargar gráfico de adherencia
-            if (window.Chart && document.getElementById('adherenceChart')) {
-                window.Meditrack.utils.loadAdherenceChart('adherenceChart');
-            }
-            
-            // Mostrar tip aleatorio de salud
-            showRandomHealthTip();
         });
-        
-        // Función para generar el calendario semanal
-        function generateWeekCalendar() {
-            const weekDaysContainer = document.getElementById('weekDays');
-            if (!weekDaysContainer) return;
-            
-            const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-            const today = new Date();
-            const currentDay = today.getDay(); // 0-6, 0 = Domingo
-            
-            let html = '';
-            
-            // Ajustar para que la semana comience el lunes
-            const adjustedCurrentDay = currentDay === 0 ? 6 : currentDay - 1;
-            
-            for (let i = 0; i < 7; i++) {
-                const isToday = i === adjustedCurrentDay;
-                const dayClass = isToday ? 'day today' : 'day';
-                
-                html += `
-                    <div class="${dayClass}">
-                        <div class="day-name">${days[i]}</div>
-                        <div class="day-number">${getDayNumber(i, adjustedCurrentDay)}</div>
-                        <div class="day-status">${isToday ? '<i class="fas fa-circle"></i>' : ''}</div>
-                    </div>
-                `;
-            }
-            
-            weekDaysContainer.innerHTML = html;
-        }
-        
-        // Función para obtener el número de día para el calendario
-        function getDayNumber(dayIndex, currentDayIndex) {
-            const today = new Date();
-            const diff = dayIndex - currentDayIndex;
-            const day = new Date(today);
-            day.setDate(today.getDate() + diff);
-            return day.getDate();
-        }
-        
-        // Cargar datos de medicamentos
-        function loadMedicationData() {
-            if (typeof window.Meditrack === 'undefined' || !window.Meditrack.medications) {
-                console.error('API de medicamentos no disponible');
-                return;
-            }
-            
-            const medications = window.Meditrack.medications.getAll();
-            const medicationsContainer = document.getElementById('medicationsReminders');
-            
-            if (medications.length === 0) {
-                console.log('No hay medicamentos registrados');
-                return;
-            }
-            
-            // Actualizar contador de medicamentos
-            const medicationCountElement = document.getElementById('medicationCount');
-            if (medicationCountElement) {
-                medicationCountElement.textContent = medications.length;
-            }
-            
-            // Mostrar medicamentos activos
-            let html = '';
-            const activeMeds = medications.filter(med => med.active);
-            
-            if (activeMeds.length === 0) {
-                return;
-            }
-            
-            activeMeds.forEach(med => {
-                html += `
-                <div class="reminder-item">
-                    <div class="reminder-icon medication-icon">
-                        <i class="fas fa-pills"></i>
-                    </div>
-                    <div class="reminder-details">
-                        <h4>${med.name}</h4>
-                        <p>${med.dose || ''} - ${med.form || ''}</p>
-                    </div>
-                    <div class="reminder-time">
-                        ${getNextDoseTime(med)}
-                    </div>
-                </div>
-                `;
-            });
-            
-<<<<<<< HEAD:pages/patient/patient_dashboard.html
-            // Funciones para cargar datos
-            function loadPendingMedications() {
-                const pendingMedications = Meditrack.medications.getPendingMedications();
-                const medicationsContainer = document.getElementById('medicationsReminders');
-                
-                if (pendingMedications.length > 0) {
-                    medicationsContainer.innerHTML = '';
-                    
-                    pendingMedications.forEach(med => {
-                        const reminderElement = document.createElement('div');
-                        reminderElement.className = 'reminder';
-                        
-                        let nextDoseTime = 'Hoy';
-                        if (med.schedule && med.schedule.times && med.schedule.times.length > 0) {
-                            nextDoseTime = `Hoy a las ${med.schedule.times[0]}`;
-                        }
-                        
-                        reminderElement.innerHTML = `
-                            <div class="reminder-icon">
-                                <i class="fas fa-pills"></i>
-                            </div>
-                            <div class="reminder-content">
-                                <h4>${med.name} - ${med.dose} ${med.form}</h4>
-                                <p>Próxima dosis: ${nextDoseTime}</p>
-                            </div>
-                            <button class="btn btn-primary take-dose-btn" data-id="${med.id}">
-                                Tomar
-                            </button>
-                        `;
-                        
-                        medicationsContainer.appendChild(reminderElement);
-                    });
-                    
-                    // Agregar eventos a los botones de tomar dosis
-                    document.querySelectorAll('.take-dose-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            const medicationId = this.getAttribute('data-id');
-                            Meditrack.medications.takeDose(medicationId);
-                            loadPendingMedications(); // Recargar lista
-                            
-                            // Recalcular y mostrar adherencia
-                            const adherencePercentage = Meditrack.utils.calculateAdherence(7);
-                            document.getElementById('adherencePercentage').textContent = `${adherencePercentage}%`;
-                            document.getElementById('adherenceSummary').textContent = `${adherencePercentage}%`;
-                            
-                            // Actualizar puntos del usuario
-                            const currentUser = Meditrack.getCurrentUser();
-                            document.getElementById('userPoints').textContent = currentUser.points || 0;
-                            
-                            // Actualizar gráfico de adherencia
-                            updateAdherenceChart();
-                            
-                            // Mostrar notificación
-                            Meditrack.showNotification('Dosis registrada', {
-                                body: '¡Bien hecho! Has registrado correctamente tu medicación.',
-                                icon: '../../images/med-icon.png'
-                            });
-                        });
-                    });
-                    
-                } else {
-                    medicationsContainer.innerHTML = `
-                        <div class="empty-state">
-                            <p>No tienes medicamentos pendientes para hoy.</p>
-                            <a href="add_medication.html" class="btn btn-primary mt-2">Añadir Medicamento</a>
-                        </div>
-                    `;
-                }
-            }
-=======
-            medicationsContainer.innerHTML = html;
-        }
-        
-        // Obtener el tiempo para la próxima dosis
-        function getNextDoseTime(medication) {
-            if (!medication.schedule) return 'Sin horario';
->>>>>>> cambios-temporales:patient_dashboard.html
-            
-            if (medication.schedule.frequency === 'daily') {
-                const now = new Date();
-                const currentHour = now.getHours();
-                const currentMinutes = now.getMinutes();
-                const currentTime = currentHour * 60 + currentMinutes;
-                
-                // Buscar la próxima hora de toma
-                if (medication.schedule.times && medication.schedule.times.length > 0) {
-                    let nextDoseTime = null;
-                    let minTimeDiff = Infinity;
-                    
-                    for (const time of medication.schedule.times) {
-                        const [hours, minutes] = time.split(':').map(Number);
-                        const doseTime = hours * 60 + minutes;
-                        
-                        // Calcular diferencia de tiempo
-                        let timeDiff = doseTime - currentTime;
-                        if (timeDiff < 0) timeDiff += 24 * 60; // Si ya pasó, sumar un día completo
-                        
-                        if (timeDiff < minTimeDiff) {
-                            minTimeDiff = timeDiff;
-                            nextDoseTime = time;
-                        }
-                    }
-                    
-                    if (nextDoseTime) {
-                        return nextDoseTime;
-                    }
-                }
-                
-                return 'Hoy';
-            } else if (medication.schedule.frequency === 'as-needed') {
-                return 'Según necesidad';
-            }
-            
-            return 'Sin horario';
-        }
-        
-        // Mostrar un tip de salud aleatorio
-        function showRandomHealthTip() {
-            const tips = [
-                'Mantener una buena hidratación es fundamental para facilitar la absorción de medicamentos.',
-                'Establecer rutinas diarias te ayudará a recordar tomar tus medicamentos a tiempo.',
-                'Asegúrate de leer las instrucciones de almacenamiento de tus medicamentos.',
-                'Infórmale a tu médico sobre todos los medicamentos que estás tomando, incluidos suplementos.',
-                'Descansar adecuadamente es tan importante como tomar tus medicamentos correctamente.',
-                'La actividad física regular puede mejorar la efectividad de muchos tratamientos médicos.'
-            ];
-            
-            const tipElement = document.getElementById('healthTip');
-            if (tipElement) {
-                const randomIndex = Math.floor(Math.random() * tips.length);
-                tipElement.textContent = tips[randomIndex];
-            }
-        }
     </script>
 </body>
 </html> 
