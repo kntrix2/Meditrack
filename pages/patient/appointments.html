@@ -85,6 +85,12 @@
             padding: 1em 2em;
         }
         
+        /* Clase para botón pequeño */
+        .btn-sm {
+            font-size: 0.9rem;
+            padding: 0.5em 1em;
+        }
+        
         .specialty-badge {
             font-size: 1rem;
             padding: 0.5em 1em;
@@ -203,7 +209,7 @@
                 </div>
                 <div class="header-title">Mis Citas</div>
                 <div class="header-actions">
-                    <a href="add_appointment.html" class="btn btn-primary">
+                    <a href="add_appointment.html" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Nueva Cita
                     </a>
                 </div>
@@ -318,6 +324,9 @@
                 return;
             }
             
+            // Cargar citas de ejemplo si no hay datos
+            loadExampleAppointments();
+            
             // Configurar botón de logout
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
@@ -360,6 +369,125 @@
             
             // Cargar la lista de citas inicialmente
             loadAppointments();
+            
+            // Función para cargar datos de ejemplo
+            function loadExampleAppointments() {
+                // Verificar si ya hay citas guardadas
+                const existingUpcoming = Meditrack.appointments.getUpcoming() || [];
+                const existingPast = Meditrack.appointments.getPast() || [];
+                
+                if (existingUpcoming.length > 0 || existingPast.length > 0) {
+                    console.log("Ya existen citas en el sistema, no se cargarán ejemplos.");
+                    return; // No cargar ejemplos si ya hay datos
+                }
+                
+                console.log("No se encontraron citas. Cargando ejemplos...");
+                
+                // Crear fechas para las citas
+                const today = new Date();
+                
+                // Fechas futuras
+                const tomorrow = new Date(today);
+                tomorrow.setDate(today.getDate() + 1);
+                
+                const nextWeek = new Date(today);
+                nextWeek.setDate(today.getDate() + 7);
+                
+                const nextMonth = new Date(today);
+                nextMonth.setDate(today.getDate() + 30);
+                
+                // Fechas pasadas
+                const lastWeek = new Date(today);
+                lastWeek.setDate(today.getDate() - 7);
+                
+                const lastMonth = new Date(today);
+                lastMonth.setDate(today.getDate() - 30);
+                
+                // Citas próximas
+                const upcomingAppointments = [
+                    {
+                        id: "apt1" + Date.now(),
+                        userId: currentUser.id,
+                        doctorName: "Dr. García Martínez",
+                        specialty: "Cardiología",
+                        date: tomorrow.toISOString().split('T')[0],
+                        time: "10:30",
+                        location: "Centro Médico Las Américas, Consultorio 302",
+                        notes: "Revisión de medicación para la presión arterial",
+                        enableReminders: true
+                    },
+                    {
+                        id: "apt2" + Date.now(),
+                        userId: currentUser.id,
+                        doctorName: "Dra. Rodríguez Sánchez",
+                        specialty: "Medicina General",
+                        date: nextWeek.toISOString().split('T')[0],
+                        time: "16:00",
+                        location: "Clínica San Rafael, Planta 1",
+                        notes: "Revisión general de salud, llevar análisis recientes",
+                        enableReminders: true
+                    },
+                    {
+                        id: "apt3" + Date.now(),
+                        userId: currentUser.id,
+                        doctorName: "Dr. López Hernández",
+                        specialty: "Traumatología",
+                        date: nextMonth.toISOString().split('T')[0],
+                        time: "09:15",
+                        location: "Hospital Universitario, Pabellón B",
+                        notes: "Revisión de dolor en la rodilla derecha",
+                        enableReminders: true
+                    }
+                ];
+                
+                // Citas pasadas
+                const pastAppointments = [
+                    {
+                        id: "apt4" + Date.now(),
+                        userId: currentUser.id,
+                        doctorName: "Dra. Sánchez Pérez",
+                        specialty: "Neurología",
+                        date: lastWeek.toISOString().split('T')[0],
+                        time: "11:45",
+                        location: "Centro Neurológico Avanzado",
+                        notes: "Evaluación de dolores de cabeza frecuentes",
+                        enableReminders: false
+                    },
+                    {
+                        id: "apt5" + Date.now(),
+                        userId: currentUser.id,
+                        doctorName: "Dr. Martínez Gómez",
+                        specialty: "Medicina General",
+                        date: lastMonth.toISOString().split('T')[0],
+                        time: "15:30",
+                        location: "Consultorio Médico Central",
+                        notes: "Chequeo rutinario",
+                        enableReminders: false
+                    }
+                ];
+                
+                // Guardar citas en el sistema
+                try {
+                    upcomingAppointments.forEach(appointment => {
+                        Meditrack.appointments.add(appointment);
+                        console.log("Cita próxima añadida:", appointment.doctorName);
+                    });
+                    
+                    pastAppointments.forEach(appointment => {
+                        Meditrack.appointments.add(appointment);
+                        console.log("Cita pasada añadida:", appointment.doctorName);
+                    });
+                    
+                    console.log("Citas de ejemplo cargadas correctamente");
+                    
+                    // Forzar la recarga de citas después de añadir los ejemplos
+                    setTimeout(() => {
+                        loadAppointments();
+                    }, 500);
+                } catch (error) {
+                    console.error("Error al cargar citas de ejemplo:", error);
+                }
+            }
             
             // Eventos para tabs
             upcomingTab.addEventListener('click', function() {

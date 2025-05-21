@@ -258,6 +258,9 @@
                 return;
             }
             
+            // Cargar medicamentos de ejemplo si no hay datos
+            loadExampleMedications();
+            
             // Configurar botón de logout
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
@@ -295,6 +298,92 @@
                 }
             });
         });
+        
+        // Función para cargar medicamentos de ejemplo
+        function loadExampleMedications() {
+            // Verificar si ya hay medicamentos guardados
+            const existingMedications = Meditrack.medications.getAll() || [];
+            
+            if (existingMedications.length > 0) {
+                console.log("Ya existen medicamentos en el sistema, no se cargarán ejemplos.");
+                return; // No cargar ejemplos si ya hay datos
+            }
+            
+            console.log("No se encontraron medicamentos. Cargando ejemplos...");
+            
+            const currentUser = Meditrack.getCurrentUser();
+            
+            // Fechas para los medicamentos
+            const today = new Date();
+            const nextMonth = new Date(today);
+            nextMonth.setMonth(today.getMonth() + 1);
+            
+            // Crear medicamentos de ejemplo
+            const exampleMedications = [
+                {
+                    id: "med1" + Date.now(),
+                    userId: currentUser.id,
+                    name: "Ibuprofeno",
+                    dose: "400mg",
+                    instructions: "Tomar con alimentos",
+                    startDate: today.toISOString().split('T')[0],
+                    endDate: nextMonth.toISOString().split('T')[0],
+                    active: true,
+                    schedule: {
+                        frequency: "daily",
+                        times: ["08:00", "20:00"],
+                        days: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                    }
+                },
+                {
+                    id: "med2" + Date.now(),
+                    userId: currentUser.id,
+                    name: "Paracetamol",
+                    dose: "500mg",
+                    instructions: "Tomar en caso de dolor o fiebre",
+                    startDate: today.toISOString().split('T')[0],
+                    endDate: null,
+                    active: true,
+                    schedule: {
+                        frequency: "asneeded",
+                        times: [],
+                        days: []
+                    }
+                },
+                {
+                    id: "med3" + Date.now(),
+                    userId: currentUser.id,
+                    name: "Metformina",
+                    dose: "850mg",
+                    instructions: "Tomar después de las comidas principales",
+                    startDate: today.toISOString().split('T')[0],
+                    endDate: null,
+                    active: true,
+                    schedule: {
+                        frequency: "daily",
+                        times: ["14:00"],
+                        days: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                    }
+                }
+            ];
+            
+            // Guardar los medicamentos de ejemplo
+            try {
+                exampleMedications.forEach(medication => {
+                    Meditrack.medications.add(medication);
+                    console.log("Medicamento añadido:", medication.name);
+                });
+                
+                console.log("Medicamentos de ejemplo cargados correctamente");
+                
+                // Forzar la recarga de medicamentos después de añadir los ejemplos
+                setTimeout(() => {
+                    loadMedications();
+                }, 500);
+            } catch (error) {
+                console.error("Error al cargar medicamentos de ejemplo:", error);
+            }
+        }
         
         // Cargar medicamentos
         function loadMedications() {
