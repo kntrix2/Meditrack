@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Medicamentos - MediTrack</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="images/app-icon.png" type="image/png">
+    <link rel="icon" href="../../images/app-icon.png" type="image/png">
+    <script src="../../js/app.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -14,7 +15,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <img src="images/app-icon.png" alt="MediTrack" width="30" height="30">
+                    <img src="../../images/app-icon.png" alt="MediTrack" width="30" height="30">
                     MediTrack
                 </div>
             </div>
@@ -239,186 +240,213 @@
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Verificar autenticación
-            const currentUser = Meditrack.getCurrentUser();
-            if (!currentUser || currentUser.userType !== 'patient') {
-                window.location.href = 'login.html';
+            if (typeof Meditrack === 'undefined') {
+                console.error('MediTrack API no está disponible');
+                setTimeout(function() {
+                    window.location.href = '../auth/login.html';
+                }, 1000);
                 return;
             }
             
-            // Toggle del menú móvil
-            document.querySelector('.menu-toggle').addEventListener('click', function() {
-                document.querySelector('.sidebar').classList.toggle('active');
-            });
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser) {
+                console.error('Usuario no autenticado, redirigiendo a login');
+                window.location.href = '../auth/login.html';
+                return;
+            }
             
-            // Configurar botón de cerrar sesión
+            // Cargar medicamentos de ejemplo si no hay datos
+            loadExampleMedications();
+            
+            // Configurar botón de logout
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 Meditrack.logout();
             });
             
-            // Referencias a elementos DOM
-            const medicationsList = document.getElementById('medicationsList');
-            const statusFilter = document.getElementById('statusFilter');
-            const medicationSearch = document.getElementById('medicationSearch');
-            const searchBtn = document.getElementById('searchBtn');
-            const alertMessage = document.getElementById('alertMessage');
+            // Configurar acciones del menú móvil
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
             
-            // Referencias a modales
-            const medicationDetailsModal = document.getElementById('medicationDetailsModal');
-            const closeModal = document.getElementById('closeModal');
-            const modalMedicationName = document.getElementById('modalMedicationName');
-            const medicationDetails = document.getElementById('medicationDetails');
-            const doseHistory = document.getElementById('doseHistory');
-            const editMedicationBtn = document.getElementById('editMedicationBtn');
-            const deleteMedicationBtn = document.getElementById('deleteMedicationBtn');
-            
-            // Referencias al modal de confirmación
-            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-            const closeConfirmModal = document.getElementById('closeConfirmModal');
-            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-            
-            let currentMedication = null; // Para almacenar el medicamento actualmente seleccionado
-            
-            // Cargar la lista de medicamentos
-            loadMedications();
-            
-            // Eventos para filtros
-            statusFilter.addEventListener('change', loadMedications);
-            searchBtn.addEventListener('click', loadMedications);
-            medicationSearch.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    loadMedications();
-                }
-            });
-            
-            // Eventos para modales
-            closeModal.addEventListener('click', function() {
-                medicationDetailsModal.style.display = 'none';
-            });
-            
-            closeConfirmModal.addEventListener('click', function() {
-                confirmDeleteModal.style.display = 'none';
-            });
-            
-            cancelDeleteBtn.addEventListener('click', function() {
-                confirmDeleteModal.style.display = 'none';
-            });
-            
-            confirmDeleteBtn.addEventListener('click', function() {
-                if (currentMedication) {
-                    Meditrack.medications.delete(currentMedication.id);
-                    confirmDeleteModal.style.display = 'none';
-                    medicationDetailsModal.style.display = 'none';
-                    
-                    // Mostrar mensaje de éxito
-                    showAlert('Medicamento eliminado correctamente.', 'success');
-                    
-                    // Recargar la lista
-                    loadMedications();
-                }
-            });
-            
-            editMedicationBtn.addEventListener('click', function() {
-                if (currentMedication) {
-                    // Implementación simplificada - en un escenario real, redirigir a una página de edición
-                    // con el ID del medicamento, o abrir un formulario modal de edición
-                    showAlert('La funcionalidad de edición está simulada en este prototipo.', 'warning');
-                }
-            });
-            
-            deleteMedicationBtn.addEventListener('click', function() {
-                if (currentMedication) {
-                    confirmDeleteModal.style.display = 'block';
-                }
-            });
-            
-            // Cerrar modales al hacer clic fuera de ellos
-            window.addEventListener('click', function(e) {
-                if (e.target === medicationDetailsModal) {
-                    medicationDetailsModal.style.display = 'none';
-                }
-                if (e.target === confirmDeleteModal) {
-                    confirmDeleteModal.style.display = 'none';
-                }
-            });
-            
-            // Función para cargar medicamentos
-            function loadMedications() {
-                const status = statusFilter.value;
-                const searchTerm = medicationSearch.value.toLowerCase();
-                
-                // Obtener todos los medicamentos
-                let medications = Meditrack.medications.getAll();
-                
-                // Filtrar por estado si es necesario
-                if (status === 'active') {
-                    medications = medications.filter(med => med.active);
-                } else if (status === 'completed') {
-                    medications = medications.filter(med => !med.active);
-                }
-                
-                // Filtrar por término de búsqueda si es necesario
-                if (searchTerm) {
-                    medications = medications.filter(med => 
-                        med.name.toLowerCase().includes(searchTerm) ||
-                        med.form.toLowerCase().includes(searchTerm)
-                    );
-                }
-                
-                // Mostrar resultados
-                if (medications.length > 0) {
-                    medicationsList.innerHTML = '';
-                    
-                    medications.forEach(med => {
-                        const card = createMedicationCard(med);
-                        medicationsList.appendChild(card);
-                    });
-                } else {
-                    medicationsList.innerHTML = `
-                        <div class="empty-state">
-                            <div class="feature-icon-container feature-icon-med">
-                                <i class="fas fa-prescription-bottle-medical"></i>
-                            </div>
-                            <p>No se encontraron medicamentos.</p>
-                            <a href="add_medication.html" class="btn btn-primary mt-2">Añadir Medicamento</a>
-                        </div>
-                    `;
-                }
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
+                });
             }
             
-            // Función para crear una tarjeta de medicamento
+            // Cargar medicamentos
+            loadMedications();
+            
+            // Configurar búsqueda y filtros
+            document.getElementById('medicationSearch').addEventListener('input', loadMedications);
+            document.getElementById('statusFilter').addEventListener('change', loadMedications);
+            
+            // Configurar cierre del modal
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('medicationDetailsModal').classList.remove('active');
+            });
+            
+            // Función para cerrar el modal cuando se hace clic fuera de él
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('medicationDetailsModal');
+                if (event.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+        
+        // Función para cargar medicamentos de ejemplo
+        function loadExampleMedications() {
+            // Verificar si ya hay medicamentos guardados
+            const existingMedications = Meditrack.medications.getAll() || [];
+            
+            if (existingMedications.length > 0) {
+                console.log("Ya existen medicamentos en el sistema, no se cargarán ejemplos.");
+                return; // No cargar ejemplos si ya hay datos
+            }
+            
+            console.log("No se encontraron medicamentos. Cargando ejemplos...");
+            
+            const currentUser = Meditrack.getCurrentUser();
+            
+            // Fechas para los medicamentos
+            const today = new Date();
+            const nextMonth = new Date(today);
+            nextMonth.setMonth(today.getMonth() + 1);
+            
+            // Crear medicamentos de ejemplo
+            const exampleMedications = [
+                {
+                    id: "med1" + Date.now(),
+                    userId: currentUser.id,
+                    name: "Ibuprofeno",
+                    dose: "400mg",
+                    instructions: "Tomar con alimentos",
+                    startDate: today.toISOString().split('T')[0],
+                    endDate: nextMonth.toISOString().split('T')[0],
+                    active: true,
+                    schedule: {
+                        frequency: "daily",
+                        times: ["08:00", "20:00"],
+                        days: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                    }
+                },
+                {
+                    id: "med2" + Date.now(),
+                    userId: currentUser.id,
+                    name: "Paracetamol",
+                    dose: "500mg",
+                    instructions: "Tomar en caso de dolor o fiebre",
+                    startDate: today.toISOString().split('T')[0],
+                    endDate: null,
+                    active: true,
+                    schedule: {
+                        frequency: "asneeded",
+                        times: [],
+                        days: []
+                    }
+                },
+                {
+                    id: "med3" + Date.now(),
+                    userId: currentUser.id,
+                    name: "Metformina",
+                    dose: "850mg",
+                    instructions: "Tomar después de las comidas principales",
+                    startDate: today.toISOString().split('T')[0],
+                    endDate: null,
+                    active: true,
+                    schedule: {
+                        frequency: "daily",
+                        times: ["14:00"],
+                        days: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+                    }
+                }
+            ];
+            
+            // Guardar los medicamentos de ejemplo
+            try {
+                exampleMedications.forEach(medication => {
+                    Meditrack.medications.add(medication);
+                    console.log("Medicamento añadido:", medication.name);
+                });
+                
+                console.log("Medicamentos de ejemplo cargados correctamente");
+                
+                // Forzar la recarga de medicamentos después de añadir los ejemplos
+                setTimeout(() => {
+                    loadMedications();
+                }, 500);
+            } catch (error) {
+                console.error("Error al cargar medicamentos de ejemplo:", error);
+            }
+        }
+        
+        // Cargar medicamentos
+        function loadMedications() {
+            if (!Meditrack || !Meditrack.medications) {
+                showAlert('Error al cargar los medicamentos. API no disponible.', 'error');
+                return;
+            }
+            
+            const searchTerm = document.getElementById('medicationSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            // Obtener medicamentos
+            const medications = Meditrack.medications.getAll();
+            
+            // Filtrar medicamentos
+            const filteredMeds = medications.filter(med => {
+                const nameMatch = med.name.toLowerCase().includes(searchTerm);
+                const statusMatch = statusFilter === 'all' || 
+                                   (statusFilter === 'active' && med.active) || 
+                                   (statusFilter === 'completed' && !med.active);
+                return nameMatch && statusMatch;
+            });
+            
+            // Mostrar medicamentos
+            displayMedications(filteredMeds);
+        }
+        
+        // Mostrar medicamentos en la interfaz
+        function displayMedications(medications) {
+            const container = document.getElementById('medicationsList');
+            const emptyState = container.querySelector('.empty-state');
+            
+            // Limpiar lista actual (excepto el estado vacío)
+            const cards = container.querySelectorAll('.medication-card');
+            cards.forEach(card => card.remove());
+            
+            if (medications.length === 0) {
+                if (emptyState) emptyState.style.display = 'flex';
+                return;
+            }
+            
+            if (emptyState) emptyState.style.display = 'none';
+            
+            // Crear y añadir tarjetas de medicamentos
+                    medications.forEach(med => {
+                        const card = createMedicationCard(med);
+                container.appendChild(card);
+            });
+        }
+        
+        // Crear tarjeta de medicamento
             function createMedicationCard(medication) {
                 const card = document.createElement('div');
                 card.className = 'medication-card';
                 
-                // Determinar estado del medicamento
-                let statusClass = 'status-active';
-                let statusText = 'Activo';
-                
-                if (!medication.active) {
-                    statusClass = 'status-completed';
-                    statusText = 'Completado';
-                }
-                
-                // Determinar próxima dosis
+            const statusClass = medication.active ? 'status-active' : 'status-completed';
+            const statusText = medication.active ? 'Activo' : 'Completado';
+            
+            // Obtener próxima dosis
                 let nextDoseText = 'No programado';
-                if (medication.schedule) {
-                    if (medication.schedule.frequency === 'daily') {
-                        nextDoseText = 'Diariamente';
-                        if (medication.schedule.times && medication.schedule.times.length > 0) {
-                            nextDoseText = `Hoy a las ${medication.schedule.times[0]}`;
-                        }
-                    } else if (medication.schedule.frequency === 'specific-days') {
-                        // Mapear números de día a nombres cortos
-                        const dayNames = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
-                        const daysList = medication.schedule.specificDays.map(day => dayNames[day]).join(', ');
-                        nextDoseText = `${daysList}`;
-                    }
+            if (medication.schedule && medication.schedule.frequency === 'daily' && 
+                medication.schedule.times && medication.schedule.times.length > 0) {
+                nextDoseText = 'Hoy, ' + medication.schedule.times[0];
                 }
                 
                 card.innerHTML = `
@@ -428,146 +456,153 @@
                     </div>
                     <div class="medication-card-body">
                         <div class="med-info-row">
-                            <div class="med-time-row">
-                                <div class="med-time-indicator med-time-morning">M</div>
-                                <span>${medication.schedule && medication.schedule.times && medication.schedule.times.length > 0 ? medication.schedule.times[0] : 'No programado'}</span>
-                            </div>
-                            <div class="med-time-row">
-                                <div class="med-time-indicator med-time-evening">T</div>
-                                <span>${medication.schedule && medication.schedule.times && medication.schedule.times.length > 1 ? medication.schedule.times[1] : 'No programado'}</span>
-                            </div>
-                        </div>
-                        <p><strong>Dosis:</strong> ${medication.dose}</p>
-                        <p><strong>Forma:</strong> ${medication.form}</p>
-                        <p><strong>Próxima toma:</strong> <span class="highlight-text">${nextDoseText}</span></p>
+                        ${createScheduleDisplay(medication.schedule)}
+                    </div>
+                    <p><strong>Dosis:</strong> ${medication.dose || 'No especificada'}</p>
+                    <p><strong>Próxima toma:</strong> <span class="highlight-text">${nextDoseText}</span></p>
                     </div>
                     <div class="medication-card-footer">
-                        <button class="btn btn-outline btn-sm view-details-btn" data-id="${medication.id}">
-                            Ver Detalles
-                        </button>
-                        <button class="btn btn-primary btn-sm take-dose-btn" data-id="${medication.id}">
-                            Tomar Dosis
-                        </button>
+                    <button class="btn btn-sm btn-primary take-dose-btn" data-id="${medication.id}">Tomar dosis</button>
+                    <button class="btn btn-sm btn-outline view-details-btn" data-id="${medication.id}">Ver detalles</button>
                     </div>
                 `;
                 
-                // Evento para ver detalles
-                card.querySelector('.view-details-btn').addEventListener('click', function() {
-                    const medicationId = this.getAttribute('data-id');
-                    showMedicationDetails(medicationId);
-                });
-                
-                // Evento para tomar dosis
-                card.querySelector('.take-dose-btn').addEventListener('click', function() {
-                    const medicationId = this.getAttribute('data-id');
-                    takeDose(medicationId);
+            // Configurar eventos
+            const takeDoseBtn = card.querySelector('.take-dose-btn');
+            takeDoseBtn.addEventListener('click', function() {
+                takeMedicationDose(medication.id);
+            });
+            
+            const viewDetailsBtn = card.querySelector('.view-details-btn');
+            viewDetailsBtn.addEventListener('click', function() {
+                openMedicationDetails(medication.id);
                 });
                 
                 return card;
             }
             
-            // Función para mostrar detalles de un medicamento
-            function showMedicationDetails(medicationId) {
-                const medication = Meditrack.medications.getById(medicationId);
+        // Crear visualización del horario
+        function createScheduleDisplay(schedule) {
+            if (!schedule || !schedule.times || schedule.times.length === 0) {
+                return '<p>Sin horario definido</p>';
+            }
+            
+            let html = '';
+            
+            // Mostrar horarios
+            schedule.times.forEach((time, index) => {
+                const [hours, minutes] = time.split(':');
+                const hour = parseInt(hours);
                 
-                if (medication) {
-                    currentMedication = medication;
-                    
-                    // Actualizar título del modal
-                    modalMedicationName.textContent = medication.name;
-                    
-                    // Preparar detalles del medicamento
-                    let scheduleText = 'No programado';
-                    if (medication.schedule) {
-                        if (medication.schedule.frequency === 'daily') {
-                            scheduleText = `Diariamente, ${medication.schedule.timesPerDay || 1} veces al día`;
-                        } else if (medication.schedule.frequency === 'specific-days') {
-                            // Mapear números de día a nombres
-                            const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-                            const daysList = medication.schedule.specificDays.map(day => dayNames[day]).join(', ');
-                            scheduleText = `Días específicos (${daysList}), ${medication.schedule.timesPerDay || 1} veces por día`;
-                        }
-                    }
-                    
-                    // Mostrar horarios específicos si están disponibles
-                    let timesText = '';
-                    if (medication.schedule && medication.schedule.times && medication.schedule.times.length > 0) {
-                        timesText = `<p><strong>Horarios:</strong> ${medication.schedule.times.join(', ')}</p>`;
-                    }
-                    
-                    medicationDetails.innerHTML = `
-                        <div class="details-section">
-                            <h3>Información General</h3>
-                            <p><strong>Dosis:</strong> ${medication.dose}</p>
-                            <p><strong>Forma:</strong> ${medication.form}</p>
-                            <p><strong>Instrucciones:</strong> ${medication.instructions || 'No especificadas'}</p>
-                            <p><strong>Frecuencia:</strong> ${scheduleText}</p>
-                            ${timesText}
-                            <p><strong>Fecha de inicio:</strong> ${Meditrack.utils.formatDate(medication.startDate)}</p>
-                            <p><strong>Fecha de fin:</strong> ${medication.endDate ? Meditrack.utils.formatDate(medication.endDate) : 'No especificada'}</p>
+                let timeClass = 'med-time-other';
+                let timeLabel = 'O';
+                
+                if (hour >= 5 && hour < 12) {
+                    timeClass = 'med-time-morning';
+                    timeLabel = 'M';
+                } else if (hour >= 12 && hour < 18) {
+                    timeClass = 'med-time-afternoon';
+                    timeLabel = 'T';
+                } else if (hour >= 18 && hour < 23) {
+                    timeClass = 'med-time-evening';
+                    timeLabel = 'N';
+                }
+                
+                html += `
+                    <div class="med-time-row">
+                        <div class="med-time-indicator ${timeClass}">${timeLabel}</div>
+                        <span>${formatTime(time)}</span>
                         </div>
-                    `;
-                    
-                    // Mostrar historial de dosis
-                    if (medication.doses && medication.doses.length > 0) {
-                        let doseHistoryHtml = '<ul class="dose-list">';
-                        
-                        medication.doses.sort((a, b) => b.timestamp - a.timestamp).forEach(dose => {
-                            const doseDate = new Date(dose.timestamp);
-                            doseHistoryHtml += `
-                                <li class="dose-item">
-                                    <div class="dose-info">
-                                        <span class="med-status ${dose.taken ? 'med-taken' : 'med-missed'}"></span>
-                                        <span>${medication.name} ${medication.dose}mg</span>
-                                    </div>
-                                    <span class="dose-date">${doseDate.toLocaleString()}</span>
-                                </li>
                             `;
                         });
                         
-                        doseHistoryHtml += '</ul>';
-                        doseHistory.innerHTML = doseHistoryHtml;
-                    } else {
-                        doseHistory.innerHTML = '<p class="no-data">No hay registros de dosis tomadas.</p>';
-                    }
-                    
-                    // Mostrar modal
-                    medicationDetailsModal.style.display = 'block';
-                }
+            return html;
+        }
+        
+        // Formatear hora
+        function formatTime(timeString) {
+            try {
+                const [hours, minutes] = timeString.split(':');
+                const hour = parseInt(hours);
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const hour12 = hour % 12 || 12;
+                return `${hour12}:${minutes} ${ampm}`;
+            } catch (e) {
+                return timeString;
+            }
+        }
+        
+        // Tomar dosis de medicamento
+        function takeMedicationDose(medicationId) {
+            if (!Meditrack || !Meditrack.medications) {
+                showAlert('Error al registrar la dosis. API no disponible.', 'error');
+                return;
             }
             
-            // Función para tomar una dosis
-            function takeDose(medicationId) {
-                if (Meditrack.medications.takeDose(medicationId)) {
-                    // Mostrar mensaje de éxito
+            const result = Meditrack.medications.takeDose(medicationId);
+            
+            if (result) {
                     showAlert('Dosis registrada correctamente.', 'success');
                     
-                    // Mostrar notificación solo si el permiso ya ha sido otorgado
-                    const notificationState = Meditrack.getNotificationPermissionState();
-                    if (notificationState === 'granted') {
-                        Meditrack.showNotification('Dosis registrada', {
-                            body: '¡Bien hecho! Has registrado correctamente tu medicación.',
-                            icon: 'images/med-icon.png'
-                        });
-                    }
-                    
-                    // Recargar la lista
-                    loadMedications();
-                }
+                // Recargar la lista de medicamentos
+                loadMedications();
+            } else {
+                showAlert('Error al registrar la dosis. Inténtalo de nuevo.', 'error');
+            }
+        }
+        
+        // Abrir detalles del medicamento
+        function openMedicationDetails(medicationId) {
+            if (!Meditrack || !Meditrack.medications) {
+                showAlert('Error al cargar los detalles. API no disponible.', 'error');
+                return;
             }
             
-            // Función para mostrar alertas
+            const medication = Meditrack.medications.getById(medicationId);
+            
+            if (!medication) {
+                showAlert('Medicamento no encontrado.', 'error');
+                return;
+            }
+            
+            // Llenar el modal con la información del medicamento
+            document.getElementById('modalMedicationName').textContent = medication.name;
+            document.getElementById('modalDose').textContent = medication.dose || 'No especificada';
+            document.getElementById('modalInstructions').textContent = medication.instructions || 'No especificadas';
+            document.getElementById('modalStartDate').textContent = formatDate(medication.startDate) || 'No especificada';
+            document.getElementById('modalEndDate').textContent = medication.endDate ? formatDate(medication.endDate) : 'No especificada';
+            
+            // Mostrar modal
+            document.getElementById('medicationDetailsModal').classList.add('active');
+        }
+        
+        // Formatear fecha
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('es-ES');
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        // Mostrar alerta
             function showAlert(message, type = 'info') {
-                alertMessage.textContent = message;
-                alertMessage.className = `alert alert-${type}`;
-                alertMessage.style.display = 'block';
+            const alert = document.getElementById('alertMessage');
+            
+            if (!alert) return;
+            
+            alert.textContent = message;
+            alert.className = 'alert alert-' + type;
+            alert.style.display = 'block';
                 
                 // Ocultar después de 5 segundos
                 setTimeout(() => {
-                    alertMessage.style.display = 'none';
+                alert.style.display = 'none';
                 }, 5000);
             }
-        });
     </script>
 </body>
 </html> 

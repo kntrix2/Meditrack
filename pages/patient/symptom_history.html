@@ -4,16 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Síntomas - Meditrack</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="images/app-icon.png" type="image/png">
+    <link rel="icon" href="../../images/app-icon.png" type="image/png">
+    <script src="../../js/app.js"></script>
+    <style>
+        /* Estilos específicos para reducir márgenes */
+        .content-area {
+            padding: 0.25rem;
+        }
+        
+        .section-header {
+            margin-bottom: 0.25rem;
+        }
+        
+        .section-header h1 {
+            margin-bottom: 0.1rem;
+            font-size: 1.5rem;
+        }
+        
+        .section-header p {
+            margin-bottom: 0.25rem;
+        }
+        
+        .filters {
+            margin-bottom: 0.25rem;
+            gap: 0.25rem;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            margin-bottom: 0.25rem;
+            margin-right: 0.5rem;
+        }
+        
+        /* Ocultar la sección de gráficos por defecto */
+        .symptoms-view {
+            display: none;
+        }
+        
+        .symptoms-list {
+            margin-top: 0.25rem;
+        }
+        
+        .symptom-card {
+            margin-bottom: 0.25rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+        
+        /* Clase para botón pequeño */
+        .btn-sm {
+            font-size: 0.9rem;
+            padding: 0.5em 1em;
+        }
+        
+        /* Estilos adicionales para reducir espacio */
+        .symptom-header {
+            margin-bottom: 0.1rem;
+        }
+        
+        .symptom-body {
+            margin-top: 0.25rem;
+        }
+        
+        .symptom-badges {
+            margin-bottom: 0.25rem;
+        }
+        
+        .symptom-description {
+            margin-bottom: 0;
+        }
+        
+        /* Para dispositivos móviles */
+        @media (max-width: 768px) {
+            .section-header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
         <!-- Barra lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">MediTrack</div>
+                <div class="sidebar-logo">
+                    <img src="../../images/app-icon.png" alt="MediTrack" width="30" height="30">
+                    MediTrack
+                </div>
             </div>
             <nav class="sidebar-nav">
                 <a href="patient_dashboard.html" class="sidebar-nav-item">
@@ -49,7 +129,7 @@
                 </div>
                 <div class="header-title">Historial de Síntomas</div>
                 <div class="header-actions">
-                    <a href="log_symptom.html" class="btn btn-primary">
+                    <a href="log_symptom.html" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Nuevo Síntoma
                     </a>
                 </div>
@@ -97,7 +177,7 @@
                 </div>
                 
                 <!-- Visualización de síntomas -->
-                <div class="symptoms-view">
+                <div class="symptoms-view" style="display: none;">
                     <div class="symptoms-charts">
                         <div class="chart-container">
                             <canvas id="intensityChart"></canvas>
@@ -146,27 +226,43 @@
         </nav>
     </div>
 
-    <script src="js/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Verificar autenticación
-            const currentUser = Meditrack.getCurrentUser();
-            if (!currentUser || currentUser.userType !== 'patient') {
-                window.location.href = 'login.html';
+            if (typeof Meditrack === 'undefined') {
+                console.error('MediTrack API no está disponible');
+                setTimeout(function() {
+                    window.location.href = '../auth/login.html';
+                }, 1000);
                 return;
             }
             
-            // Toggle del menú móvil
-            document.querySelector('.menu-toggle').addEventListener('click', function() {
-                document.querySelector('.sidebar').classList.toggle('active');
-            });
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser) {
+                console.error('Usuario no autenticado, redirigiendo a login');
+                window.location.href = '../auth/login.html';
+                return;
+            }
             
-            // Configurar botón de cerrar sesión
+            // Cargar síntomas de ejemplo si no hay datos
+            loadExampleSymptoms();
+            
+            // Configurar botón de logout
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 Meditrack.logout();
             });
+            
+            // Configurar acciones del menú móvil
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
+                });
+            }
             
             // Cargar síntomas
             loadSymptoms();
@@ -175,6 +271,102 @@
             document.getElementById('periodFilter').addEventListener('change', loadSymptoms);
             document.getElementById('categoryFilter').addEventListener('change', loadSymptoms);
             document.getElementById('intensityFilter').addEventListener('change', loadSymptoms);
+            
+            // Función para cargar datos de ejemplo
+            function loadExampleSymptoms() {
+                // Verificar si ya hay síntomas guardados
+                const existingSymptoms = Meditrack.symptoms.getAll() || [];
+                if (existingSymptoms.length > 0) {
+                    console.log("Ya existen síntomas en el sistema, no se cargarán ejemplos.");
+                    return; // No cargar ejemplos si ya hay datos
+                }
+                
+                console.log("No se encontraron síntomas. Cargando ejemplos...");
+                
+                // Crear síntomas de ejemplo
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(today.getDate() - 1);
+                
+                const twoDaysAgo = new Date(today);
+                twoDaysAgo.setDate(today.getDate() - 2);
+                
+                const threeDaysAgo = new Date(today);
+                threeDaysAgo.setDate(today.getDate() - 3);
+                
+                const fiveDaysAgo = new Date(today);
+                fiveDaysAgo.setDate(today.getDate() - 5);
+                
+                const exampleSymptoms = [
+                    {
+                        id: "symptom1" + Date.now(),
+                        userId: currentUser.id,
+                        name: "Dolor de cabeza",
+                        category: "pain",
+                        intensity: 2,
+                        description: "Dolor en la zona frontal que empeoró por la tarde",
+                        date: today.toISOString().split('T')[0],
+                        time: "14:30"
+                    },
+                    {
+                        id: "symptom2" + Date.now(),
+                        userId: currentUser.id,
+                        name: "Mareo leve",
+                        category: "other",
+                        intensity: 1,
+                        description: "Sensación de mareo al levantarme rápidamente",
+                        date: yesterday.toISOString().split('T')[0],
+                        time: "10:15"
+                    },
+                    {
+                        id: "symptom3" + Date.now(),
+                        userId: currentUser.id,
+                        name: "Dolor articular",
+                        category: "pain",
+                        intensity: 2,
+                        description: "Molestia en la rodilla derecha al subir escaleras",
+                        date: twoDaysAgo.toISOString().split('T')[0],
+                        time: "18:45"
+                    },
+                    {
+                        id: "symptom4" + Date.now(),
+                        userId: currentUser.id,
+                        name: "Dificultad para dormir",
+                        category: "sleep",
+                        intensity: 2,
+                        description: "Me costó conciliar el sueño y me desperté varias veces",
+                        date: threeDaysAgo.toISOString().split('T')[0],
+                        time: "23:00"
+                    },
+                    {
+                        id: "symptom5" + Date.now(),
+                        userId: currentUser.id,
+                        name: "Tos persistente",
+                        category: "respiratory",
+                        intensity: 3,
+                        description: "Tos seca que empeoró por la noche, difícil de controlar",
+                        date: fiveDaysAgo.toISOString().split('T')[0],
+                        time: "20:30"
+                    }
+                ];
+                
+                // Guardar los síntomas de ejemplo
+                try {
+                    exampleSymptoms.forEach(symptom => {
+                        Meditrack.symptoms.add(symptom);
+                        console.log("Síntoma añadido:", symptom.name);
+                    });
+                    
+                    console.log("Síntomas de ejemplo cargados correctamente");
+                    
+                    // Forzar la recarga de síntomas después de añadir los ejemplos
+                    setTimeout(() => {
+                        loadSymptoms();
+                    }, 500);
+                } catch (error) {
+                    console.error("Error al cargar síntomas de ejemplo:", error);
+                }
+            }
             
             // Función para cargar síntomas
             function loadSymptoms() {
@@ -343,13 +535,17 @@
                 });
             }
             
-            // Función para actualizar gráficos
+            // Función para mostrar/ocultar gráficos (mantener oculto por defecto)
             function updateCharts(symptoms) {
-                // Gráfico de intensidad a lo largo del tiempo
-                updateIntensityChart(symptoms);
+                // Mantener gráficos ocultos
+                document.querySelector('.symptoms-view').style.display = 'none';
                 
-                // Gráfico de distribución por categoría
-                updateCategoryChart(symptoms);
+                // Si hay síntomas, actualizar datos (pero sin mostrar)
+                if (symptoms.length > 0) {
+                    // Actualizar datos sin mostrar
+                    updateIntensityChart(symptoms);
+                    updateCategoryChart(symptoms);
+                }
             }
             
             // Gráfico de intensidad a lo largo del tiempo

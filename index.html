@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meditrack - Gestión de Salud</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/home-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="images/app-icon.png" type="image/png">
     <!-- Cargar app.js con manejo de errores -->
@@ -52,24 +53,22 @@
                 <i class="fas fa-bars"></i>
             </div>
             <ul class="nav-links" id="nav-links">
-                <li><a href="index.html" class="active">Inicio</a></li>
-                <li><a href="#features">Características</a></li>
-                <li><a href="#about">Acerca de</a></li>
-                <li><a href="#testimonials">Testimonios</a></li>
-                <li><a href="login.html" class="btn btn-primary">Iniciar Sesión</a></li>
+                <li><a href="#problema">El Problema</a></li>
+                <li><a href="#solucion">Solución</a></li>
+                <li><a href="#producto">Producto</a></li>
+                <li><a href="pages/auth/login.html" class="btn btn-primary">Iniciar Sesión</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="hero">
+    <!-- El Problema -->
+    <section id="problema" class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>Gestiona tu salud de manera sencilla</h1>
-                <p class="hero-text">MediTrack te ayuda a realizar un seguimiento de tus medicamentos, citas médicas y síntomas para mantener un control eficiente de tu salud.</p>
+                <h1>El Problema de la Adherencia Médica</h1>
+                <p class="hero-text">¡Hola a todos! Entre el 50 y 70% de los pacientes no siguen sus tratamientos médicos. ¿Las razones? Olvidos, falta de acompañamiento o simplemente porque llevar un control es complicado.</p>
                 <div class="hero-buttons">
-                    <a href="login.html" class="btn btn-primary">Comenzar Ahora</a>
-                    <a href="#features" class="btn btn-outline">Conoce Más</a>
+                    <a href="#solucion" class="btn btn-primary">Conoce Nuestra Solución</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -78,73 +77,52 @@
         </div>
     </section>
 
-    <!-- Características -->
-    <section id="features" class="features">
+    <!-- Nuestra Solución -->
+    <section id="solucion" class="features">
         <div class="container">
-            <h2 class="section-title text-center">Características Principales</h2>
+            <h2 class="section-title text-center">Nuestra Solución: MediTrack</h2>
+            <p class="text-center feature-description">Por eso creamos MediTrack, una aplicación diseñada para ayudarte a seguir tu tratamiento con recordatorios personalizados y funciones que hacen que llevar un control sea muy fácil.</p>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-pills"></i>
                     </div>
                     <h3>Gestión de Medicamentos</h3>
-                    <p>Mantén un registro de tus medicamentos, recibe recordatorios para tomarlos y nunca olvides una dosis.</p>
+                    <p>Mantén un registro de tus medicamentos y recibe recordatorios para tomarlos a tiempo.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-calendar-check"></i>
+                        <i class="fas fa-bell"></i>
                     </div>
-                    <h3>Seguimiento de Citas</h3>
-                    <p>Programa y sigue tus citas médicas, recibiendo recordatorios antes de cada una.</p>
+                    <h3>Recordatorios Personalizados</h3>
+                    <p>Configura recordatorios según tus necesidades específicas para nunca olvidar una dosis.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-heart-pulse"></i>
+                        <i class="fas fa-check-circle"></i>
                     </div>
-                    <h3>Registro de Síntomas</h3>
-                    <p>Registra tus síntomas y signos vitales para compartir información precisa con tu médico.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <h3>Sistema de Recompensas</h3>
-                    <p>Mantente motivado con nuestro sistema de gamificación que te premia por mantener buenos hábitos de salud.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-group"></i>
-                    </div>
-                    <h3>Compartir con Cuidadores</h3>
-                    <p>Comparte información relevante con familiares o cuidadores que te ayudan con tu salud.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Informes y Estadísticas</h3>
-                    <p>Visualiza tendencias en tu salud y genera informes para compartir con tus médicos.</p>
+                    <h3>Registro Simplificado</h3>
+                    <p>Interfaz intuitiva que facilita el registro y seguimiento de tu tratamiento.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Acerca de -->
-    <section id="about" class="about">
+    <!-- Estrategia de Mercado -->
+    <section id="mercado" class="about">
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <h2 class="section-title">Acerca de MediTrack</h2>
-                    <p>MediTrack es una aplicación diseñada para ayudar a personas con condiciones crónicas o tratamientos complejos a gestionar su salud de manera más efectiva.</p>
-                    <p>Nuestra misión es mejorar la adherencia a los tratamientos y reducir las complicaciones relacionadas con medicamentos, facilitando la comunicación entre pacientes, cuidadores y profesionales de la salud.</p>
-                    <p>La aplicación está diseñada pensando en la facilidad de uso para personas de todas las edades, incluyendo adultos mayores y personas con condiciones que afectan su capacidad para gestionar sus medicamentos.</p>
+                    <h2 class="section-title">Estrategia de Mercado</h2>
+                    <p>Para llegar a los aproximadamente 3.6 millones de pacientes con enfermedades crónicas en Colombia que podrían beneficiarse inicialmente de MediTrack, implementaremos una estrategia de mercadeo dinámica.</p>
+                    <p>Utilizaremos redes sociales y alianzas estratégicas con clínicas, hospitales y laboratorios para que recomienden MediTrack.</p>
+                    <p>Nuestra propuesta de valor es muy clara: <strong>'MediTrack es la única aplicación que combina recordatorios inteligentes y un panel para pacientes, familiares y médicos'</strong>, posicionándonos como una solución completa e innovadora.</p>
                 </div>
                 <div class="about-image">
                     <div class="about-app-container">
                         <img src="images/app-icon.png" alt="MediTrack" class="about-app-icon">
                         <div class="about-app-info">
                             <h3>MediTrack</h3>
-                            <p>Versión 1.0</p>
                             <p>Tu asistente de salud personal</p>
                         </div>
                     </div>
@@ -153,64 +131,86 @@
         </div>
     </section>
 
-    <!-- Testimonios -->
-    <section id="testimonials" class="testimonials">
+    <!-- Producto y Tecnología -->
+    <section id="producto" class="features">
         <div class="container">
-            <h2 class="section-title text-center">Lo que dicen nuestros usuarios</h2>
+            <h2 class="section-title text-center">Producto y Tecnología</h2>
+            <p class="text-center feature-description">Desde el punto de vista técnico y de producto, MediTrack no solo envía recordatorios. También pensamos en la atención médica integral. La app ofrecerá herramientas para un seguimiento detallado del tratamiento, permitiendo registrar síntomas, efectos secundarios y avances. Así, el paciente tiene un control más claro y empoderado de su salud.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>Escaneo de Recetas</h3>
+                    <p>MediTrack permitirá escanear recetas médicas para registrar información fácilmente, eliminando errores de transcripción.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-store-alt"></i>
+                    </div>
+                    <h3>Conexión con Farmacias</h3>
+                    <p>Facilitará la conexión con farmacias para la compra de medicamentos.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-group"></i>
+                    </div>
+                    <h3>Compartir con Cuidadores</h3>
+                    <p>Permitirá compartir datos de forma segura con familiares o cuidadores.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Privacidad Garantizada</h3>
+                    <p>Garantizamos la privacidad del usuario mediante cifrado y controles de acceso robustos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modelo de Negocio -->
+    <section id="modelo" class="testimonials">
+        <div class="container">
+            <h2 class="section-title text-center">Modelo de Negocio</h2>
+            <p class="text-center">A diferencia de muchas apps que después de un tiempo empiezan a cobrar, MediTrack no tendrá una suscripción obligatoria. Ofreceremos un modelo freemium:</p>
             <div class="testimonials-slider">
                 <div class="testimonial-card">
                     <div class="testimonial-content">
-                        <p>"MediTrack ha revolucionado la forma en que gestiono mis medicamentos. Ya no me olvido de ninguna dosis y me siento mucho más tranquilo."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">
-                            <img src="images/avatar1.svg" alt="Avatar" onerror="this.src='https://via.placeholder.com/50?text=A'">
-                        </div>
-                        <div class="testimonial-info">
-                            <h4>Ana García</h4>
-                            <span>Paciente con diabetes</span>
-                        </div>
+                        <h3>Plan Gratuito</h3>
+                        <p>Una versión básica gratuita con funcionalidades esenciales para todos los usuarios.</p>
                     </div>
                 </div>
                 <div class="testimonial-card">
                     <div class="testimonial-content">
-                        <p>"Como cuidador de mi madre mayor, esta aplicación me permite seguir su tratamiento a distancia y estar tranquilo sabiendo que está tomando sus medicamentos."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">
-                            <img src="images/avatar2.svg" alt="Avatar" onerror="this.src='https://via.placeholder.com/50?text=C'">
-                        </div>
-                        <div class="testimonial-info">
-                            <h4>Carlos Martínez</h4>
-                            <span>Cuidador familiar</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"Como médico, valoro enormemente los informes detallados que mis pacientes pueden generar con MediTrack. Me ayuda a tomar mejores decisiones en sus tratamientos."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">
-                            <img src="images/avatar3.svg" alt="Avatar" onerror="this.src='https://via.placeholder.com/50?text=L'">
-                        </div>
-                        <div class="testimonial-info">
-                            <h4>Dra. Laura Sánchez</h4>
-                            <span>Médica de familia</span>
-                        </div>
+                        <h3>Plan Premium</h3>
+                        <p>Por solo 5 dólares al mes, accede a funciones extra como reportes en PDF detallados para los médicos y un chat de soporte prioritario.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta">
+    <!-- Proyecciones Financieras -->
+    <section id="finanzas" class="cta">
         <div class="container">
             <div class="cta-content">
-                <h2>Empieza a gestionar tu salud hoy mismo</h2>
-                <p>Regístrate gratis y comienza a experimentar los beneficios de MediTrack en tu vida diaria.</p>
-                <a href="login.html" class="btn btn-primary">Comenzar Ahora</a>
+                <h2>Proyecciones Financieras</h2>
+                <p>En el primer año anticipamos alcanzar 6,000 suscriptores Premium. Esto generaría ingresos mensuales de 30,000 dólares y anuales de 360,000 dólares.</p>
+                <p>Con costos estimados de 50,000 dólares en marketing e infraestructura durante este primer año, proyectamos un EBITDA de 310,000 dólares, con un margen operativo cercano al 86%.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusión -->
+    <section id="conclusion" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Conclusión</h2>
+                    <p>MediTrack no es solo una aplicación, es un aliado en la salud, una solución digital robusta, segura y accesible, diseñada para mejorar la calidad de vida de miles de personas en Colombia.</p>
+                    <a href="pages/auth/login.html" class="btn btn-primary">Comenzar Ahora</a>
+                </div>
             </div>
         </div>
     </section>
@@ -226,11 +226,13 @@
                 <div class="footer-links">
                     <h3>Enlaces rápidos</h3>
                     <ul>
-                        <li><a href="index.html">Inicio</a></li>
-                        <li><a href="#features">Características</a></li>
-                        <li><a href="#about">Acerca de</a></li>
-                        <li><a href="#testimonials">Testimonios</a></li>
-                        <li><a href="login.html">Iniciar Sesión</a></li>
+                        <li><a href="#problema">El Problema</a></li>
+                        <li><a href="#solucion">Nuestra Solución</a></li>
+                        <li><a href="#mercado">Estrategia</a></li>
+                        <li><a href="#producto">Producto</a></li>
+                        <li><a href="#modelo">Modelo de Negocio</a></li>
+                        <li><a href="#finanzas">Finanzas</a></li>
+                        <li><a href="#conclusion">Conclusión</a></li>
                     </ul>
                 </div>
                 <div class="footer-contact">
@@ -252,46 +254,49 @@
     </footer>
 
     <script>
-        // Código JavaScript específico de la página de inicio
         document.addEventListener('DOMContentLoaded', function() {
-            // Control de desplazamiento suave para enlaces internos
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-            
             // Menú móvil
             const menuToggle = document.getElementById('menu-toggle');
             const navLinks = document.getElementById('nav-links');
             const menuOverlay = document.getElementById('menu-overlay');
             
-            if (menuToggle && navLinks) {
+            if (menuToggle && navLinks && menuOverlay) {
                 menuToggle.addEventListener('click', function() {
                     navLinks.classList.toggle('active');
                     menuOverlay.classList.toggle('active');
-                    document.body.classList.toggle('no-scroll');
+                    document.body.classList.toggle('menu-open');
                 });
                 
-                // Cerrar el menú al hacer clic en un enlace
-                navLinks.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', function() {
-                        navLinks.classList.remove('active');
-                        menuOverlay.classList.remove('active');
-                        document.body.classList.remove('no-scroll');
-                    });
-                });
-                
-                // Cerrar el menú al hacer clic en el overlay
                 menuOverlay.addEventListener('click', function() {
                     navLinks.classList.remove('active');
                     menuOverlay.classList.remove('active');
-                    document.body.classList.remove('no-scroll');
+                    document.body.classList.remove('menu-open');
                 });
             }
+            
+            // Desplazamiento suave para enlaces internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    // Cerrar el menú móvil si está abierto
+                    if (navLinks && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        menuOverlay.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                    }
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
         });
     </script>
 </body>

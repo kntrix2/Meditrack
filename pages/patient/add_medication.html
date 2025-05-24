@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Añadir Medicamento - MediTrack</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Añadir Medicamento - Meditrack</title>
+    <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="images/app-icon.png" type="image/png">
+    <link rel="icon" href="../../images/app-icon.png" type="image/png">
     <style>
         /* Estilos específicos para mejorar la usabilidad para adultos mayores */
         .step-container {
             background: linear-gradient(145deg, #f0f4ff, #e1eaff);
-            border-radius: 15px;
-            padding: 2em;
-            margin-bottom: 2em;
+            border-radius: 20px;
+            padding: 2.5em;
+            margin-bottom: 2.5em;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
@@ -29,65 +29,259 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border-radius: 50%;
-            font-size: 1.5em;
+            font-size: 1.8em;
             font-weight: bold;
             margin-right: 1em;
             box-shadow: 0 3px 10px rgba(58, 123, 213, 0.2);
         }
         
         .step-heading {
-            font-size: 1.5em;
+            font-size: 1.8em;
             font-weight: 600;
             color: var(--primary-dark);
         }
         
         .form-row {
             gap: 2em;
+            display: flex;
+            flex-wrap: wrap;
         }
         
         .form-group {
-            margin-bottom: 2em;
+            margin-bottom: 2.5em;
+            flex: 1 1 300px;
         }
         
         label {
-            font-size: 1.15rem;
-            margin-bottom: 0.75em;
+            font-size: 1.3rem;
+            margin-bottom: 1em;
+            display: block;
+            font-weight: 600;
+            color: #333;
         }
         
         input, select, textarea {
-            font-size: 1.15rem;
-            padding: 0.9em;
-            border-radius: 8px;
+            font-size: 1.3rem;
+            padding: 1em;
+            border-radius: 12px;
+            border: 2px solid #d0d0d0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+            outline: none;
         }
         
         .form-help-text {
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-top: 0.75em;
+            color: #666;
         }
         
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 2em;
+            margin-top: 2.5em;
         }
         
         .btn {
-            font-size: 1.15rem;
+            font-size: 1.3rem;
             padding: 1em 2em;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(58, 123, 213, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+        }
+        
+        /* Estilos para el botón de escanear */
+        .scan-button-container {
+            margin-bottom: 2em;
+            text-align: center;
+        }
+        
+        .scan-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #42a5f5, #2196f3);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 1.5em;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .scan-button:hover {
+            background: linear-gradient(145deg, #2196f3, #1e88e5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5);
+        }
+        
+        .scan-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5em;
+        }
+
+        /* Mejoras en la selección de días */
+        .days-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            margin-top: 1em;
+        }
+        
+        .day-checkbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid #d0d0d0;
+            border-radius: 15px;
+            padding: 1em;
+            cursor: pointer;
+            width: 100px;
+            transition: all 0.2s ease;
+        }
+        
+        .day-checkbox.selected {
+            border-color: var(--primary);
+            background-color: rgba(58, 123, 213, 0.1);
+        }
+        
+        .day-checkbox input {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 0.5em;
+        }
+
+        /* Mejorar checkbox */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: 30px;
+            height: 30px;
+            margin-right: 1em;
+        }
+
+        /* Mejorar radio buttons */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            margin-top: 1em;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 1em;
+            border: 2px solid #d0d0d0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .radio-label:hover {
+            background-color: rgba(58, 123, 213, 0.05);
+        }
+        
+        .radio-label input {
+            width: 24px;
+            height: 24px;
+            margin-right: 1em;
+        }
+        
+        .radio-label.selected {
+            border-color: var(--primary);
+            background-color: rgba(58, 123, 213, 0.1);
+        }
+        
+        .radio-label span {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Estilos para la entrada de dosis */
+        .dose-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        
+        .dose-input input {
+            flex: 1;
+        }
+        
+        .dose-input select {
+            width: 100px;
+        }
+        
+        /* Estilos para mensajes de ayuda visuales */
+        .visual-help {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 235, 59, 0.2);
+            border-left: 4px solid #FFC107;
+            padding: 1em;
+            border-radius: 8px;
+            margin: 1em 0;
+        }
+        
+        .visual-help i {
+            font-size: 2rem;
+            color: #FFC107;
+            margin-right: 1em;
+        }
+
+        /* Estilo para botón pequeño */
+        .btn-sm {
+            font-size: 1rem;
+            padding: 0.5em 1em;
+            border-radius: 8px;
         }
     </style>
+    <script src="../../js/app.js"></script>
 </head>
 <body>
     <div class="app-container">
         <!-- Barra lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">MediTrack</div>
+                <div class="sidebar-logo">
+                    <img src="../../images/app-icon.png" alt="MediTrack" width="30" height="30">
+                    MediTrack
+                </div>
             </div>
             <nav class="sidebar-nav">
                 <a href="patient_dashboard.html" class="sidebar-nav-item">
@@ -123,9 +317,9 @@
                 </div>
                 <div class="header-title">Añadir Medicamento</div>
                 <div class="header-actions">
-                    <button type="button" class="btn btn-outline" onclick="window.history.back()">
+                    <a href="medications.html" class="btn btn-outline btn-sm">
                         <i class="fas fa-arrow-left"></i> Volver
-                    </button>
+                    </a>
                 </div>
             </header>
 
@@ -136,12 +330,26 @@
                     <p>Complete cada paso para registrar su medicamento. Los campos marcados con * son obligatorios.</p>
                 </div>
                 
+                <!-- Botón para escanear -->
+                <div class="scan-button-container">
+                    <button type="button" id="scanButton" class="scan-button">
+                        <i class="fas fa-camera scan-icon"></i>
+                        Escanear Medicamento o Receta
+                    </button>
+                    <p class="form-help-text">Use la cámara para escanear el código de barras o la etiqueta de su medicamento</p>
+                </div>
+                
                 <form id="addMedicationForm">
                     <!-- PASO 1: Información básica del medicamento -->
                     <div class="step-container" id="step1">
                         <div class="step-title">
                             <div class="step-number">1</div>
                             <div class="step-heading">Información del medicamento</div>
+                        </div>
+                        
+                        <div class="visual-help">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Puede encontrar esta información en la caja o etiqueta del medicamento. Si tiene dudas, consulte a su médico o farmacéutico.</p>
                         </div>
                         
                         <div class="form-group">
@@ -194,7 +402,7 @@
                         <div class="form-group">
                             <label for="medicationInstructions">Instrucciones / Notas</label>
                             <textarea id="medicationInstructions" name="medicationInstructions" 
-                                placeholder="Ej: Tomar con alimentos, no tomar con leche..." rows="2"></textarea>
+                                placeholder="Ej: Tomar con alimentos, no tomar con leche..." rows="3"></textarea>
                             <p class="form-help-text">Indicaciones especiales para tomar este medicamento</p>
                         </div>
                         
@@ -381,26 +589,40 @@
         </nav>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Verificar autenticación
-            const currentUser = Meditrack.getCurrentUser();
-            if (!currentUser || currentUser.userType !== 'patient') {
-                window.location.href = 'login.html';
+            if (typeof Meditrack === 'undefined') {
+                console.error('MediTrack API no está disponible');
+                setTimeout(function() {
+                    window.location.href = '../auth/login.html';
+                }, 1000);
                 return;
             }
             
-            // Toggle del menú móvil
-            document.querySelector('.menu-toggle').addEventListener('click', function() {
-                document.querySelector('.sidebar').classList.toggle('active');
-            });
+            const currentUser = Meditrack.getCurrentUser();
+            if (!currentUser) {
+                console.error('Usuario no autenticado, redirigiendo a login');
+                window.location.href = '../auth/login.html';
+                return;
+            }
             
-            // Configurar botón de cerrar sesión
+            // Configurar botón de logout
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 Meditrack.logout();
             });
+            
+            // Configurar acciones del menú móvil
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    document.body.classList.toggle('no-scroll');
+                });
+            }
             
             // Navegación por pasos
             document.querySelectorAll('.next-btn').forEach(btn => {
@@ -648,6 +870,55 @@
             // Establecer fecha actual como valor predeterminado para la fecha de inicio
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').value = today;
+            
+            // Función para el escáner de medicamentos
+            document.getElementById('scanButton').addEventListener('click', function() {
+                // Comprobar si la API de cámara está disponible
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    showMessage('Su dispositivo no soporta acceso a la cámara', 'error');
+                    return;
+                }
+                
+                // Mostrar diálogo de confirmación
+                if (confirm('¿Desea activar la cámara para escanear un medicamento?')) {
+                    // Aquí iría la lógica para abrir la cámara y escanear
+                    // Como es solo una demo, mostramos un mensaje
+                    setTimeout(function() {
+                        showMessage('Función de escaneo en desarrollo. Por favor ingrese los datos manualmente.', 'info');
+                    }, 1500);
+                }
+            });
+            
+            // Mejorar interacción con radio buttons
+            document.querySelectorAll('.radio-label').forEach(label => {
+                label.addEventListener('click', function() {
+                    const input = this.querySelector('input[type="radio"]');
+                    if (input) {
+                        input.checked = true;
+                        
+                        // Actualizar clases visuales
+                        document.querySelectorAll('.radio-label').forEach(l => {
+                            l.classList.remove('selected');
+                        });
+                        this.classList.add('selected');
+                        
+                        // Disparar evento de cambio para actualizar formulario
+                        const event = new Event('change');
+                        input.dispatchEvent(event);
+                    }
+                });
+            });
+            
+            // Mejorar interacción con checkbox de días
+            document.querySelectorAll('.day-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    const input = this.querySelector('input[type="checkbox"]');
+                    if (input) {
+                        input.checked = !input.checked;
+                        this.classList.toggle('selected', input.checked);
+                    }
+                });
+            });
         });
     </script>
 </body>

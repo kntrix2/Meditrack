@@ -1,0 +1,176 @@
+/* Correcciones de márgenes para el dashboard de paciente */
+
+/* Mejora del espaciado general */
+.content-area {
+    padding: 20px;
+}
+
+/* Mejora de los márgenes en los encabezados */
+.dashboard-header {
+    margin-bottom: 25px;
+}
+
+.dashboard-header h1 {
+    margin-bottom: 10px;
+}
+
+/* Mejora del espaciado entre las tarjetas de estado de salud */
+.health-status-summary {
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.health-status-item {
+    padding: 15px;
+}
+
+/* Márgenes mejorados para las tarjetas */
+.dashboard-card {
+    margin-bottom: 25px;
+    padding: 18px;
+}
+
+.dashboard-card-title {
+    margin-bottom: 15px;
+}
+
+.dashboard-cards {
+    gap: 25px;
+}
+
+/* Mejora de espaciado en elementos dentro de las tarjetas */
+.quick-actions {
+    gap: 15px;
+}
+
+.quick-action {
+    padding: 12px;
+}
+
+.rewards-progress {
+    margin-bottom: 20px;
+}
+
+.badges-preview {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+}
+
+.badge-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.badge-name {
+    font-size: 12px;
+    text-align: center;
+    color: #333;
+}
+
+.badge-locked .badge-name {
+    color: #888;
+}
+
+.week-days {
+    gap: 12px;
+}
+
+/* Estilos para el gráfico de adherencia */
+.adherence-chart {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.adherence-percentage {
+    font-size: 36px;
+    font-weight: bold;
+    color: #4CAF50;
+    margin-bottom: 5px;
+}
+
+.canvas-container {
+    margin: 15px 0;
+    height: 200px;
+}
+
+/* Estilos para la barra de progreso */
+.progress-bar {
+    height: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress {
+    height: 100%;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.level-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    .content-area {
+        padding: 15px;
+    }
+    
+    .dashboard-card {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .health-status-summary {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .dashboard-cards {
+        gap: 20px;
+    }
+    
+    .canvas-container {
+        height: 180px;
+    }
+    
+    .badge-item {
+        width: 70px;
+    }
+    
+    .badge-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+} 
